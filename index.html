@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebSpace Ultimate - Plus Edition</title>
     
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0000000000000000" crossorigin="anonymous"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <script type="module">
@@ -65,7 +71,6 @@
         }
         header h1 { font-size: 28px; margin: 0; background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* Cam Efektli Ana Modeller */
         .modal { 
             background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             padding: 25px; border-radius: 16px; border: var(--glass-border); 
@@ -74,7 +79,6 @@
         
         .modal h3 { margin-top: 0; color: var(--accent-color); font-weight: 600; }
 
-        /* Klasör Bölümleri */
         .folder-section { 
             background: var(--glass-bg); backdrop-filter: blur(10px); padding: 20px; 
             border-radius: 16px; border: var(--glass-border); margin-top: 20px; 
@@ -87,92 +91,52 @@
             text-align: center; border: 1px solid rgba(255,255,255,0.05); 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; font-weight: 500;
         }
-        .link-card:hover { 
-            transform: translateY(-5px) scale(1.02); 
-            border-color: var(--accent-color); 
-            background: var(--card-hover);
-            box-shadow: var(--accent-glow);
-        }
+        .link-card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--accent-color); background: var(--card-hover); box-shadow: var(--accent-glow); }
 
-        /* İnput ve Butonlar */
         input, select { 
             background: rgba(15, 23, 42, 0.8); color: var(--text-color); 
             border: 1px solid rgba(255,255,255,0.1); padding: 12px 16px; 
-            border-radius: 8px; margin: 8px 0; width: 100%; box-sizing: border-box;
-            font-family: inherit; transition: border-color 0.3s;
+            border-radius: 8px; margin: 8px 0; width: 100%; box-sizing: border-box; font-family: inherit; transition: border-color 0.3s;
         }
         input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
         
         button { 
             background: var(--accent-color); color: #0f172a; font-weight: 600; font-family: inherit;
-            border: none; padding: 12px 20px; border-radius: 8px; margin: 8px 0; 
-            cursor: pointer; transition: all 0.3s; 
+            border: none; padding: 12px 20px; border-radius: 8px; margin: 8px 0; cursor: pointer; transition: all 0.3s; 
         }
         button:hover { transform: translateY(-2px); box-shadow: var(--accent-glow); opacity: 0.9; }
         
         .hidden { display: none !important; }
         
-        /* Sekme Düzenleri */
         .tabs { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
         .tab-btn { background: rgba(255,255,255,0.05); border: var(--glass-border); color: var(--text-muted); }
         .tab-active { background: var(--accent-color); color: #0f172a; border-color: var(--accent-color); box-shadow: var(--accent-glow); }
 
-        /* Rütbe Rozetleri */
         .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; margin-left: 8px; letter-spacing: 0.5px; text-transform: uppercase; }
         .badge-caylak { background: #fdba74; color: #7c2d12; }
         .badge-usta { background: var(--success-color); color: #14532d; }
         .badge-efsane { background: #c084fc; color: #4a044e; box-shadow: 0 0 10px rgba(192, 132, 252, 0.4); }
 
-        /* Chat Grid Yapısı */
         .chat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
         @media (max-width: 768px) { .chat-grid { grid-template-columns: 1fr; } }
         
-        .chat-box { 
-            background: var(--glass-bg); backdrop-filter: blur(12px); border: var(--glass-border);
-            padding: 20px; border-radius: 16px; height: 420px; display: flex; flex-direction: column; 
-        }
-        .chat-messages { 
-            flex: 1; overflow-y: auto; background: rgba(15, 23, 42, 0.5); 
-            padding: 15px; border-radius: 12px; margin-bottom: 15px; 
-            display: flex; flex-direction: column; gap: 10px;
-        }
-        
-        /* Modern Mesaj Balonları */
+        .chat-box { background: var(--glass-bg); backdrop-filter: blur(12px); border: var(--glass-border); padding: 20px; border-radius: 16px; height: 420px; display: flex; flex-direction: column; }
+        .chat-messages { flex: 1; overflow-y: auto; background: rgba(15, 23, 42, 0.5); padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
         .msg { background: rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 12px; border-left: 3px solid var(--accent-color); font-size: 14px; line-height: 1.5; }
         .msg b { color: var(--accent-color); font-weight: 600; }
 
-        /* Canlı Maskot Alanı */
-        .maskot-container { 
-            display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); 
-            padding: 12px 20px; border-radius: 16px; border: var(--glass-border); margin-bottom: 25px; 
-        }
-        .maskot-img { 
-            width: 65px; height: 65px; border-radius: 50%; 
-            background: transparent; 
-            object-fit: cover;
-            display: flex; align-items: center; justify-content: center; 
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: var(--accent-glow);
-        }
-        .maskot-bubble { 
-            background: rgba(15, 23, 42, 0.8); padding: 10px 16px; border-radius: 12px 12px 12px 4px; 
-            font-size: 14px; font-weight: 500; border: 1px solid rgba(255,255,255,0.1); 
-        }
+        .maskot-container { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 16px; border: var(--glass-border); margin-bottom: 25px; }
+        .maskot-img { width: 65px; height: 65px; border-radius: 50%; background: transparent; object-fit: cover; display: flex; align-items: center; justify-content: center; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: var(--accent-glow); }
+        .maskot-bubble { background: rgba(15, 23, 42, 0.8); padding: 10px 16px; border-radius: 12px 12px 12px 4px; font-size: 14px; font-weight: 500; border: 1px solid rgba(255,255,255,0.1); }
 
-        /* SAĞ ALT KÖŞE MİNİ FORM WIDGET */
         .mini-widget { position: fixed; bottom: 25px; right: 25px; z-index: 9999; }
-        .widget-btn { 
-            width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #fb7185, #f43f5e); 
-            color: #fff; font-size: 24px; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.4); 
-            display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; 
-        }
-        .widget-panel { 
-            position: absolute; bottom: 75px; right: 0; width: 300px; 
-            background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid rgba(244, 63, 94, 0.5); 
-            border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-        }
+        .widget-btn { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #fb7185, #f43f5e); color: #fff; font-size: 24px; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+        .widget-panel { position: absolute; bottom: 75px; right: 0; width: 300px; background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid rgba(244, 63, 94, 0.5); border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .widget-panel h4 { margin-top: 0; color: #fb7185; }
 
-        /* Scrollbar Özelleştirme */
+        /* GOOGLE ADS BANNER ALANI */
+        .ads-container { margin: 20px 0; text-align: center; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1); }
+        
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
         ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
@@ -183,13 +147,26 @@
 <div class="container">
     <div class="maskot-container">
         <img id="maskotFace" class="maskot-img" src="pusheen-cat-png-7-2329363506 (1).png" alt="Maskot">
-        <div id="maskotSpeech" class="maskot-bubble">Hoş geldin! Bugün hangi siteleri düzenliyoruz?</div>
+        <div id="maskotSpeech" class="maskot-bubble">Hoş geldin! Sistem hazır, her şey tıkırında işliyor...</div>
     </div>
 
     <header>
         <h1>📁 WebSpace Ultimate Pro</h1>
         <div id="userInfo" style="font-weight: 500; color: var(--text-muted);">Yükleniyor...</div>
     </header>
+
+    <div class="ads-container">
+        <span style="font-size: 12px; color: var(--text-muted); display:block; margin-bottom:5px;">Sponsorlu Bağlantı</span>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-0000000000000000"
+             data-ad-slot="0000000000"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
 
     <div class="tabs">
         <button id="tabDashboard" class="tab-btn tab-active" onclick="switchTab('dashboard')">🗂️ Panelim</button>
@@ -199,7 +176,6 @@
 
     <div id="authPanel" class="modal hidden">
         <h3>Giriş Yap / Sözleşmeyi Onayla</h3>
-        <p style="color: var(--text-muted); font-size: 14px;">Kendi evrenini oluşturmak için giriş yap.</p>
         <input type="email" id="authEmail" placeholder="E-posta Adresi">
         <input type="password" id="authPassword" placeholder="Şifre">
         <div style="display: flex; gap: 10px; margin-top: 10px;">
@@ -210,7 +186,7 @@
 
     <div id="dashboardSection" class="hidden">
         <div class="modal">
-            <h3>📌 Yeni Veri Ekle</h3>
+            <h3>📌 Yeni Klasör ve Site Ekle</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <input type="text" id="folderInput" placeholder="Klasör Adı (Örn: Eğitim)">
                 <input type="text" id="siteNameInput" placeholder="Site Adı (Örn: GitHub)">
@@ -227,16 +203,16 @@
                 <h3 style="margin-bottom: 10px;">🌍 Genel Chat</h3>
                 <div id="globalChatMsgs" class="chat-messages"></div>
                 <div style="display:flex; gap:10px;">
-                    <input type="text" id="globalMsgInput" placeholder="Mesajınızı yazın..." style="margin:0;">
+                    <input type="text" id="globalMsgInput" placeholder="Mesaj..." style="margin:0;">
                     <button onclick="sendChatMessage('global')" style="margin:0;">Gönder</button>
                 </div>
             </div>
             <div class="chat-box">
                 <h3 style="margin-bottom: 5px;">🔗 URL Tartışma</h3>
-                <input type="text" id="urlChatTarget" placeholder="Hakkında konuşulacak URL'yi girin" oninput="loadUrlChat()" style="margin-bottom:15px; background: rgba(0,0,0,0.2);">
+                <input type="text" id="urlChatTarget" placeholder="URL girin" oninput="loadUrlChat()" style="margin-bottom:15px; background: rgba(0,0,0,0.2);">
                 <div id="urlChatMsgs" class="chat-messages"></div>
                 <div style="display:flex; gap:10px;">
-                    <input type="text" id="urlMsgInput" placeholder="Fikrini belirt..." style="margin:0;">
+                    <input type="text" id="urlMsgInput" placeholder="Mesaj..." style="margin:0;">
                     <button onclick="sendChatMessage('url')" style="margin:0;">Gönder</button>
                 </div>
             </div>
@@ -247,23 +223,20 @@
         <div class="modal">
             <h3>🙋 Yardım Konusu Aç</h3>
             <div style="display:flex; gap:10px;">
-                <input type="text" id="helpTitleInput" placeholder="Sorununuz nedir? (Örn: CSS grid yapısını yapamadım)" style="margin:0;">
-                <button onclick="createNewHelpTopic()" style="margin:0; white-space: nowrap;">Konuyu Yayınla</button>
+                <input type="text" id="helpTitleInput" placeholder="Sorununuz nedir?" style="margin:0;">
+                <button onclick="createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
             </div>
         </div>
         <div id="helpTopicsWrapper"></div>
     </div>
 
     <div class="modal" style="margin-top:30px;">
-        <h3>⚙️ Ayarlar ve Profil</h3>
+        <h3>⚙️ Ayarlar</h3>
         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px;">
             <input type="checkbox" id="profilePublicCheck" onchange="updateProfileVisibility()" style="width: 20px; height: 20px; margin: 0;"> 
-            <span>Profilimi ve Rütbemi Herkese Açık Yap</span>
+            <span>Profilimi Herkese Açık Yap</span>
         </label>
-        <br>
-        <label style="color: var(--text-muted); font-size: 14px; margin-bottom: 5px; display: block;">Hızlı Erişim Widget'ı İçin Site Seçin:</label>
-        <input type="text" id="widgetUrlConfig" placeholder="Örn: github.com" oninput="saveWidgetConfig()">
-        <button onclick="handleLogout()" style="background: var(--danger-color); color: #fff; margin-top: 15px;">Oturumu Kapat</button>
+        <button onclick="handleLogout()" style="background: var(--danger-color); color: #fff; margin-top: 15px;">Çıkış Yap</button>
     </div>
 </div>
 
@@ -271,7 +244,7 @@
     <button class="widget-btn" onclick="toggleWidget()">⚡</button>
     <div id="widgetPanel" class="widget-panel hidden">
         <h4>🚀 Hızlı Erişim</h4>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom: 15px;">Ayarlardan seçtiğin favori sitene anında uç.</p>
+        <input type="text" id="widgetUrlConfig" placeholder="Favori site (Örn: github.com)" oninput="saveWidgetConfig()" style="margin-bottom: 10px;">
         <button id="widgetGoBtn" onclick="launchWidgetSite()" style="width:100%; background:var(--danger-color); color:#fff; border-radius: 8px;">🚀 Siteyi Başlat</button>
     </div>
 </div>
@@ -281,30 +254,11 @@
         const face = document.getElementById('maskotFace');
         const speech = document.getElementById('maskotSpeech');
         
-        if(action === 'welcome') { 
-            face.src = "pusheen-cat-png-7-2329363506 (1).png";
-            speech.innerText = "Kodlar derlendi, sistem hazır! Nereden başlıyoruz?"; 
-        }
-        if(action === 'add') { 
-            face.src = "064ee24888c1bd4798de70b6f3ced122-4153733655_350x350.gif";
-            speech.innerText = "Veritabanına eklendi! Mükemmel bir koleksiyon oluyor."; 
-            face.style.transform = "scale(1.2) rotate(5deg)"; 
-            setTimeout(() => face.style.transform="scale(1) rotate(0)", 500); 
-        }
-        if(action === 'click') { 
-            face.src = "a11a0917a45ca4f2ab2fd52a30e858ea-3541279818 (1).jpg";
-            speech.innerText = "Kemerleri bağla, hedef siteye gidiyoruz!"; 
-        }
-        if(action === 'chat') { 
-            face.src = "pusheen-cat-png-7-2329363506 (1).png";
-            speech.innerText = "Başkalarının kodlarına bakmak gibisi yok, sohbete akalım!"; 
-        }
-        if(action === 'level') { 
-            face.src = "064ee24888c1bd4798de70b6f3ced122-4153733655_350x350.gif";
-            speech.innerText = "Bir sorunu daha çözdün! Seviye atlıyorsun efsane!"; 
-            face.style.transform = "translateY(-10px)"; 
-            setTimeout(() => face.style.transform="translateY(0)", 400); 
-        }
+        if(action === 'welcome') { face.src = "pusheen-cat-png-7-2329363506 (1).png"; speech.innerText = "Kodlar derlendi, sistem hazır!"; }
+        if(action === 'add') { face.src = "064ee24888c1bd4798de70b6f3ced122-4153733655_350x350.gif"; speech.innerText = "Yeni veriyi başarıyla arşivledik!"; face.style.transform = "scale(1.2) rotate(5deg)"; setTimeout(() => face.style.transform="scale(1) rotate(0)", 500); }
+        if(action === 'click') { face.src = "a11a0917a45ca4f2ab2fd52a30e858ea-3541279818 (1).jpg"; speech.innerText = "Hedef siteye gidiyoruz!"; }
+        if(action === 'chat') { face.src = "pusheen-cat-png-7-2329363506 (1).png"; speech.innerText = "Sohbete akalım!"; }
+        if(action === 'level') { face.src = "064ee24888c1bd4798de70b6f3ced122-4153733655_350x350.gif"; speech.innerText = "Seviye atlıyorsun efsane!"; face.style.transform = "translateY(-10px)"; setTimeout(() => face.style.transform="translateY(0)", 400); }
     }
 
     function switchTab(tab) {
@@ -321,39 +275,35 @@
 
     function toggleWidget() { document.getElementById('widgetPanel').classList.toggle('hidden'); }
     function saveWidgetConfig() { localStorage.setItem('widget_fav_url', document.getElementById('widgetUrlConfig').value); }
-    function launchWidgetSite() {
-        let url = localStorage.getItem('widget_fav_url') || 'google.com';
-        if(!url.startsWith('http')) url = 'https://' + url;
-        window.open(url, '_blank', 'width=600,height=700,noopener,noreferrer');
-    }
+    function launchWidgetSite() { let url = localStorage.getItem('widget_fav_url') || 'google.com'; if(!url.startsWith('http')) url = 'https://' + url; window.open(url, '_blank', 'width=600,height=700,noopener,noreferrer'); }
 </script>
 
 <script type="module">
-    let currentUser = null;
-    let userData = { folders: {}, points: 0, isPublic: false };
-    let activeUrlChatListener = null;
+    let currentUser = null; let userData = { folders: {}, points: 0, isPublic: false }; let activeUrlChatListener = null;
 
     window.auth.onAuthStateChanged(async (user) => {
         if (user) {
-            currentUser = user;
-            document.getElementById('userInfo').innerText = `👤 ${user.email}`;
+            currentUser = user; document.getElementById('userInfo').innerText = `👤 ${user.email}`;
             document.getElementById('authPanel').classList.add('hidden');
-            switchTab('dashboard');
-            await loadUserData();
-            listenChatRoom("global_chat", "globalChatMsgs");
-            listenHelpForum();
-            triggerMaskot('welcome');
+            switchTab('dashboard'); await loadUserData(); listenChatRoom("global_chat", "globalChatMsgs"); listenHelpForum(); triggerMaskot('welcome');
         } else {
-            currentUser = null;
-            document.getElementById('authPanel').classList.remove('hidden');
-            document.getElementById('dashboardSection').classList.add('hidden');
-            document.getElementById('chatSection').classList.add('hidden');
-            document.getElementById('helpSection').classList.add('hidden');
+            currentUser = null; document.getElementById('authPanel').classList.remove('hidden');
+            document.getElementById('dashboardSection').classList.add('hidden'); document.getElementById('chatSection').classList.add('hidden'); document.getElementById('helpSection').classList.add('hidden');
         }
     });
 
-    window.handleLogin = async () => { try { await window.signInWithEmailAndPassword(window.auth, document.getElementById('authEmail').value, document.getElementById('authPassword').value); } catch(e) { alert("Hata: " + e.message); } };
-    window.handleRegister = async () => { try { await window.createUserWithEmailAndPassword(window.auth, document.getElementById('authEmail').value, document.getElementById('authPassword').value); } catch(e) { alert("Hata: " + e.message); } };
+    window.handleLogin = async () => { 
+        const email = document.getElementById('authEmail').value.trim(); const pass = document.getElementById('authPassword').value;
+        if(!email || !pass) { alert("Boş alan bırakma!"); return; }
+        try { await window.signInWithEmailAndPassword(window.auth, email, pass); } catch(e) { alert("Hata: " + e.message); } 
+    };
+
+    window.handleRegister = async () => { 
+        const email = document.getElementById('authEmail').value.trim(); const pass = document.getElementById('authPassword').value;
+        if(!email || !pass) { alert("Boş alan bırakma!"); return; }
+        try { await window.createUserWithEmailAndPassword(window.auth, email, pass); } catch(e) { alert("Hata: " + e.message); } 
+    };
+
     window.handleLogout = () => window.signOut(window.auth);
 
     async function loadUserData() {
@@ -366,65 +316,43 @@
         renderUI();
     }
 
-    function getRank(points) {
-        if(points >= 150) return { name: "Efsane", class: "badge-efsane" };
-        if(points >= 50) return { name: "Usta", class: "badge-usta" };
-        return { name: "Çaylak", class: "badge-caylak" };
-    }
+    function getRank(points) { if(points >= 150) return { name: "Efsane", class: "badge-efsane" }; if(points >= 50) return { name: "Usta", class: "badge-usta" }; return { name: "Çaylak", class: "badge-caylak" }; }
 
     function renderUI() {
-        const wrapper = document.getElementById('foldersWrapper');
-        wrapper.innerHTML = '';
+        const wrapper = document.getElementById('foldersWrapper'); wrapper.innerHTML = '';
         for (let folderName in userData.folders) {
-            let folderDiv = document.createElement('div');
-            folderDiv.className = 'folder-section';
+            let folderDiv = document.createElement('div'); folderDiv.className = 'folder-section';
             folderDiv.innerHTML = `<div class="folder-title">📁 ${folderName}</div>`;
-            let container = document.createElement('div');
-            container.className = 'links-container';
+            let container = document.createElement('div'); container.className = 'links-container';
             userData.folders[folderName].forEach(site => {
-                let card = document.createElement('div');
-                card.className = 'link-card';
-                card.innerText = site.name;
-                card.onclick = () => { triggerMaskot('click'); window.open(site.url, '_blank'); };
-                container.appendChild(card);
+                let card = document.createElement('div'); card.className = 'link-card'; card.innerText = site.name;
+                card.onclick = () => { triggerMaskot('click'); window.open(site.url, '_blank'); }; container.appendChild(card);
             });
-            folderDiv.appendChild(container);
-            wrapper.appendChild(folderDiv);
+            folderDiv.appendChild(container); wrapper.appendChild(folderDiv);
         }
     }
 
     window.addNewData = async () => {
-        const folder = document.getElementById('folderInput').value.trim();
-        const name = document.getElementById('siteNameInput').value.trim();
-        let url = document.getElementById('siteUrlInput').value.trim();
-        if(!folder || !name || !url) return;
-        if(!url.startsWith('http')) url = 'https://' + url;
+        const folder = document.getElementById('folderInput').value.trim(); const name = document.getElementById('siteNameInput').value.trim(); let url = document.getElementById('siteUrlInput').value.trim();
+        if(!folder || !name || !url) return; if(!url.startsWith('http')) url = 'https://' + url;
         if(!userData.folders[folder]) userData.folders[folder] = [];
-        userData.folders[folder].push({ name, url });
-        userData.points += 5;
+        userData.folders[folder].push({ name, url }); userData.points += 5;
         await window.firestoreTools.setDoc(window.firestoreTools.doc(window.db, "users", currentUser.uid), userData);
-        triggerMaskot('add');
-        renderUI();
+        triggerMaskot('add'); renderUI();
     };
 
-    window.updateProfileVisibility = async () => {
-        userData.isPublic = document.getElementById('profilePublicCheck').checked;
-        await window.firestoreTools.setDoc(window.firestoreTools.doc(window.db, "users", currentUser.uid), userData);
-    };
+    window.updateProfileVisibility = async () => { userData.isPublic = document.getElementById('profilePublicCheck').checked; await window.firestoreTools.setDoc(window.firestoreTools.doc(window.db, "users", currentUser.uid), userData); };
 
     function listenChatRoom(collectionPath, elementId) {
         const q = window.firestoreTools.query(window.firestoreTools.collection(window.db, collectionPath), window.firestoreTools.orderBy("timestamp", "asc"));
         return window.firestoreTools.onSnapshot(q, async (snapshot) => {
-            const box = document.getElementById(elementId);
-            box.innerHTML = '';
-            let msgs = [];
+            const box = document.getElementById(elementId); box.innerHTML = ''; let msgs = [];
             snapshot.forEach(doc => {
                 let d = doc.data(); msgs.push({id: doc.id});
                 let rankBadge = d.isPublic ? `<span class="badge ${getRank(d.points).class}">${getRank(d.points).name}</span>` : '';
                 box.innerHTML += `<div class="msg"><b>${d.user}</b>${rankBadge}: <span style="color: #cbd5e1;">${d.text}</span></div>`;
             });
-            box.scrollTop = box.scrollHeight;
-            if(msgs.length > 50) await window.firestoreTools.deleteDoc(window.firestoreTools.doc(window.db, collectionPath, msgs[0].id));
+            box.scrollTop = box.scrollHeight; if(msgs.length > 50) await window.firestoreTools.deleteDoc(window.firestoreTools.doc(window.db, collectionPath, msgs[0].id));
         });
     }
 
@@ -436,23 +364,16 @@
             inp.value = '';
         } else {
             const inp = document.getElementById('urlMsgInput'); let rawUrl = document.getElementById('urlChatTarget').value.trim();
-            if(!inp.value.trim() || !rawUrl) return;
-            let room = rawUrl.replace(/[\.\/]/g, "_");
+            if(!inp.value.trim() || !rawUrl) return; let room = rawUrl.replace(/[\.\/]/g, "_");
             await window.firestoreTools.addDoc(window.firestoreTools.collection(window.db, `url_chats/${room}/messages`), { user: nick, text: inp.value.trim(), timestamp: Date.now(), points: userData.points, isPublic: userData.isPublic });
             inp.value = '';
         }
     };
 
-    window.loadUrlChat = () => {
-        let rawUrl = document.getElementById('urlChatTarget').value.trim(); if(!rawUrl) return;
-        let room = rawUrl.replace(/[\.\/]/g, "_");
-        if(activeUrlChatListener) activeUrlChatListener();
-        activeUrlChatListener = listenChatRoom(`url_chats/${room}/messages`, "urlChatMsgs");
-    };
+    window.loadUrlChat = () => { let rawUrl = document.getElementById('urlChatTarget').value.trim(); if(!rawUrl) return; let room = rawUrl.replace(/[\.\/]/g, "_"); if(activeUrlChatListener) activeUrlChatListener(); activeUrlChatListener = listenChatRoom(`url_chats/${room}/messages`, "urlChatMsgs"); };
 
     window.createNewHelpTopic = async () => {
-        const title = document.getElementById('helpTitleInput').value.trim(); if(!title) return;
-        const nick = currentUser.email.split('@')[0];
+        const title = document.getElementById('helpTitleInput').value.trim(); if(!title) return; const nick = currentUser.email.split('@')[0];
         await window.firestoreTools.addDoc(window.firestoreTools.collection(window.db, "forum_topics"), { title, creator: nick, timestamp: Date.now(), solved: false });
         document.getElementById('helpTitleInput').value = '';
     };
@@ -460,28 +381,17 @@
     function listenHelpForum() {
         const q = window.firestoreTools.query(window.firestoreTools.collection(window.db, "forum_topics"), window.firestoreTools.orderBy("timestamp", "desc"));
         window.firestoreTools.onSnapshot(q, (snapshot) => {
-            const wrapper = document.getElementById('helpTopicsWrapper');
-            wrapper.innerHTML = '';
+            const wrapper = document.getElementById('helpTopicsWrapper'); wrapper.innerHTML = '';
             snapshot.forEach(docSnap => {
-                let topic = docSnap.data();
-                let div = document.createElement('div');
+                let topic = docSnap.data(); let div = document.createElement('div');
                 div.style = `background: var(--glass-bg); padding: 15px; border-radius: 12px; border-left: 4px solid ${topic.solved ? 'var(--success-color)' : 'var(--danger-color)'}; margin-bottom: 15px;`;
-                div.innerHTML = `
-                    <h4 style="margin:0 0 8px 0; color:var(--text-color);">🚨 ${topic.title}</h4>
-                    <p style="font-size:13px; color:var(--text-muted); margin:0 0 10px 0;">Açan: <b>${topic.creator}</b> | Durum: ${topic.solved ? '✅ Çözüldü' : '⏳ Çözüm Bekliyor'}</p>
-                    ${!topic.solved ? `<button onclick="markAsSolved('${docSnap.id}', '${topic.creator}')" style="background:var(--success-color); color:#14532d; font-size:12px; padding: 6px 12px; margin:0;">Sorunu Çözdüm (+20 Puan)</button>` : ''}
-                `;
+                div.innerHTML = `<h4 style="margin:0 0 8px 0; color:var(--text-color);">🚨 ${topic.title}</h4><p style="font-size:13px; color:var(--text-muted); margin:0 0 10px 0;">Açan: <b>${topic.creator}</b> | Durum: ${topic.solved ? '✅ Çözüldü' : '⏳ Çözüm Bekliyor'}</p>${!topic.solved ? `<button onclick="markAsSolved('${docSnap.id}', '${topic.creator}')" style="background:var(--success-color); color:#14532d; font-size:12px; padding: 6px 12px; margin:0;">Sorunu Çözdüm (+20 Puan)</button>` : ''}`;
                 wrapper.appendChild(div);
             });
         });
     }
 
-    window.markAsSolved = async (topicId, creator) => {
-        await window.firestoreTools.updateDoc(window.firestoreTools.doc(window.db, "forum_topics", topicId), { solved: true });
-        userData.points += 20;
-        await window.firestoreTools.setDoc(window.firestoreTools.doc(window.db, "users", currentUser.uid), userData);
-        triggerMaskot('level');
-    };
+    window.markAsSolved = async (topicId, creator) => { await window.firestoreTools.updateDoc(window.firestoreTools.doc(window.db, "forum_topics", topicId), { solved: true }); userData.points += 20; await window.firestoreTools.setDoc(window.firestoreTools.doc(window.db, "users", currentUser.uid), userData); triggerMaskot('level'); };
 </script>
 
 </body>
