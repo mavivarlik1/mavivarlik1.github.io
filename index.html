@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebSpace Ultimate - Plus Edition</title>
     
+    <!-- PWA (APK DÖNÜŞÜMÜ İÇİN ZORUNLU MANIFEST BAĞLANTISI) -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <link rel="apple-touch-icon" href="icon-192x192.png">
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0000000000000000" crossorigin="anonymous"></script>
+    <!-- GOOGLE ADSENSE BAĞLANTISI (SENİN YAYINCI KİMLİĞİN İLE EKLENDİ) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5865725607083870" crossorigin="anonymous"></script>
 
+    <!-- Modern Font: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
+    <!-- Firebase SDK (v10+) CDN -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -135,7 +139,7 @@
         .widget-panel h4 { margin-top: 0; color: #fb7185; }
 
         /* GOOGLE ADS BANNER ALANI */
-        .ads-container { margin: 20px 0; text-align: center; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1); }
+        .ads-container { margin: 20px 0; text-align: center; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1); overflow: hidden; min-height: 100px; display: flex; align-items: center; justify-content: center; }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
@@ -155,17 +159,20 @@
         <div id="userInfo" style="font-weight: 500; color: var(--text-muted);">Yükleniyor...</div>
     </header>
 
+    <!-- GOOGLE ADSENSE MANUEL BANNER REKLAM YERİ -->
     <div class="ads-container">
-        <span style="font-size: 12px; color: var(--text-muted); display:block; margin-bottom:5px;">Sponsorlu Bağlantı</span>
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-0000000000000000"
-             data-ad-slot="0000000000"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+        <div style="width: 100%;">
+            <span style="font-size: 12px; color: var(--text-muted); display:block; margin-bottom:5px;">Sponsorlu Bağlantı</span>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-5865725607083870"
+                 data-ad-slot="1234567890" 
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
     </div>
 
     <div class="tabs">
@@ -240,6 +247,13 @@
     </div>
 </div>
 
+<!-- 30 SANİYEDE BİR ÇIKAN ÖZEL DUYURU/REKLAM MODALI -->
+<div id="intervalAdModal" class="modal hidden" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; border: 2px solid var(--accent-color); text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.8); max-width: 90%;">
+    <h3 style="color: var(--danger-color); margin-bottom: 15px;">🌟 Sponsorlu İçerik</h3>
+    <p style="margin-bottom: 20px;">Buraya kendi sponsorlu linklerini veya özel duyurularını koyabilirsin.</p>
+    <button onclick="document.getElementById('intervalAdModal').classList.add('hidden')" style="width: 100%;">Kapat</button>
+</div>
+
 <div class="mini-widget">
     <button class="widget-btn" onclick="toggleWidget()">⚡</button>
     <div id="widgetPanel" class="widget-panel hidden">
@@ -276,6 +290,14 @@
     function toggleWidget() { document.getElementById('widgetPanel').classList.toggle('hidden'); }
     function saveWidgetConfig() { localStorage.setItem('widget_fav_url', document.getElementById('widgetUrlConfig').value); }
     function launchWidgetSite() { let url = localStorage.getItem('widget_fav_url') || 'google.com'; if(!url.startsWith('http')) url = 'https://' + url; window.open(url, '_blank', 'width=600,height=700,noopener,noreferrer'); }
+    
+    // 30 Saniyede bir çıkan özel pop-up reklamı
+    setInterval(() => {
+        const adModal = document.getElementById('intervalAdModal');
+        if(adModal) {
+            adModal.classList.remove('hidden');
+        }
+    }, 30000);
 </script>
 
 <script type="module">
