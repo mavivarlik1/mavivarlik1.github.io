@@ -19,7 +19,7 @@
     <!-- Firebase SDK CDN -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -40,6 +40,7 @@
         window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
         window.signInWithEmailAndPassword = signInWithEmailAndPassword;
         window.signOut = signOut;
+        window.sendPasswordResetEmail = sendPasswordResetEmail; // Yeni fonksiyonu tarayıcıya açtık
     </script>
 
     <style>
@@ -138,7 +139,7 @@
         /* ADS BANNER */
         .ads-container { margin: 20px 0; text-align: center; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1); min-height: 100px; }
 
-        /* YENİ: GENİŞLETİLMİŞ GÖRÜNTÜLEYİCİ MODAL STİLLERİ */
+        /* DOSYA GÖRÜNTÜLEYİCİ MODAL STİLLERİ */
         .viewer-modal-backdrop { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); display:flex; justify-content:center; align-items:center; z-index: 10000; }
         .viewer-content { background: #1e293b; border: 1px solid rgba(255,255,255,0.15); width: 80%; max-width: 800px; max-height: 85vh; border-radius: 16px; display:flex; flex-direction:column; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         .viewer-header { padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between; align-items:center; }
@@ -186,12 +187,14 @@
         <button id="tabHelp" class="tab-btn" onclick="switchTab('help')">🙋 /yardım Forumu</button>
     </div>
 
-    <!-- GİRİŞ EKRANI -->
+    <!-- GİRİŞ EKRANI (GÜNCELLENDİ: ŞİFREMİ UNUTTUM BUTONU EKLENDİ) -->
     <div id="authPanel" class="modal hidden">
         <h3>Giriş Yap veya Kayıt Ol</h3>
         <input type="email" id="authEmail" placeholder="E-posta Adresi">
         <input type="password" id="authPassword" placeholder="Şifre">
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <span onclick="handleForgotPassword()" style="color: var(--accent-color); cursor: pointer; font-size: 13px; display: inline-block; margin-top: 2px; margin-bottom: 12px; text-decoration: underline;">Şifremi Unuttum?</span>
+        
+        <div style="display: flex; gap: 10px;">
             <button onclick="handleLogin()" style="flex: 1;">Giriş Yap</button>
             <button onclick="handleRegister()" style="flex: 1; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color);">Kayıt Ol</button>
         </div>
@@ -298,24 +301,15 @@
     </div>
 </div>
 
-<!-- YENİ: DİNAMİK DOSYA GÖRÜNTÜLEYİCİ MODAL EKRANI -->
+<!-- DOSYA GÖRÜNTÜLEYİCİ MODAL EKRANI -->
 <div id="fileViewerModal" class="viewer-modal-backdrop hidden">
     <div class="viewer-content">
         <div class="viewer-header">
             <h3 id="viewerTitle" style="margin:0; color:var(--accent-color); font-size:16px;">📄 Dosya Önizleme</h3>
             <button onclick="closeFileViewer()" style="margin:0; background:rgba(255,255,255,0.1); color:white; padding:5px 12px; border-radius:6px;">✕ Kapat</button>
         </div>
-        <div id="viewerBody" class="viewer-body">
-            <!-- İçerik JavaScript ile dinamik basılacak -->
-        </div>
+        <div id="viewerBody" class="viewer-body"></div>
     </div>
-</div>
-
-<!-- 30 SANİYEDE BİR TETİKLENEN SPONSOR MODALI -->
-<div id="intervalAdModal" class="modal hidden" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; border: 2px solid var(--accent-color); text-align: center; max-width: 400px; box-shadow: 0 0 40px rgba(0,0,0,0.8);">
-    <h3 style="color: var(--danger-color);">🌟 Sponsorlu İçerik</h3>
-    <p>Sistemi desteklemek için sponsor bağlantılarına göz atabilirsiniz.</p>
-    <button onclick="document.getElementById('intervalAdModal').classList.add('hidden')" style="width:100%;">Kapat</button>
 </div>
 
 <script>
@@ -327,6 +321,7 @@
         if(action === 'file_add') speech.innerText = "Harika! Dosya başarıyla işlendi ve sisteme kaydedildi.";
         if(action === 'download') speech.innerText = "Dosya indiriliyor, disk kontrol ediliyor.";
         if(action === 'view') speech.innerText = "Dosya tarayıcı modülünde başarıyla açıldı.";
+        if(action === 'reset_mail') speech.innerText = "Şifre sıfırlama talebi Firebase bulutuna iletildi! E-postanı kontrol et.";
     }
 
     function switchTab(tab) {
@@ -338,11 +333,6 @@
         document.getElementById('chatSection').classList.toggle('hidden', tab !== 'chat');
         document.getElementById('helpSection').classList.toggle('hidden', tab !== 'help');
     }
-
-    setInterval(() => {
-        const adModal = document.getElementById('intervalAdModal');
-        if(adModal) adModal.classList.add('hidden'); // Seni rahatsız etmesin diye şimdilik kapattık
-    }, 30000);
 </script>
 
 <script type="module">
@@ -381,6 +371,21 @@
         const pass = document.getElementById('authPassword').value;
         if(!email || !pass) return alert("Boş alan bırakma!");
         try { await window.createUserWithEmailAndPassword(window.auth, email, pass); } catch(e) { alert("Hata: " + e.message); } 
+    };
+
+    // YENİ: ŞİFRE SIFIRLAMA MOTORU FONSİYONU
+    window.handleForgotPassword = async () => {
+        const email = document.getElementById('authEmail').value.trim();
+        if(!email) {
+            return alert("Şifre sıfırlama bağlantısı gönderebilmemiz için lütfen önce yukarıdaki 'E-posta Adresi' alanını doldur!");
+        }
+        try {
+            await window.sendPasswordResetEmail(window.auth, email);
+            alert("Harika! Şifre sıfırlama linki e-posta adresine başarıyla gönderildi. Lütfen gelen kutunu ve gereksiz (spam) klasörünü kontrol et.");
+            triggerMaskot('reset_mail');
+        } catch(e) {
+            alert("Şifre sıfırlama maili gönderilemedi: " + e.message);
+        }
     };
 
     window.handleLogout = () => window.signOut(window.auth);
@@ -472,7 +477,6 @@
         reader.readAsDataURL(file);
     };
 
-    // GÜNCELLENDİ: ARTIK GÖRÜNTÜLE (VIEW) BUTONU DA VAR!
     function renderFilesUI() {
         const wrapper = document.getElementById('fileStorageWrapper');
         wrapper.innerHTML = '';
@@ -500,18 +504,15 @@
         });
     }
 
-    // YENİ: DOSYA İÇERİĞİNİ AYIKLAYIP EKRENDA GÖSTEREN MOTOR
     window.viewFile = (index) => {
         const file = userData.files[index];
         const body = document.getElementById('viewerBody');
         document.getElementById('viewerTitle').innerText = `👁️ Önizleme: ${file.name}`;
         body.innerHTML = '';
 
-        // Eğer dosya bir resim ise doğrudan img tagı basıyoruz
         if (file.data.startsWith('data:image/')) {
             body.innerHTML = `<img src="${file.data}" class="viewer-img" alt="${file.name}">`;
         } 
-        // Eğer metin veya kod dosyası ise base64'ü çözüp textarea içine basıyoruz
         else if (file.data.startsWith('data:text/') || file.name.endsWith('.txt') || file.name.endsWith('.html') || file.name.endsWith('.css') || file.name.endsWith('.js')) {
             try {
                 const base64Part = file.data.split(',')[1];
@@ -521,7 +522,6 @@
                 body.innerHTML = `<p style="color:var(--danger-color)">Dosya metni çözülemedi veya format hatalı.</p>`;
             }
         } 
-        // Desteklenmeyen diğer formatlar için uyarı veriyoruz
         else {
             body.innerHTML = `<p style="color:var(--text-muted); text-align:center;">⚠️ Bu dosya formatı tarayıcı içi doğrudan açmayı desteklemiyor.<br>Lütfen bilgisayarınıza indirmek için 'İndir' butonunu kullanın.</p>`;
         }
