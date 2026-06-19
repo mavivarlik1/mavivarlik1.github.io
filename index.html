@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebSpace Ultimate Pro - Bulut Ekosistemi</title>
     
+    <link rel="icon" type="image/png" href="site_profile.png">
+    
     <meta name="description" content="WebSpace Ultimate Pro; gelişmiş bulut dosya depolama çözümleri, anlık interaktif sohbet odaları, teknik yardım forumları ve dinamik klasör paylaşım ağı sunan yeni nesil bir web uygulaması ekosistemidir.">
     <meta name="keywords" content="bulut depolama, dosya paylaşımı, canlı chat, forum, web uygulaması, pwa, teknoloji rehberi">
     
@@ -36,7 +38,6 @@
         .modal { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 25px; border-radius: 16px; border: var(--glass-border); margin-bottom: 25px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
         .modal h3 { margin-top: 0; color: var(--accent-color); font-weight: 600; }
         
-        /* Dinamik Rütbe Rozet Stilleri */
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-left: 5px; display: inline-block;}
         .badge-kurucu { background: #ef4444; color: white; box-shadow: 0 0 10px rgba(239, 68, 68, 0.6); }
         .badge-mod { background: #10b981; color: white; }
@@ -69,8 +70,6 @@
         .viewer-body { padding: 20px; overflow-y: auto; flex:1; background: #0f172a; }
         .viewer-text { width:100%; height: 350px; background:#0f172a; color:#a7f3d0; border:none; font-family: monospace; padding:15px; }
         .viewer-img { max-width:100%; max-height:60vh; object-fit:contain; }
-
-        /* GOOGLE PLAY CHECKOUT CARD TEMPLATE */
         .credit-card-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 400px; margin: 20px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
     </style>
 </head>
@@ -79,7 +78,7 @@
 <div class="container">
     <div class="maskot-container">
         <img id="maskotFace" class="maskot-img" src="pusheen-cat-png-7-2329363506 (1).png" alt="Maskot">
-        <div id="maskotSpeech" class="maskot-bubble">Sistem aktif! Misafir girişi yapıldığında yerel bellek (localStorage) devreye girer.</div>
+        <div id="maskotSpeech" class="maskot-bubble">Sistem aktif! Klasör paylaşım hatası giderildi ve vitrin güncellendi.</div>
     </div>
 
     <header>
@@ -108,13 +107,22 @@
         <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px;">
             <div>
                 <h2 style="color: var(--accent-color); margin-top:0;">WebSpace Sistem Özellikleri (Vitrin)</h2>
-                <p style="font-size: 14px; line-height: 1.6; color: var(--text-muted);">Sistemimize üye olmadan veya misafir olarak katıldığınızda tüm genel chat odalarını, yardım forumunu ve paylaşılan ortak klasörleri kısıtlamasız görüntüleyebilirsiniz. Ancak size özel dosya yükleme, klasör yaratma, rütbe puanı kazanma ve veri paylaşma özelliklerini kullanmak için ücretsiz hesap açmanız veya giriş yapmanız gerekir.</p>
-                <h4 style="color: var(--success-color); margin-bottom: 5px;">Hesap Durumu Kısıtlama Matrisi:</h4>
-                <ul style="font-size: 12px; color: var(--text-muted); padding-left: 20px;">
-                    <li><b>Giriş Yapılmadığında Gidenler:</b> Klasör Oluşturma, Dosya Yükleme, Klasör Paylaşma, Puan Kazanma ve Seviye Atlama.</li>
-                    <li><b>Giriş Yapılmadığında Kalanlar:</b> Genel Chat, URL Sohbeti, /yardım Forumu Konu Okuma, Paylaşılan Klasörleri İnceleme.</li>
+                <p style="font-size: 14px; line-height: 1.6; color: var(--text-muted);">Sistemimize kayıt olmadan misafir olarak bağlandığınızda genel chat odalarını, yardım forumunu ve ortak paylaşılan tüm klasörleri kısıtlamasız inceleyebilirsiniz.</p>
+                
+                <h4 style="color: var(--success-color); margin-bottom: 5px;">🔄 Misafir Modu Özellik Matrisi (Güncellendi):</h4>
+                <ul style="font-size: 12px; color: var(--text-muted); padding-left: 20px; line-height: 1.8;">
+                    <li><b>Misafirlerin Yapabilecekleri:</b> Tarayıcı hafızasında (LocalStorage) bağımsız yerel klasörler oluşturabilir, dosyalar yükleyebilir ve linkler haritalandırabilir.</li>
+                    <li><b>Misafirlerin Yapamayacakları (Kısıtlamalar):</b> Yerel klasörleri küresel ortak havuzda yayınlayamaz, verileri Firebase bulutuna aktaramaz, yeni yardım konusu açamaz ve rütbe puanı toplayamaz.</li>
                 </ul>
+
+                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
+                <h4 style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
+                <p style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
+                    WebSpace Ultimate Pro, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir. Platformumuz; link gruplandırma, güvenli şifreli dosya saklama, gerçek zamanlı interaktif sohbet kanalları ve topluluk destekli bir yardım forumunu tek bir çatıda birleştirir. Kullanıcı gizliliğine ve esnek veri yönetimine odaklanan vizyonumuzla, dijital dünyada sade ve güçlü bir çalışma alanı inşa etmeyi hedefliyoruz.
+                </p>
+                <p style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
             </div>
+            
             <div style="border-left: 1px solid rgba(255,255,255,0.05); padding-left: 20px;">
                 <h3>Sisteme Bağlan</h3>
                 <input type="email" id="authEmail" placeholder="E-posta Adresi">
@@ -371,7 +379,6 @@
 
     let activeUserSession = null;
 
-    // 14 AŞAMALI "ALATICI/OLATICI" REKABET SEVİYE MOTORU
     window.calculateRank = function(points, email, role) {
         if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu 👑", class: "badge-kurucu" };
         if(role === 'mod') return { name: "Moderatör 🛠️", class: "badge-mod" };
@@ -394,7 +401,6 @@
         return { name: "Çaylaklatıcı", class: "badge-user" };
     }
 
-    // 10 YAŞ GÜVENLİ BANKA TRANSFER DETEKTÖRÜ
     window.handleCardPayment = () => {
         if(window.isCurrentUserGuest) return alert("Ödeme yapabilmek için misafir modundan çıkıp gerçek bir hesap açmalısın!");
         
@@ -456,7 +462,6 @@
             window.location.hash = '#dashboard';
         }
 
-        // Hiyerarşik Yönetim Yetkilendirmeleri
         if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') {
             document.getElementById('tabAdmin').classList.remove('hidden');
             document.getElementById('optModRole').classList.remove('hidden');
