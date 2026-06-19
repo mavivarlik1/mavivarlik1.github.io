@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSpace Ultimate - Plus Edition</title>
+    <title>WebSpace Ultimate - Pro File Edition</title>
     
-    <!-- PWA (APK DÖNÜŞÜMÜ İÇİN ZORUNLU MANIFEST BAĞLANTISI) -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <link rel="apple-touch-icon" href="icon-192x192.png">
 
-    <!-- GOOGLE ADSENSE BAĞLANTISI (SENİN YAYINCI KİMLİĞİN İLE EKLENDİ) -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5865725607083870" crossorigin="anonymous"></script>
 
-    <!-- Modern Font: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK (v10+) CDN -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -43,7 +39,6 @@
     </script>
 
     <style>
-        /* YENİLENMİŞ MODERN CSS (GLASSMORPHISM & GLOW EFEKTLERİ) */
         :root { 
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             --glass-bg: rgba(30, 41, 59, 0.6);
@@ -83,26 +78,20 @@
         
         .modal h3 { margin-top: 0; color: var(--accent-color); font-weight: 600; }
 
-        .folder-section { 
-            background: var(--glass-bg); backdrop-filter: blur(10px); padding: 20px; 
-            border-radius: 16px; border: var(--glass-border); margin-top: 20px; 
+        .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
+        .file-item { 
+            background: rgba(15, 23, 42, 0.7); border: var(--glass-border); padding: 15px; 
+            border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px;
         }
-        .folder-title { font-weight: 600; font-size: 18px; color: var(--text-color); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        
-        .links-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-        .link-card { 
-            background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 12px; 
-            text-align: center; border: 1px solid rgba(255,255,255,0.05); 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; font-weight: 500;
-        }
-        .link-card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--accent-color); background: var(--card-hover); box-shadow: var(--accent-glow); }
+        .file-info { font-size: 14px; font-weight: 500; word-break: break-all; }
+        .file-size { font-size: 11px; color: var(--text-muted); }
 
-        input, select { 
+        input, select, textarea { 
             background: rgba(15, 23, 42, 0.8); color: var(--text-color); 
             border: 1px solid rgba(255,255,255,0.1); padding: 12px 16px; 
             border-radius: 8px; margin: 8px 0; width: 100%; box-sizing: border-box; font-family: inherit; transition: border-color 0.3s;
         }
-        input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
+        input:focus, textarea:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
         
         button { 
             background: var(--accent-color); color: #0f172a; font-weight: 600; font-family: inherit;
@@ -116,30 +105,19 @@
         .tab-btn { background: rgba(255,255,255,0.05); border: var(--glass-border); color: var(--text-muted); }
         .tab-active { background: var(--accent-color); color: #0f172a; border-color: var(--accent-color); box-shadow: var(--accent-glow); }
 
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; margin-left: 8px; letter-spacing: 0.5px; text-transform: uppercase; }
-        .badge-caylak { background: #fdba74; color: #7c2d12; }
-        .badge-usta { background: var(--success-color); color: #14532d; }
-        .badge-efsane { background: #c084fc; color: #4a044e; box-shadow: 0 0 10px rgba(192, 132, 252, 0.4); }
-
         .chat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
         @media (max-width: 768px) { .chat-grid { grid-template-columns: 1fr; } }
         
         .chat-box { background: var(--glass-bg); backdrop-filter: blur(12px); border: var(--glass-border); padding: 20px; border-radius: 16px; height: 420px; display: flex; flex-direction: column; }
         .chat-messages { flex: 1; overflow-y: auto; background: rgba(15, 23, 42, 0.5); padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { background: rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 12px; border-left: 3px solid var(--accent-color); font-size: 14px; line-height: 1.5; }
-        .msg b { color: var(--accent-color); font-weight: 600; }
+        .msg { background: rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 12px; border-left: 3px solid var(--accent-color); font-size: 14px; }
 
         .maskot-container { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 16px; border: var(--glass-border); margin-bottom: 25px; }
-        .maskot-img { width: 65px; height: 65px; border-radius: 50%; background: transparent; object-fit: cover; display: flex; align-items: center; justify-content: center; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: var(--accent-glow); }
+        .maskot-img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; box-shadow: var(--accent-glow); }
         .maskot-bubble { background: rgba(15, 23, 42, 0.8); padding: 10px 16px; border-radius: 12px 12px 12px 4px; font-size: 14px; font-weight: 500; border: 1px solid rgba(255,255,255,0.1); }
 
-        .mini-widget { position: fixed; bottom: 25px; right: 25px; z-index: 9999; }
-        .widget-btn { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #fb7185, #f43f5e); color: #fff; font-size: 24px; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
-        .widget-panel { position: absolute; bottom: 75px; right: 0; width: 300px; background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid rgba(244, 63, 94, 0.5); border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .widget-panel h4 { margin-top: 0; color: #fb7185; }
-
-        /* GOOGLE ADS BANNER ALANI */
-        .ads-container { margin: 20px 0; text-align: center; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1); overflow: hidden; min-height: 100px; display: flex; align-items: center; justify-content: center; }
+        /* ADS BANNER */
+        .ads-container { margin: 20px 0; text-align: center; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1); min-height: 100px; }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
@@ -151,7 +129,7 @@
 <div class="container">
     <div class="maskot-container">
         <img id="maskotFace" class="maskot-img" src="pusheen-cat-png-7-2329363506 (1).png" alt="Maskot">
-        <div id="maskotSpeech" class="maskot-bubble">Hoş geldin! Sistem hazır, her şey tıkırında işliyor...</div>
+        <div id="maskotSpeech" class="maskot-bubble">Sistem aktif! Dosya yükleme ve oluşturma modülleri entegre edildi.</div>
     </div>
 
     <header>
@@ -159,30 +137,27 @@
         <div id="userInfo" style="font-weight: 500; color: var(--text-muted);">Yükleniyor...</div>
     </header>
 
-    <!-- GOOGLE ADSENSE MANUEL BANNER REKLAM YERİ -->
     <div class="ads-container">
-        <div style="width: 100%;">
-            <span style="font-size: 12px; color: var(--text-muted); display:block; margin-bottom:5px;">Sponsorlu Bağlantı</span>
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-5865725607083870"
-                 data-ad-slot="1234567890" 
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
+        <span style="font-size: 12px; color: var(--text-muted); display:block; margin-bottom:5px;">Sponsorlu Reklam Alanı</span>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-5865725607083870"
+             data-ad-slot="1234567890" 
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
 
     <div class="tabs">
-        <button id="tabDashboard" class="tab-btn tab-active" onclick="switchTab('dashboard')">🗂️ Panelim</button>
+        <button id="tabDashboard" class="tab-btn tab-active" onclick="switchTab('dashboard')">🗂️ Dosya & Link Merkezi</button>
         <button id="tabChat" class="tab-btn" onclick="switchTab('chat')">💬 /chat Odaları</button>
         <button id="tabHelp" class="tab-btn" onclick="switchTab('help')">🙋 /yardım Forumu</button>
     </div>
 
     <div id="authPanel" class="modal hidden">
-        <h3>Giriş Yap / Sözleşmeyi Onayla</h3>
+        <h3>Giriş Yap veya Kayıt Ol</h3>
         <input type="email" id="authEmail" placeholder="E-posta Adresi">
         <input type="password" id="authPassword" placeholder="Şifre">
         <div style="display: flex; gap: 10px; margin-top: 10px;">
@@ -192,14 +167,39 @@
     </div>
 
     <div id="dashboardSection" class="hidden">
+        
+        <div class="modal" style="border: 1px solid rgba(56, 189, 248, 0.3);">
+            <h3>🚀 Dosya Oluşturma ve Yükleme Paneli</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="border-right: 1px solid rgba(255,255,255,0.05); padding-right: 15px;">
+                    <h4 style="margin:0; color: var(--accent-color);">📄 Sıfırdan Dosya Oluştur</h4>
+                    <input type="text" id="newFileName" placeholder="Dosya Adı (Örn: notlar.txt)">
+                    <textarea id="newFileContent" placeholder="Dosya içeriğini buraya yazın..." rows="3"></textarea>
+                    <button onclick="createNewTextFile()" style="width: 100%;">Dosyayı Sisteme Kaydet</button>
+                </div>
+                <div>
+                    <h4 style="margin:0; color: var(--success-color);">📤 Bilgisayardan Dosya Yükle</h4>
+                    <p style="font-size: 12px; color: var(--text-muted);">Cihazındaki herhangi bir dosyayı seçerek sisteme aktar.</p>
+                    <input type="file" id="localFileUploader" style="padding: 5px;">
+                    <button onclick="uploadLocalFile()" style="width: 100%; background: var(--success-color); color: #064e3b;">Dosyayı Yükle</button>
+                </div>
+            </div>
+            
+            <hr style="border:0; border-top: 1px solid rgba(255,255,255,0.05); margin: 20px 0;">
+            
+            <h4>📂 Kayıtlı Dosyaların</h4>
+            <div id="fileStorageWrapper" class="file-grid">
+                </div>
+        </div>
+
         <div class="modal">
-            <h3>📌 Yeni Klasör ve Site Ekle</h3>
+            <h3>📌 Hızlı Klasör ve Site Linki Ekle</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <input type="text" id="folderInput" placeholder="Klasör Adı (Örn: Eğitim)">
-                <input type="text" id="siteNameInput" placeholder="Site Adı (Örn: GitHub)">
+                <input type="text" id="folderInput" placeholder="Klasör Adı (Örn: Projeler)">
+                <input type="text" id="siteNameInput" placeholder="Site Başlığı">
             </div>
             <input type="text" id="siteUrlInput" placeholder="URL adresi (https://...)">
-            <button onclick="addNewData()" style="width: 100%;">Klasöre Ekle</button>
+            <button onclick="addNewData()" style="width: 100%;">Klasöre Link Ekle</button>
         </div>
         <div id="foldersWrapper"></div>
     </div>
@@ -207,7 +207,7 @@
     <div id="chatSection" class="hidden">
         <div class="chat-grid">
             <div class="chat-box">
-                <h3 style="margin-bottom: 10px;">🌍 Genel Chat</h3>
+                <h3>🌍 Genel Chat</h3>
                 <div id="globalChatMsgs" class="chat-messages"></div>
                 <div style="display:flex; gap:10px;">
                     <input type="text" id="globalMsgInput" placeholder="Mesaj..." style="margin:0;">
@@ -215,8 +215,8 @@
                 </div>
             </div>
             <div class="chat-box">
-                <h3 style="margin-bottom: 5px;">🔗 URL Tartışma</h3>
-                <input type="text" id="urlChatTarget" placeholder="URL girin" oninput="loadUrlChat()" style="margin-bottom:15px; background: rgba(0,0,0,0.2);">
+                <h3>🔗 URL Tartışma</h3>
+                <input type="text" id="urlChatTarget" placeholder="URL girin" oninput="loadUrlChat()" style="margin-bottom:15px;">
                 <div id="urlChatMsgs" class="chat-messages"></div>
                 <div style="display:flex; gap:10px;">
                     <input type="text" id="urlMsgInput" placeholder="Mesaj..." style="margin:0;">
@@ -239,40 +239,23 @@
 
     <div class="modal" style="margin-top:30px;">
         <h3>⚙️ Ayarlar</h3>
-        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px;">
-            <input type="checkbox" id="profilePublicCheck" onchange="updateProfileVisibility()" style="width: 20px; height: 20px; margin: 0;"> 
-            <span>Profilimi Herkese Açık Yap</span>
-        </label>
-        <button onclick="handleLogout()" style="background: var(--danger-color); color: #fff; margin-top: 15px;">Çıkış Yap</button>
+        <button onclick="handleLogout()" style="background: var(--danger-color); color: #fff;">Sistemden Çıkış Yap</button>
     </div>
 </div>
 
-<!-- 30 SANİYEDE BİR ÇIKAN ÖZEL DUYURU/REKLAM MODALI -->
-<div id="intervalAdModal" class="modal hidden" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; border: 2px solid var(--accent-color); text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.8); max-width: 90%;">
-    <h3 style="color: var(--danger-color); margin-bottom: 15px;">🌟 Sponsorlu İçerik</h3>
-    <p style="margin-bottom: 20px;">Buraya kendi sponsorlu linklerini veya özel duyurularını koyabilirsin.</p>
-    <button onclick="document.getElementById('intervalAdModal').classList.add('hidden')" style="width: 100%;">Kapat</button>
-</div>
-
-<div class="mini-widget">
-    <button class="widget-btn" onclick="toggleWidget()">⚡</button>
-    <div id="widgetPanel" class="widget-panel hidden">
-        <h4>🚀 Hızlı Erişim</h4>
-        <input type="text" id="widgetUrlConfig" placeholder="Favori site (Örn: github.com)" oninput="saveWidgetConfig()" style="margin-bottom: 10px;">
-        <button id="widgetGoBtn" onclick="launchWidgetSite()" style="width:100%; background:var(--danger-color); color:#fff; border-radius: 8px;">🚀 Siteyi Başlat</button>
-    </div>
+<div id="intervalAdModal" class="modal hidden" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; border: 2px solid var(--accent-color); text-align: center; max-width: 400px; box-shadow: 0 0 40px rgba(0,0,0,0.8);">
+    <h3 style="color: var(--danger-color);">🌟 Sponsorlu İçerik</h3>
+    <p>Sistemi desteklemek için sponsor bağlantılarına göz atabilirsiniz.</p>
+    <button onclick="document.getElementById('intervalAdModal').classList.add('hidden')" style="width:100%;">Kapat</button>
 </div>
 
 <script>
     function triggerMaskot(action) {
         const face = document.getElementById('maskotFace');
         const speech = document.getElementById('maskotSpeech');
-        
-        if(action === 'welcome') { face.src = "pusheen-cat-png-7-2329363506 (1).png"; speech.innerText = "Kodlar derlendi, sistem hazır!"; }
-        if(action === 'add') { face.src = "064ee24888c1bd4798de70b6f3ced122-4153733655_350x350.gif"; speech.innerText = "Yeni veriyi başarıyla arşivledik!"; face.style.transform = "scale(1.2) rotate(5deg)"; setTimeout(() => face.style.transform="scale(1) rotate(0)", 500); }
-        if(action === 'click') { face.src = "a11a0917a45ca4f2ab2fd52a30e858ea-3541279818 (1).jpg"; speech.innerText = "Hedef siteye gidiyoruz!"; }
-        if(action === 'chat') { face.src = "pusheen-cat-png-7-2329363506 (1).png"; speech.innerText = "Sohbete akalım!"; }
-        if(action === 'level') { face.src = "064ee24888c1bd4798de70b6f3ced122-4153733655_350x350.gif"; speech.innerText = "Seviye atlıyorsun efsane!"; face.style.transform = "translateY(-10px)"; setTimeout(() => face.style.transform="translateY(0)", 400); }
+        if(action === 'welcome') speech.innerText = "Kodlar stabil, veri transferi güvenli!";
+        if(action === 'file_add') speech.innerText = "Harika! Dosya başarıyla işlendi ve sisteme kaydedildi.";
+        if(action === 'download') speech.innerText = "Dosya indiriliyor, disk kontrol ediliyor.";
     }
 
     function switchTab(tab) {
@@ -283,46 +266,50 @@
         document.getElementById('dashboardSection').classList.toggle('hidden', tab !== 'dashboard');
         document.getElementById('chatSection').classList.toggle('hidden', tab !== 'chat');
         document.getElementById('helpSection').classList.toggle('hidden', tab !== 'help');
-        
-        if(tab === 'chat') triggerMaskot('chat');
     }
 
-    function toggleWidget() { document.getElementById('widgetPanel').classList.toggle('hidden'); }
-    function saveWidgetConfig() { localStorage.setItem('widget_fav_url', document.getElementById('widgetUrlConfig').value); }
-    function launchWidgetSite() { let url = localStorage.getItem('widget_fav_url') || 'google.com'; if(!url.startsWith('http')) url = 'https://' + url; window.open(url, '_blank', 'width=600,height=700,noopener,noreferrer'); }
-    
-    // 30 Saniyede bir çıkan özel pop-up reklamı
+    // 30 Saniyede bir reklam tetikleyici döngü
     setInterval(() => {
         const adModal = document.getElementById('intervalAdModal');
-        if(adModal) {
-            adModal.classList.remove('hidden');
-        }
+        if(adModal) adModal.classList.remove('hidden');
     }, 30000);
 </script>
 
 <script type="module">
-    let currentUser = null; let userData = { folders: {}, points: 0, isPublic: false }; let activeUrlChatListener = null;
+    let currentUser = null; 
+    let userData = { folders: {}, files: [], points: 0, isPublic: false }; 
+    let activeUrlChatListener = null;
 
     window.auth.onAuthStateChanged(async (user) => {
         if (user) {
-            currentUser = user; document.getElementById('userInfo').innerText = `👤 ${user.email}`;
+            currentUser = user; 
+            document.getElementById('userInfo').innerText = `👤 ${user.email}`;
             document.getElementById('authPanel').classList.add('hidden');
-            switchTab('dashboard'); await loadUserData(); listenChatRoom("global_chat", "globalChatMsgs"); listenHelpForum(); triggerMaskot('welcome');
+            switchTab('dashboard'); 
+            await loadUserData(); 
+            listenChatRoom("global_chat", "globalChatMsgs"); 
+            listenHelpForum(); 
+            triggerMaskot('welcome');
         } else {
-            currentUser = null; document.getElementById('authPanel').classList.remove('hidden');
-            document.getElementById('dashboardSection').classList.add('hidden'); document.getElementById('chatSection').classList.add('hidden'); document.getElementById('helpSection').classList.add('hidden');
+            currentUser = null; 
+            document.getElementById('authPanel').classList.remove('hidden');
+            document.getElementById('dashboardSection').classList.add('hidden'); 
+            document.getElementById('chatSection').classList.add('hidden'); 
+            document.getElementById('helpSection').classList.add('hidden');
         }
     });
 
     window.handleLogin = async () => { 
-        const email = document.getElementById('authEmail').value.trim(); const pass = document.getElementById('authPassword').value;
-        if(!email || !pass) { alert("Boş alan bırakma!"); return; }
+        const email = document.getElementById('authEmail').value.trim(); 
+        const pass = document.getElementById('authPassword').value;
+        if(!email || !pass) return alert("Boş alan bırakma!");
         try { await window.signInWithEmailAndPassword(window.auth, email, pass); } catch(e) { alert("Hata: " + e.message); } 
     };
 
     window.handleRegister = async () => { 
-        const email = document.getElementById('authEmail').value.trim(); const pass = document.getElementById('authPassword').value;
-        if(!email || !pass) { alert("Boş alan bırakma!"); return; }
+        const email = document.getElementById('authEmail').value.trim(); 
+        const pass = document.getElementById('authPassword').value;
+        if(!email || !pass) return alert("Boş alan bırakma!");
         try { await window.createUserWithEmailAndPassword(window.auth, email, pass); } catch(e) { alert("Hata: " + e.message); } 
     };
 
@@ -331,50 +318,136 @@
     async function loadUserData() {
         const docRef = window.firestoreTools.doc(window.db, "users", currentUser.uid);
         const docSnap = await window.firestoreTools.getDoc(docRef);
-        if(docSnap.exists()) { userData = docSnap.data(); if(!userData.points) userData.points = 0; } 
-        else { userData = { folders: {}, points: 0, isPublic: false }; }
-        document.getElementById('profilePublicCheck').checked = userData.isPublic || false;
-        document.getElementById('widgetUrlConfig').value = localStorage.getItem('widget_fav_url') || '';
+        if(docSnap.exists()) { 
+            userData = docSnap.data(); 
+            if(!userData.folders) userData.folders = {};
+            if(!userData.files) userData.files = [];
+        } else { 
+            userData = { folders: {}, files: [], points: 0, isPublic: false }; 
+        }
         renderUI();
+        renderFilesUI();
     }
 
-    function getRank(points) { if(points >= 150) return { name: "Efsane", class: "badge-efsane" }; if(points >= 50) return { name: "Usta", class: "badge-usta" }; return { name: "Çaylak", class: "badge-caylak" }; }
+    // 1. SIFIRDAN METİN DOSYASI OLUŞTURMA FONKSİYONU
+    window.createNewTextFile = async () => {
+        const name = document.getElementById('newFileName').value.trim();
+        const content = document.getElementById('newFileContent').value;
+        if(!name) return alert("Lütfen bir dosya adı girin!");
 
-    function renderUI() {
-        const wrapper = document.getElementById('foldersWrapper'); wrapper.innerHTML = '';
-        for (let folderName in userData.folders) {
-            let folderDiv = document.createElement('div'); folderDiv.className = 'folder-section';
-            folderDiv.innerHTML = `<div class="folder-title">📁 ${folderName}</div>`;
-            let container = document.createElement('div'); container.className = 'links-container';
-            userData.folders[folderName].forEach(site => {
-                let card = document.createElement('div'); card.className = 'link-card'; card.innerText = site.name;
-                card.onclick = () => { triggerMaskot('click'); window.open(site.url, '_blank'); }; container.appendChild(card);
-            });
-            folderDiv.appendChild(container); wrapper.appendChild(folderDiv);
+        const base64Content = btoa(unescape(encodeURIComponent(content))); // Güvenli veri dönüşümü
+        const newFile = { name: name, size: content.length + " bytes", data: "data:text/plain;base64," + base64Content };
+        
+        userData.files.push(newFile);
+        await saveToFirebase();
+        
+        document.getElementById('newFileName').value = '';
+        document.getElementById('newFileContent').value = '';
+        renderFilesUI();
+        triggerMaskot('file_add');
+    };
+
+    // 2. BİLGİSAYARDAN DOSYA SEÇİP YÜKLEME FONKSİYONU
+    window.uploadLocalFile = () => {
+        const fileInput = document.getElementById('localFileUploader');
+        if(fileInput.files.length === 0) return alert("Lütfen önce bilgisayarınızdan bir dosya seçin!");
+        
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = async (e) => {
+            const uploadedFile = { name: file.name, size: (file.size / 1024).toFixed(2) + " KB", data: e.target.result };
+            userData.files.push(uploadedFile);
+            await saveToFirebase();
+            fileInput.value = '';
+            renderFilesUI();
+            triggerMaskot('file_add');
+        };
+        reader.readAsDataURL(file); // Dosyayı koda entegre edilebilir veri tipine çevirir
+    };
+
+    // DOSYALARI EKRANDA LİSTELEME VE İNDİRME BUTONU YAPILANDIRMASI
+    function renderFilesUI() {
+        const wrapper = document.getElementById('fileStorageWrapper');
+        wrapper.innerHTML = '';
+        if(userData.files.length === 0) {
+            wrapper.innerHTML = `<p style="font-size:13px; color:var(--text-muted); grid-column: 1/-1;">Sistemde kayıtlı dosya bulunmuyor.</p>`;
+            return;
+        }
+        userData.files.forEach((file, index) => {
+            let div = document.createElement('div');
+            div.className = 'file-item';
+            div.innerHTML = `
+                <div>
+                    <div class="file-info">📄 ${file.name}</div>
+                    <div class="file-size">${file.size}</div>
+                </div>
+                <div style="display:flex; gap:5px;">
+                    <a href="${file.data}" download="${file.name}" onclick="triggerMaskot('download')" style="flex:1; text-align:center; background:var(--accent-color); color:#0f172a; text-decoration:none; padding:6px; font-size:12px; font-weight:600; border-radius:6px;">İndir</a>
+                    <button onclick="deleteStoredFile(${index})" style="background:var(--danger-color); color:#white; margin:0; padding:6px; font-size:12px; border-radius:6px;">Sil</button>
+                </div>
+            `;
+            wrapper.appendChild(div);
+        });
+    }
+
+    window.deleteStoredFile = async (index) => {
+        userData.files.splice(index, 1);
+        await saveToFirebase();
+        renderFilesUI();
+    };
+
+    async function saveToFirebase() {
+        if(currentUser) {
+            await window.firestoreTools.setDoc(window.firestoreTools.doc(window.db, "users", currentUser.uid), userData);
         }
     }
 
+    // LİNK KATEGORİSİ EKLEME ALANI
     window.addNewData = async () => {
-        const folder = document.getElementById('folderInput').value.trim(); const name = document.getElementById('siteNameInput').value.trim(); let url = document.getElementById('siteUrlInput').value.trim();
-        if(!folder || !name || !url) return; if(!url.startsWith('http')) url = 'https://' + url;
+        const folder = document.getElementById('folderInput').value.trim(); 
+        const name = document.getElementById('siteNameInput').value.trim(); 
+        let url = document.getElementById('siteUrlInput').value.trim();
+        if(!folder || !name || !url) return; 
+        if(!url.startsWith('http')) url = 'https://' + url;
+        
         if(!userData.folders[folder]) userData.folders[folder] = [];
-        userData.folders[folder].push({ name, url }); userData.points += 5;
-        await window.firestoreTools.setDoc(window.firestoreTools.doc(window.db, "users", currentUser.uid), userData);
-        triggerMaskot('add'); renderUI();
+        userData.folders[folder].push({ name, url });
+        await saveToFirebase();
+        renderUI();
     };
 
-    window.updateProfileVisibility = async () => { userData.isPublic = document.getElementById('profilePublicCheck').checked; await window.firestoreTools.setDoc(window.firestoreTools.doc(window.db, "users", currentUser.uid), userData); };
+    function renderUI() {
+        const wrapper = document.getElementById('foldersWrapper'); 
+        wrapper.innerHTML = '';
+        for (let folderName in userData.folders) {
+            let folderDiv = document.createElement('div'); 
+            folderDiv.className = 'folder-section';
+            folderDiv.innerHTML = `<div class="folder-title">📁 ${folderName}</div>`;
+            let container = document.createElement('div'); 
+            container.className = 'links-container';
+            userData.folders[folderName].forEach(site => {
+                let card = document.createElement('div'); 
+                card.className = 'link-card'; 
+                card.innerText = site.name;
+                card.onclick = () => window.open(site.url, '_blank'); 
+                container.appendChild(card);
+            });
+            folderDiv.appendChild(container); 
+            wrapper.appendChild(folderDiv);
+        }
+    }
 
+    // SOHBET ALTYAPISI
     function listenChatRoom(collectionPath, elementId) {
         const q = window.firestoreTools.query(window.firestoreTools.collection(window.db, collectionPath), window.firestoreTools.orderBy("timestamp", "asc"));
         return window.firestoreTools.onSnapshot(q, async (snapshot) => {
-            const box = document.getElementById(elementId); box.innerHTML = ''; let msgs = [];
+            const box = document.getElementById(elementId); box.innerHTML = '';
             snapshot.forEach(doc => {
-                let d = doc.data(); msgs.push({id: doc.id});
-                let rankBadge = d.isPublic ? `<span class="badge ${getRank(d.points).class}">${getRank(d.points).name}</span>` : '';
-                box.innerHTML += `<div class="msg"><b>${d.user}</b>${rankBadge}: <span style="color: #cbd5e1;">${d.text}</span></div>`;
+                let d = doc.data();
+                box.innerHTML += `<div class="msg"><b>${d.user}</b>: <span style="color: #cbd5e1;">${d.text}</span></div>`;
             });
-            box.scrollTop = box.scrollHeight; if(msgs.length > 50) await window.firestoreTools.deleteDoc(window.firestoreTools.doc(window.db, collectionPath, msgs[0].id));
+            box.scrollTop = box.scrollHeight;
         });
     }
 
@@ -382,18 +455,24 @@
         const nick = currentUser.email.split('@')[0];
         if(type === 'global') {
             const inp = document.getElementById('globalMsgInput'); if(!inp.value.trim()) return;
-            await window.firestoreTools.addDoc(window.firestoreTools.collection(window.db, "global_chat"), { user: nick, text: inp.value.trim(), timestamp: Date.now(), points: userData.points, isPublic: userData.isPublic });
+            await window.firestoreTools.addDoc(window.firestoreTools.collection(window.db, "global_chat"), { user: nick, text: inp.value.trim(), timestamp: Date.now() });
             inp.value = '';
         } else {
             const inp = document.getElementById('urlMsgInput'); let rawUrl = document.getElementById('urlChatTarget').value.trim();
             if(!inp.value.trim() || !rawUrl) return; let room = rawUrl.replace(/[\.\/]/g, "_");
-            await window.firestoreTools.addDoc(window.firestoreTools.collection(window.db, `url_chats/${room}/messages`), { user: nick, text: inp.value.trim(), timestamp: Date.now(), points: userData.points, isPublic: userData.isPublic });
+            await window.firestoreTools.addDoc(window.firestoreTools.collection(window.db, `url_chats/${room}/messages`), { user: nick, text: inp.value.trim(), timestamp: Date.now() });
             inp.value = '';
         }
     };
 
-    window.loadUrlChat = () => { let rawUrl = document.getElementById('urlChatTarget').value.trim(); if(!rawUrl) return; let room = rawUrl.replace(/[\.\/]/g, "_"); if(activeUrlChatListener) activeUrlChatListener(); activeUrlChatListener = listenChatRoom(`url_chats/${room}/messages`, "urlChatMsgs"); };
+    window.loadUrlChat = () => { 
+        let rawUrl = document.getElementById('urlChatTarget').value.trim(); if(!rawUrl) return; 
+        let room = rawUrl.replace(/[\.\/]/g, "_"); 
+        if(activeUrlChatListener) activeUrlChatListener(); 
+        activeUrlChatListener = listenChatRoom(`url_chats/${room}/messages`, "urlChatMsgs"); 
+    };
 
+    // FORUM ALTYAPISI
     window.createNewHelpTopic = async () => {
         const title = document.getElementById('helpTitleInput').value.trim(); if(!title) return; const nick = currentUser.email.split('@')[0];
         await window.firestoreTools.addDoc(window.firestoreTools.collection(window.db, "forum_topics"), { title, creator: nick, timestamp: Date.now(), solved: false });
@@ -406,14 +485,12 @@
             const wrapper = document.getElementById('helpTopicsWrapper'); wrapper.innerHTML = '';
             snapshot.forEach(docSnap => {
                 let topic = docSnap.data(); let div = document.createElement('div');
-                div.style = `background: var(--glass-bg); padding: 15px; border-radius: 12px; border-left: 4px solid ${topic.solved ? 'var(--success-color)' : 'var(--danger-color)'}; margin-bottom: 15px;`;
-                div.innerHTML = `<h4 style="margin:0 0 8px 0; color:var(--text-color);">🚨 ${topic.title}</h4><p style="font-size:13px; color:var(--text-muted); margin:0 0 10px 0;">Açan: <b>${topic.creator}</b> | Durum: ${topic.solved ? '✅ Çözüldü' : '⏳ Çözüm Bekliyor'}</p>${!topic.solved ? `<button onclick="markAsSolved('${docSnap.id}', '${topic.creator}')" style="background:var(--success-color); color:#14532d; font-size:12px; padding: 6px 12px; margin:0;">Sorunu Çözdüm (+20 Puan)</button>` : ''}`;
+                div.style = `background: var(--glass-bg); padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left:4px solid var(--accent-color);`;
+                div.innerHTML = `<h4 style="margin:0;">🚨 ${topic.title}</h4><p style="font-size:13px; color:var(--text-muted); margin:5px 0 0 0;">Açan: <b>${topic.creator}</b></p>`;
                 wrapper.appendChild(div);
             });
         });
     }
-
-    window.markAsSolved = async (topicId, creator) => { await window.firestoreTools.updateDoc(window.firestoreTools.doc(window.db, "forum_topics", topicId), { solved: true }); userData.points += 20; await window.firestoreTools.setDoc(window.firestoreTools.doc(window.db, "users", currentUser.uid), userData); triggerMaskot('level'); };
 </script>
 
 </body>
