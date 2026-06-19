@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSpace Ultimate - Pro File Edition</title>
+    <title>WebSpace Ultimate - Pro Folder Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
@@ -86,12 +86,27 @@
         .file-info { font-size: 14px; font-weight: 500; word-break: break-all; }
         .file-size { font-size: 11px; color: var(--text-muted); }
 
+        .folder-section { 
+            background: var(--glass-bg); backdrop-filter: blur(10px); padding: 20px; 
+            border-radius: 16px; border: var(--glass-border); margin-top: 20px; 
+        }
+        .folder-title { font-weight: 600; font-size: 18px; color: var(--text-color); margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+        .links-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+        .link-card { 
+            background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 12px; 
+            text-align: center; border: 1px solid rgba(255,255,255,0.05); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; font-weight: 500;
+        }
+        .link-card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--accent-color); background: var(--card-hover); box-shadow: var(--accent-glow); }
+
         input, select, textarea { 
             background: rgba(15, 23, 42, 0.8); color: var(--text-color); 
             border: 1px solid rgba(255,255,255,0.1); padding: 12px 16px; 
             border-radius: 8px; margin: 8px 0; width: 100%; box-sizing: border-box; font-family: inherit; transition: border-color 0.3s;
         }
-        input:focus, textarea:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
+        select option { background: #1e293b; color: var(--text-color); }
         
         button { 
             background: var(--accent-color); color: #0f172a; font-weight: 600; font-family: inherit;
@@ -129,7 +144,7 @@
 <div class="container">
     <div class="maskot-container">
         <img id="maskotFace" class="maskot-img" src="pusheen-cat-png-7-2329363506 (1).png" alt="Maskot">
-        <div id="maskotSpeech" class="maskot-bubble">Sistem aktif! Dosya yükleme ve oluşturma modülleri entegre edildi.</div>
+        <div id="maskotSpeech" class="maskot-bubble">Sistem aktif! Klasör oluşturma ve dinamik atama modülleri hazır.</div>
     </div>
 
     <header>
@@ -151,7 +166,7 @@
     </div>
 
     <div class="tabs">
-        <button id="tabDashboard" class="tab-btn tab-active" onclick="switchTab('dashboard')">🗂️ Dosya & Link Merkezi</button>
+        <button id="tabDashboard" class="tab-btn tab-active" onclick="switchTab('dashboard')">🗂️ Dosya & Klasör Merkezi</button>
         <button id="tabChat" class="tab-btn" onclick="switchTab('chat')">💬 /chat Odaları</button>
         <button id="tabHelp" class="tab-btn" onclick="switchTab('help')">🙋 /yardım Forumu</button>
     </div>
@@ -168,8 +183,33 @@
 
     <div id="dashboardSection" class="hidden">
         
-        <div class="modal" style="border: 1px solid rgba(56, 189, 248, 0.3);">
-            <h3>🚀 Dosya Oluşturma ve Yükleme Paneli</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+            <div class="modal" style="margin-bottom:0;">
+                <h4 style="margin-top:0; color: var(--accent-color);">📂 Yeni Klasör Yarat</h4>
+                <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Sistemde linkleri gruplayacağın boş bir klasör oluşturur.</p>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="newFolderNameInput" placeholder="Klasör İsmi (Örn: Pokemon)" style="margin:0;">
+                    <button onclick="createNewFolder()" style="margin:0; white-space:nowrap;">Klasör Yarat</button>
+                </div>
+            </div>
+
+            <div class="modal" style="margin-bottom:0;">
+                <h4 style="margin-top:0; color: var(--success-color);">📌 Klasöre Site Linki Ekle</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <select id="folderSelect" style="margin:0;">
+                        <option value="">-- Klasör Seçin --</option>
+                    </select>
+                    <input type="text" id="siteNameInput" placeholder="Site Başlığı" style="margin:0;">
+                </div>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <input type="text" id="siteUrlInput" placeholder="URL adresi (https://...)" style="margin:0;">
+                    <button onclick="addNewLinkToFolder()" style="margin:0; background:var(--success-color); color:#064e3b; white-space:nowrap;">Linki Ekle</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" style="border: 1px solid rgba(56, 189, 248, 0.15);">
+            <h3>🚀 Dosya Depolama Modülü</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div style="border-right: 1px solid rgba(255,255,255,0.05); padding-right: 15px;">
                     <h4 style="margin:0; color: var(--accent-color);">📄 Sıfırdan Dosya Oluştur</h4>
@@ -188,19 +228,10 @@
             <hr style="border:0; border-top: 1px solid rgba(255,255,255,0.05); margin: 20px 0;">
             
             <h4>📂 Kayıtlı Dosyaların</h4>
-            <div id="fileStorageWrapper" class="file-grid">
-                </div>
+            <div id="fileStorageWrapper" class="file-grid"></div>
         </div>
 
-        <div class="modal">
-            <h3>📌 Hızlı Klasör ve Site Linki Ekle</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <input type="text" id="folderInput" placeholder="Klasör Adı (Örn: Projeler)">
-                <input type="text" id="siteNameInput" placeholder="Site Başlığı">
-            </div>
-            <input type="text" id="siteUrlInput" placeholder="URL adresi (https://...)">
-            <button onclick="addNewData()" style="width: 100%;">Klasöre Link Ekle</button>
-        </div>
+        <h3 style="margin-top: 30px; color: var(--accent-color);">🗂️ Oluşturulan Sürücüler ve Linkler</h3>
         <div id="foldersWrapper"></div>
     </div>
 
@@ -253,7 +284,8 @@
     function triggerMaskot(action) {
         const face = document.getElementById('maskotFace');
         const speech = document.getElementById('maskotSpeech');
-        if(action === 'welcome') speech.innerText = "Kodlar stabil, veri transferi güvenli!";
+        if(action === 'welcome') speech.innerText = "Sistem ve veritabanı aktif!";
+        if(action === 'folder_add') speech.innerText = "Yeni klasör başarıyla oluşturuldu!";
         if(action === 'file_add') speech.innerText = "Harika! Dosya başarıyla işlendi ve sisteme kaydedildi.";
         if(action === 'download') speech.innerText = "Dosya indiriliyor, disk kontrol ediliyor.";
     }
@@ -268,7 +300,6 @@
         document.getElementById('helpSection').classList.toggle('hidden', tab !== 'help');
     }
 
-    // 30 Saniyede bir reklam tetikleyici döngü
     setInterval(() => {
         const adModal = document.getElementById('intervalAdModal');
         if(adModal) adModal.classList.remove('hidden');
@@ -329,13 +360,54 @@
         renderFilesUI();
     }
 
-    // 1. SIFIRDAN METİN DOSYASI OLUŞTURMA FONKSİYONU
+    // YENİ: BAĞIMSIZ BOŞ KLASÖR OLUŞTURMA FONKSİYONU
+    window.createNewFolder = async () => {
+        const folderName = document.getElementById('newFolderNameInput').value.trim();
+        if(!folderName) return alert("Lütfen bir klasör ismi yazın!");
+        if(userData.folders[folderName]) return alert("Bu isimde bir klasör zaten mevcut!");
+
+        userData.folders[folderName] = []; // Boş dizi atayarak klasörü tanımlıyoruz
+        await saveToFirebase();
+        document.getElementById('newFolderNameInput').value = '';
+        renderUI();
+        triggerMaskot('folder_add');
+    };
+
+    // YENİ: SEÇİLEN KLASÖRE LİNK EKLEME FONKSİYONU
+    window.addNewLinkToFolder = async () => {
+        const select = document.getElementById('folderSelect');
+        const folder = select.value;
+        const name = document.getElementById('siteNameInput').value.trim();
+        let url = document.getElementById('siteUrlInput').value.trim();
+
+        if(!folder) return alert("Lütfen linki eklemek istediğiniz klasörü seçin!");
+        if(!name || !url) return alert("Site başlığı ve URL alanları boş bırakılamaz!");
+        if(!url.startsWith('http')) url = 'https://' + url;
+
+        userData.folders[folder].push({ name, url });
+        await saveToFirebase();
+        
+        document.getElementById('siteNameInput').value = '';
+        document.getElementById('siteUrlInput').value = '';
+        renderUI();
+    };
+
+    // DİNAMİK KLASÖR SİLME MODÜLÜ
+    window.deleteFolder = async (folderName) => {
+        if(confirm(`"${folderName}" klasörünü ve içindeki tüm linkleri silmek istediğinize emin misiniz?`)) {
+            delete userData.folders[folderName];
+            await saveToFirebase();
+            renderUI();
+        }
+    };
+
+    // SIFIRDAN METİN DOSYASI OLUŞTURMAFONKSİYONU
     window.createNewTextFile = async () => {
         const name = document.getElementById('newFileName').value.trim();
         const content = document.getElementById('newFileContent').value;
         if(!name) return alert("Lütfen bir dosya adı girin!");
 
-        const base64Content = btoa(unescape(encodeURIComponent(content))); // Güvenli veri dönüşümü
+        const base64Content = btoa(unescape(encodeURIComponent(content)));
         const newFile = { name: name, size: content.length + " bytes", data: "data:text/plain;base64," + base64Content };
         
         userData.files.push(newFile);
@@ -347,7 +419,7 @@
         triggerMaskot('file_add');
     };
 
-    // 2. BİLGİSAYARDAN DOSYA SEÇİP YÜKLEME FONKSİYONU
+    // BİLGİSAYARDAN DOSYA SEÇİP YÜKLEME FONKSİYONU
     window.uploadLocalFile = () => {
         const fileInput = document.getElementById('localFileUploader');
         if(fileInput.files.length === 0) return alert("Lütfen önce bilgisayarınızdan bir dosya seçin!");
@@ -363,10 +435,9 @@
             renderFilesUI();
             triggerMaskot('file_add');
         };
-        reader.readAsDataURL(file); // Dosyayı koda entegre edilebilir veri tipine çevirir
+        reader.readAsDataURL(file);
     };
 
-    // DOSYALARI EKRANDA LİSTELEME VE İNDİRME BUTONU YAPILANDIRMASI
     function renderFilesUI() {
         const wrapper = document.getElementById('fileStorageWrapper');
         wrapper.innerHTML = '';
@@ -384,7 +455,7 @@
                 </div>
                 <div style="display:flex; gap:5px;">
                     <a href="${file.data}" download="${file.name}" onclick="triggerMaskot('download')" style="flex:1; text-align:center; background:var(--accent-color); color:#0f172a; text-decoration:none; padding:6px; font-size:12px; font-weight:600; border-radius:6px;">İndir</a>
-                    <button onclick="deleteStoredFile(${index})" style="background:var(--danger-color); color:#white; margin:0; padding:6px; font-size:12px; border-radius:6px;">Sil</button>
+                    <button onclick="deleteStoredFile(${index})" style="background:var(--danger-color); color:white; margin:0; padding:6px; font-size:12px; border-radius:6px;">Sil</button>
                 </div>
             `;
             wrapper.appendChild(div);
@@ -403,36 +474,55 @@
         }
     }
 
-    // LİNK KATEGORİSİ EKLEME ALANI
-    window.addNewData = async () => {
-        const folder = document.getElementById('folderInput').value.trim(); 
-        const name = document.getElementById('siteNameInput').value.trim(); 
-        let url = document.getElementById('siteUrlInput').value.trim();
-        if(!folder || !name || !url) return; 
-        if(!url.startsWith('http')) url = 'https://' + url;
-        
-        if(!userData.folders[folder]) userData.folders[folder] = [];
-        userData.folders[folder].push({ name, url });
-        await saveToFirebase();
-        renderUI();
-    };
-
+    // HEM PANELİ HEM DE SEÇİM MENÜSÜNÜ DİNAMİK YENİLEYEN RENDERING MOTORU
     function renderUI() {
         const wrapper = document.getElementById('foldersWrapper'); 
         wrapper.innerHTML = '';
+        
+        const select = document.getElementById('folderSelect');
+        const currentSelected = select ? select.value : "";
+        if (select) {
+            select.innerHTML = '<option value="">-- Klasör Seçin --</option>';
+        }
+
+        const keys = Object.keys(userData.folders);
+        if(keys.length === 0) {
+            wrapper.innerHTML = `<p style="font-size:14px; color:var(--text-muted);">Henüz hiç klasör oluşturulmadı. Yukarıdan ilk klasörünü yarat!</p>`;
+            return;
+        }
+
         for (let folderName in userData.folders) {
+            // Dropdown listesini güncelle
+            if (select) {
+                let opt = document.createElement('option');
+                opt.value = folderName;
+                opt.innerText = folderName;
+                if(folderName === currentSelected) opt.selected = true;
+                select.appendChild(opt);
+            }
+
             let folderDiv = document.createElement('div'); 
             folderDiv.className = 'folder-section';
-            folderDiv.innerHTML = `<div class="folder-title">📁 ${folderName}</div>`;
+            folderDiv.innerHTML = `
+                <div class="folder-title">
+                    <span>📁 ${folderName}</span>
+                    <button onclick="deleteFolder('${folderName}')" style="background:rgba(251, 113, 133, 0.2); border: 1px solid var(--danger-color); color: var(--danger-color); margin:0; padding:4px 10px; font-size:11px; border-radius:6px;">Klasörü Sil</button>
+                </div>`;
+            
             let container = document.createElement('div'); 
             container.className = 'links-container';
-            userData.folders[folderName].forEach(site => {
-                let card = document.createElement('div'); 
-                card.className = 'link-card'; 
-                card.innerText = site.name;
-                card.onclick = () => window.open(site.url, '_blank'); 
-                container.appendChild(card);
-            });
+            
+            if(userData.folders[folderName].length === 0) {
+                container.innerHTML = `<p style="font-size:13px; color:var(--text-muted); margin:0; padding:10px 0;">Bu klasör şu an boş. Sağ üstteki panelden link ekleyebilirsin.</p>`;
+            } else {
+                userData.folders[folderName].forEach(site => {
+                    let card = document.createElement('div'); 
+                    card.className = 'link-card'; 
+                    card.innerText = site.name;
+                    card.onclick = () => window.open(site.url, '_blank'); 
+                    container.appendChild(card);
+                });
+            }
             folderDiv.appendChild(container); 
             wrapper.appendChild(folderDiv);
         }
