@@ -1,47 +1,41 @@
-let db, currentUserNick, fsTools;
-let activeUrlChatListener = null;
+let db, user, fsTools;
 
-export function initChatModule(database, user, firestoreTools) {
-    db = database;
-    currentUserNick = user.email.split('@')[0];
-    fsTools = firestoreTools;
-    
-    // Uygulama açılır açılmaz Global Chat'i dinlemeye başla
+export function initChatModule(database, currentUser, firestoreTools) {
+    db = database; user = currentUser; fsTools = firestoreTools;
     listenChatRoom("global_chat", "globalChatMsgs");
 }
 
 function listenChatRoom(collectionPath, elementId) {
-    const q = fsTools.query(fsTools.collection(db, collectionPath), fsTools.orderBy("timestamp", "asc"));
-    return fsTools.onSnapshot(q, (snapshot) => {
+    fsTools.onSnapshot(fsTools.query(fsTools.collection(db, collectionPath), fsTools.orderBy("timestamp", "asc")), (snapshot) => {
         const box = document.getElementById(elementId); box.innerHTML = '';
         snapshot.forEach(doc => {
             let d = doc.data();
-            box.innerHTML += `<div class="msg"><b>${d.user}</b>: <span style="color: #cbd5e1;">${d.text}</span></div>`;
+            let rankData = window.calculateRank(d.points || 0, d.email || '', d.role || 'user');
+            box.innerHTML += `<div class="msg"><span class="badge ${rankData.class}">${rankData.name}</span> <b>${d.user}</b>: <span style="color: #cbd5e1;">${d.text}</span></div>`;
         });
         box.scrollTop = box.scrollHeight;
     });
 }
 
 window.sendChatMessage = async (type) => {
-    if(type === 'global') {
-        const inp = document.getElementById('globalMsgInput'); if(!inp.value.trim()) return;
-        await fsTools.addDoc(fsTools.collection(db, "global_chat"), { user: currentUserNick, text: inp.value.trim(), timestamp: Date.now() });
-        inp.value = '';
-    } else {
-        const inp = document.getElementById('urlMsgInput'); 
-        let rawUrl = document.getElementById('urlChatTarget').value.trim();
-        if(!inp.value.trim() || !rawUrl) return; 
-        
-        let room = rawUrl.replace(/[\.\/]/g, "_");
-        await fsTools.addDoc(fsTools.collection(db, `url_chats/${room}/messages`), { user: currentUserNick, text: inp.value.trim(), timestamp: Date.now() });
-        inp.value = '';
-    }
-};
+    const inp = document.getElementById(type === 'global' ? 'globalMsgInput' : 'urlMsgInput');
+    if(!inp.value.trim()) return;
 
-window.loadUrlChat = () => { 
-    let rawUrl = document.getElementById('urlChatTarget').value.trim(); 
-    if(!rawUrl) return; 
-    let room = rawUrl.replace(/[\.\/]/g, "_"); 
-    if(activeUrlChatListener) activeUrlChatListener(); 
-    activeUrlChatListener = listenChatRoom(`url_chats/${room}/messages`, "urlChatMsgs"); 
+    let chatData = {
+        user: user.nick || user.email.split('@')[0],
+        text: inp.value.trim(),
+        timestamp: Date.now(),
+        points: user.points || 0,
+        role: user.role || 'user',
+        email: user.email || ''
+    };
+
+    if(type === 'global') {
+        await fsTools.addDoc(fsTools.collection(db, "global_chat"), chatData);
+    } else {
+        let rawUrl = document.getElementById('urlChatTarget').value.trim(); if(!rawUrl) return alert("Önce hedef URL girin!");
+        let room = rawUrl.replace(/[\.\/]/g, "_");
+        await fsTools.addDoc(fsTools.collection(db, `url_chats/${room}/messages`), chatData);
+    }
+    inp.value = '';
 };
