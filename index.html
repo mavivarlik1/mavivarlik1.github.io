@@ -76,6 +76,8 @@
         .lang-ui-btn { background: transparent; color: var(--text-muted); padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; border:none; cursor: pointer; transition: all 0.2s; }
         .lang-ui-btn.active { background: var(--accent-color); color: #0f172a; box-shadow: var(--accent-glow); }
     </style>
+    
+    <script src="./guestdashboard.js"></script>
 </head>
 <body>
 
@@ -119,12 +121,12 @@
         <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px;">
             <div>
                 <h2 id="featureTitle">WebSpace Sistem Özellikleri (Vitrin)</h2>
-                <p id="featureDesc">Sistemimize kayıt olmadan misafir olarak bağlandığınızda genel chat odalarını, yardım forumunu ve ortak paylaşılan tüm klasörleri kısıtlamasız inceleyebilirsiniz.</p>
+                <p id="featureDesc">Sistemimize kayıt olmadan misafir olarak bağlandığınızda genel chat odalarını, yardım forumunu...</p>
                 
                 <h4 id="matrixTitle" style="color: var(--success-color); margin-bottom: 5px;">🔄 Misafir Modu Özellik Matrisi (Güncellendi):</h4>
                 <ul style="font-size: 12px; color: var(--text-muted); padding-left: 20px; line-height: 1.8;">
-                    <li id="matrixCan"><b>Misafirlerin Yapabilecekleri:</b> Tarayıcı hafızasında (LocalStorage) bağımsız yerel klasörler oluşturabilir, dosyalar yükleyebilir...</li>
-                    <li id="matrixCannot"><b>Misafirlerin Yapamayacakları:</b> Yerel klasörleri küresel ortak havuzda yayınlayamaz, verileri Firebase bulutuna aktaramaz...</li>
+                    <li id="matrixCan"><b>Misafirlerin Yapabilecekleri:</b> Tarayıcı hafızasında (LocalStorage) bağımsız yerel klasörler oluşturabilir...</li>
+                    <li id="matrixCannot"><b>Misafirlerin Yapamayacakları (Kısıtlamalar):</b> Yerel klasörleri küresel ortak havuzda yayınlayamaz...</li>
                 </ul>
 
                 <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
@@ -151,8 +153,8 @@
     <div id="dashboardSection" class="hidden">
         <div id="vipPerkArea" class="hidden modal" style="border: 2px solid var(--gold-color); background: rgba(251, 191, 36, 0.03);">
             <h3 id="vipPerkTitle" style="color: var(--gold-color); margin:0;">✨ VIP Ayrıcalık Paneli Active</h3>
-            <p id="vipPerkDesc" style="font-size:13px; color:var(--text-muted); margin: 5px 0 10px 0;">Sohbet odalarında altın isminiz parlıyor...</p>
-            <button id="btnVipBoost" onclick="alert('VIP Gold Boost aktif edildi!')" style="background:var(--gold-color); color:#0f172a; padding:6px 12px; font-size:12px;">VIP Hızlandırıcıyı Aç</button>
+            <p id="vipPerkDesc" style="font-size:13px; color:var(--text-muted); margin: 5px 0 10px 0;">Sohbet odalarında altın isminiz parlıyor. Özel yüksek hızlı indirme ve sınırsız Firebase dosya yükleme kotanız sınırsız olarak tanımlandı!</p>
+            <button id="btnVipBoost" onclick="navigateToPage('vip')" style="background:var(--gold-color); color:#0f172a; padding:6px 12px; font-size:12px;">VIP Sayfasına Git</button>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
@@ -336,16 +338,14 @@
 <script type="module">
     import { uiTranslations } from "./lang.js";
 
-    // 🌟 KÜRESEL AÇIK KAYNAK ÇEVİRİ MOTORU (TAM SENKRONİZE)
     window.translateUI = function(lang) {
         const t = uiTranslations[lang] || uiTranslations['tr'];
         
-        // Element Metinleri (Inner Text)
         const textElements = {
-            maskotSpeech: 'system_active', userInfo: 'waiting_login', tabDashboard: 'tab_drive',
+            maskotSpeech: 'system_active', tabDashboard: 'tab_drive',
             tabGuestdashboard: 'tab_guest_drive', tabChat: 'tab_chat', tabHelp: 'tab_help',
             tabPrivacy: 'tab_privacy', tabVip: 'tab_vip', tabAdmin: 'tab_admin', settingsTitle: 'settings_title',
-            btnLogout: 'btn_logout', featureTitle: 'system_active', featureDesc: 'showcase_desc',
+            btnLogout: 'btn_logout', featureTitle: 'showcase_title', featureDesc: 'showcase_desc',
             matrixTitle: 'matrix_title', matrixCan: 'matrix_can', matrixCannot: 'matrix_cannot',
             aboutTitle: 'about_title', aboutDesc: 'about_desc', contactText: 'official_contact',
             loginHeader: 'login_header', forgotText: 'forgot_password', btnLogin: 'btn_login',
@@ -373,7 +373,17 @@
             if(el) el.innerHTML = t[textElements[id]] || el.innerHTML;
         });
 
-        // Girdi İpuçları (Placeholders)
+        // ⚡ GİRİŞ DURUMUNU DİNAMİK OLARAK KONTROL EDEN VE YAZIYI KORUYAN MOTOR (FIXED)
+        const userInfoEl = document.getElementById('userInfo');
+        if (userInfoEl) {
+            if (window.activeUser) {
+                let rankBadge = window.calculateRank(window.activeUser.points || 0, window.activeUser.email, window.activeUser.role, lang);
+                userInfoEl.innerHTML = `👤 ${window.activeUser.nick || window.activeUser.email} <span class="badge ${rankBadge.class}">${rankBadge.name}</span>`;
+            } else {
+                userInfoEl.innerHTML = t['waiting_login'];
+            }
+        }
+
         const placeholders = {
             authEmail: 'plh_email', authPassword: 'plh_password', newFolderNameInput: 'plh_folder_name',
             siteNameInput: 'plh_title', siteUrlInput: 'plh_url', newFileName: 'plh_file_name',
@@ -393,17 +403,14 @@
 
 <script>
     function handleRoute() {
-        let hash = window.location.hash.replace('#', '') || '/tr/dashboard';
-        if (!hash.startsWith('/')) hash = '/tr/' + hash;
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeLang = urlParams.get('lang') || 'tr';
+        
+        let hash = window.location.hash.replace('#', '') || 'dashboard';
 
-        const parts = hash.split('/');
-        const activeLang = parts[1] || 'tr';
-        let activePage = parts[2] || 'dashboard';
+        if (window.isCurrentUserGuest && hash === 'dashboard') { hash = 'guestdashboard'; window.location.hash = '#guestdashboard'; }
+        if (!window.isCurrentUserGuest && hash === 'guestdashboard') { hash = 'dashboard'; window.location.hash = '#dashboard'; }
 
-        if (window.isCurrentUserGuest && activePage === 'dashboard') activePage = 'guestdashboard';
-        if (!window.isCurrentUserGuest && activePage === 'guestdashboard') activePage = 'dashboard';
-
-        // Motoru anlık dil parametresi ile tetikle
         if (window.translateUI) window.translateUI(activeLang);
 
         document.getElementById('langBtnTr').classList.toggle('active', activeLang === 'tr');
@@ -412,34 +419,35 @@
         const tabMap = { 'dashboard': 'tabDashboard', 'guestdashboard': 'tabGuestdashboard', 'chat': 'tabChat', 'help': 'tabHelp', 'privacy': 'tabPrivacy', 'vip': 'tabVip', 'admin': 'tabAdmin' };
         Object.values(tabMap).forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('tab-active'); });
         
-        const currentTabId = tabMap[activePage];
+        const currentTabId = tabMap[hash];
         if(currentTabId && document.getElementById(currentTabId)) document.getElementById(currentTabId).classList.add('tab-active');
 
         const sections = ['dashboardSection', 'guestDashboardSection', 'chatSection', 'helpSection', 'privacySection', 'vipSection', 'adminSection'];
         sections.forEach(id => { const el = document.getElementById(id); if(el) el.classList.add('hidden'); });
 
-        const targetSectionId = activePage + 'Section';
+        const targetSectionId = hash + 'Section';
         if(document.getElementById(targetSectionId)) document.getElementById(targetSectionId).classList.remove('hidden');
 
-        if (activePage === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI(activeLang);
+        if (hash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI(activeLang);
+        
+        if (hash === 'guestdashboard' && window.renderGuestFolders) {
+            window.renderGuestFolders();
+            window.renderGuestFiles();
+            window.loadGuestFolderSelect();
+        }
     }
 
     function switchLanguage(targetLang) {
-        let hash = window.location.hash.replace('#', '') || '/tr/dashboard';
-        if (!hash.startsWith('/')) hash = '/tr/' + hash;
-        const parts = hash.split('/');
-        parts[1] = targetLang;
-        window.location.hash = parts.join('/');
+        const currentHash = window.location.hash || '#dashboard';
+        window.location.href = window.location.origin + window.location.pathname + '?lang=' + targetLang + currentHash;
     }
 
     function navigateToPage(targetPage) {
-        let hash = window.location.hash.replace('#', '') || '/tr/dashboard';
-        if (!hash.startsWith('/')) hash = '/tr/' + hash;
-        const parts = hash.split('/');
-        window.location.hash = `/${parts[1] || 'tr'}/${targetPage}`;
+        window.location.hash = '#' + targetPage;
     }
 
     window.addEventListener('hashchange', handleRoute);
+    window.addEventListener('load', handleRoute);
 </script>
 
 <script type="module">
@@ -473,7 +481,6 @@
     const db = getFirestore(app);
     const fsTools = { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc };
 
-    // 👑 NOKTA ATIŞI VE GÜVENLİ KURUCU ATAMA MOTORU
     window.executeAdminRoleAssign = async () => {
         const targetEmail = document.getElementById('targetAdminEmail').value.trim();
         const selectedRole = document.getElementById('targetRoleSelect').value;
@@ -494,11 +501,18 @@
         } catch(e) { alert("Hata: " + e.message); }
     };
 
-    window.calculateRank = function(points, email, role) {
-        if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu 👑", class: "badge-kurucu" };
-        if(role === 'mod') return { name: "Moderatör 🛠️", class: "badge-mod" };
-        if(role === 'vip') return { name: "VIP ⭐", class: "badge-vip" };
-        return { name: "Çaylaklatıcı", class: "badge-user" };
+    // 🌟 ÇOK DİLLİ RÜTBE MOTORU (FIXED & LOCALIZED)
+    window.calculateRank = function(points, email, role, lang = 'tr') {
+        const rName = {
+            tr: { kurucu: "Kurucu 👑", mod: "Moderatör 🛠️", vip: "VIP ⭐", user: "Çaylaklatıcı" },
+            en: { kurucu: "Founder 👑", mod: "Moderator 🛠️", vip: "VIP ⭐", user: "Rookie" }
+        };
+        const r = rName[lang] || rName['tr'];
+
+        if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: r.kurucu, class: "badge-kurucu" };
+        if(role === 'mod') return { name: r.mod, class: "badge-mod" };
+        if(role === 'vip') return { name: r.vip, class: "badge-vip" };
+        return { name: r.user, class: "badge-user" };
     }
 
     window.handleLogin = async () => {
@@ -521,13 +535,11 @@
     };
 
     function setupSession(user) {
+        window.activeUser = user; // ⚡ Oturumu global hafızaya kaydediyoruz
         window.isCurrentUserGuest = !!user.isGuest;
         document.getElementById('authPanel').classList.add('hidden');
         document.getElementById('mainTabs').classList.remove('hidden');
         document.getElementById('settingsModal').classList.remove('hidden');
-        
-        let rankBadge = window.calculateRank(user.points || 0, user.email, user.role);
-        document.getElementById('userInfo').innerHTML = `👤 ${user.nick || user.email} <span class="badge ${rankBadge.class}">${rankBadge.name}</span>`;
         
         const vPerk = document.getElementById('vipPerkArea');
         const mPerk = document.getElementById('modPerkArea');
@@ -582,6 +594,7 @@
             }
             setupSession({ uid: user.uid, email: user.email, isGuest: false, nick: nick, points: points, role: role });
         } else {
+            window.activeUser = null; // ⚡ Oturum kapandığında hafızayı sıfırlıyoruz
             document.getElementById('authPanel').classList.remove('hidden');
             document.getElementById('mainTabs').classList.add('hidden');
             document.getElementById('dashboardSection').classList.add('hidden');
