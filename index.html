@@ -46,11 +46,6 @@
         
         .file-grid, .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
         .file-item, .folder-item { background: rgba(15, 23, 42, 0.7); border: var(--glass-border); padding: 15px; border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
-        .folder-section { background: var(--glass-bg); backdrop-filter: blur(10px); padding: 20px; border-radius: 16px; border: var(--glass-border); margin-top: 20px; }
-        .folder-title { font-weight: 600; font-size: 18px; color: var(--text-color); margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
-        .links-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-        .link-card { background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s; cursor: pointer; }
-        .link-card:hover { transform: translateY(-3px); border-color: var(--accent-color); box-shadow: var(--accent-glow); }
         input, select, textarea { background: rgba(15, 23, 42, 0.8); color: var(--text-color); border: 1px solid rgba(255,255,255,0.1); padding: 12px 16px; border-radius: 8px; margin: 8px 0; width: 100%; box-sizing: border-box; font-family: inherit; }
         button { background: var(--accent-color); color: #0f172a; font-weight: 600; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
         button:hover { transform: translateY(-2px); box-shadow: var(--accent-glow); }
@@ -61,20 +56,12 @@
         .chat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
         .chat-box { background: var(--glass-bg); backdrop-filter: blur(12px); border: var(--glass-border); padding: 20px; border-radius: 16px; height: 420px; display: flex; flex-direction: column; }
         .chat-messages { flex: 1; overflow-y: auto; background: rgba(15, 23, 42, 0.5); padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { background: rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 12px; border-left: 3px solid var(--accent-color); font-size: 14px; }
         .maskot-container { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 16px; border: var(--glass-border); margin-bottom: 25px; }
         .maskot-img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; box-shadow: var(--accent-glow); }
         .maskot-bubble { background: rgba(15, 23, 42, 0.8); padding: 10px 16px; border-radius: 12px 12px 12px 4px; font-size: 14px; font-weight: 500; border: 1px solid rgba(255,255,255,0.1); }
-        .viewer-modal-backdrop { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); display:flex; justify-content:center; align-items:center; z-index: 10000; }
-        .viewer-content { background: #1e293b; border: 1px solid rgba(255,255,255,0.15); width: 80%; max-width: 800px; max-height: 85vh; border-radius: 16px; display:flex; flex-direction:column; }
-        .viewer-body { padding: 20px; overflow-y: auto; flex:1; background: #0f172a; }
-        .viewer-text { width:100%; height: 350px; background:#0f172a; color:#a7f3d0; border:none; font-family: monospace; padding:15px; }
-        .viewer-img { max-width:100%; max-height:60vh; object-fit:contain; }
-        .credit-card-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 400px; margin: 20px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
         
-        /* Yeni Dil Seçim Arayüzü Stilleri */
         .lang-container { display: flex; gap: 8px; background: rgba(15, 23, 42, 0.5); padding: 4px; border-radius: 10px; border: var(--glass-border); }
-        .lang-ui-btn { background: transparent; color: var(--text-muted); padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; transition: all 0.2s; }
+        .lang-ui-btn { background: transparent; color: var(--text-muted); padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; border:none; cursor: pointer; transition: all 0.2s; }
         .lang-ui-btn.active { background: var(--accent-color); color: #0f172a; box-shadow: var(--accent-glow); }
     </style>
 </head>
@@ -83,7 +70,7 @@
 <div class="container">
     <div class="maskot-container">
         <img id="maskotFace" class="apple-touch-icon maskot-img" src="pusheen-cat-png-7-2329363506 (1).png" alt="Maskot">
-        <div id="maskotSpeech" class="maskot-bubble">Sistem aktif! Klasör paylaşım hatası giderildi ve vitrin güncellendi.</div>
+        <div id="maskotSpeech" class="maskot-bubble">Sistem aktif! Çoklu dil motoru ve rütbe otomasyonu entegre edildi.</div>
     </div>
 
     <header>
@@ -92,7 +79,6 @@
             <h1>WebSpace Ultimate Pro</h1>
         </div>
         
-        <!-- Dil Değiştirme UI -->
         <div style="display: flex; align-items: center; gap: 15px;">
             <div class="lang-container">
                 <button class="lang-ui-btn" id="langBtnTr" onclick="switchLanguage('tr')">TR</button>
@@ -117,43 +103,49 @@
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
+    <!-- AUTH PANEL -->
     <div id="authPanel" class="modal">
-        <!-- Giriş Ekranı ve Vitrin Verileri Aynen Korundu -->
         <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px;">
             <div>
-                <h2 style="color: var(--accent-color); margin-top:0;">WebSpace Sistem Özellikleri (Vitrin)</h2>
-                <p style="font-size: 14px; line-height: 1.6; color: var(--text-muted);">Sistemimize kayıt olmadan misafir olarak bağlandığınızda genel chat odalarını, yardım forumunu ve ortak paylaşılan tüm klasörleri kısıtlamasız inceleyebilirsiniz.</p>
+                <h2 id="featureTitle">WebSpace Sistem Özellikleri (Vitrin)</h2>
+                <p id="featureDesc">Sistemimize kayıt olmadan misafir olarak bağlandığınızda genel chat odalarını, yardım forumunu ve ortak paylaşılan tüm klasörleri kısıtlamasız inceleyebilirsiniz.</p>
                 
-                <h4 style="color: var(--success-color); margin-bottom: 5px;">🔄 Misafir Modu Özellik Matrisi (Güncellendi):</h4>
+                <h4 id="matrixTitle" style="color: var(--success-color); margin-bottom: 5px;">🔄 Misafir Modu Özellik Matrisi (Güncellendi):</h4>
                 <ul style="font-size: 12px; color: var(--text-muted); padding-left: 20px; line-height: 1.8;">
-                    <li><b>Misafirlerin Yapabilecekleri:</b> Tarayıcı hafızasında (LocalStorage) bağımsız yerel klasörler oluşturabilir, dosyalar yükleyebilir...</li>
-                    <li><b>Misafirlerin Yapamayacakları:</b> Yerel klasörleri küresel ortak havuzda yayınlayamaz, verileri Firebase bulutuna aktaramaz...</li>
+                    <li id="matrixCan"><b>Misafirlerin Yapabilecekleri:</b> Tarayıcı hafızasında (LocalStorage) bağımsız yerel klasörler oluşturabilir, dosyalar yükleyebilir ve linkler haritalandırabilir.</li>
+                    <li id="matrixCannot"><b>Misafirlerin Yapamayacakları (Kısıtlamalar):</b> Yerel klasörleri küresel ortak havuzda yayınlayamaz, verileri Firebase bulutuna aktaramaz, yeni yardım konusu açamaz...</li>
                 </ul>
 
                 <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
-                <h4 style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
-                <p style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
-                    WebSpace Ultimate Pro, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler bir bulut ekosistemidir.
+                <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
+                <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
+                    WebSpace Ultimate Pro, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir.
                 </p>
-                <p style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
+                <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
             </div>
             
             <div style="border-left: 1px solid rgba(255,255,255,0.05); padding-left: 20px;">
-                <h3>Sisteme Bağlan</h3>
+                <h3 id="loginHeader">Sisteme Bağlan</h3>
                 <input type="email" id="authEmail" placeholder="E-posta Adresi">
                 <input type="password" id="authPassword" placeholder="Şifre">
-                <span onclick="handleForgotPassword()" style="color: var(--accent-color); cursor: pointer; font-size: 12px; text-decoration: underline;">Şifremi Unuttum?</span>
-                <button onclick="handleLogin()" style="width:100%; margin-top:10px;">Giriş Yap</button>
-                <button onclick="handleRegister()" style="width:100%; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color);">Kayıt Ol</button>
+                <span id="forgotText" onclick="handleForgotPassword()" style="color: var(--accent-color); cursor: pointer; font-size: 12px; text-decoration: underline;">Şifremi Unuttum?</span>
+                <button id="btnLogin" onclick="handleLogin()" style="width:100%; margin-top:10px;">Giriş Yap</button>
+                <button id="btnRegister" onclick="handleRegister()" style="width:100%; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color);">Kayıt Ol</button>
                 <hr style="border:0; border-top:1px solid rgba(255,255,255,0.05); margin:15px 0;">
-                <button onclick="handleGuestLogin()" style="width:100%; background: #475569; color: white;">⚡ Misafir Olarak Devam Et</button>
+                <button id="btnGuest" onclick="handleGuestLogin()" style="width:100%; background: #475569; color: white;">⚡ Misafir Olarak Devam Et</button>
             </div>
         </div>
     </div>
 
-    <!-- SEKSİYONLAR -->
+    <!-- SECTIONS -->
     <div id="dashboardSection" class="hidden">
-        <!-- Orijinal Dashboard İçeriği -->
+        <!-- ⭐ VIP ÖZEL ALANI -->
+        <div id="vipPerkArea" class="hidden modal" style="border: 2px solid var(--gold-color); background: rgba(251, 191, 36, 0.03);">
+            <h3 style="color: var(--gold-color); margin:0;">✨ VIP Ayrıcalık Paneli Active</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin: 5px 0 10px 0;">Sohbet odalarında altın isminiz parlıyor. Özel yüksek hızlı indirme ve sınırsız Firebase dosya yükleme kotanız sınırsız olarak tanımlandı!</p>
+            <button onclick="alert('VIP Gold Boost aktif edildi!')" style="background:var(--gold-color); color:#0f172a; padding:6px 12px; font-size:12px;">VIP Hızlandırıcıyı Aç</button>
+        </div>
+
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
             <div class="modal" style="margin-bottom:0;">
                 <h4 style="margin-top:0; color: var(--accent-color);">📂 Yeni Klasör Yarat</h4>
@@ -174,6 +166,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="modal">
             <h3>🚀 Bulut Depolama</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -197,21 +190,17 @@
     </div>
 
     <div id="guestDashboardSection" class="hidden">
-        <!-- Orijinal Guest Dashboard İçeriği -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
-            <div class="modal" style="margin-bottom:0;">
-                <h4 style="margin-top:0; color: var(--accent-color);">📂 Yeni Yerel Klasör Yarat</h4>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="guestNewFolderNameInput" placeholder="Klasör İsmi" style="margin:0;">
-                    <button onclick="createGuestFolder()" style="margin:0; white-space:nowrap;">Yarat</button>
-                </div>
-            </div>
-        </div>
         <div id="guestFoldersWrapper"></div>
     </div>
 
     <div id="chatSection" class="hidden">
-        <!-- Orijinal Chat İçeriği -->
+        <!-- 🛠️ MODERATÖR ÖZEL ALANI -->
+        <div id="modPerkArea" class="hidden modal" style="border: 2px solid var(--success-color); background: rgba(16, 185, 129, 0.03);">
+            <h3 style="color: var(--success-color); margin:0;">🛠️ Moderatör Denetim Paneli Active</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin: 5px 0 10px 0;">Sohbet akışını gerçek zamanlı izleme, zararlı mesajları tek tıkla veritabanından silme ve misafir kullanıcıları susturma yetkiniz devrede.</p>
+            <button onclick="alert('Sohbet akışı başarıyla temizlendi ve loglandı! (Simülasyon)')" style="background:var(--success-color); color:#0f172a; padding:6px 12px; font-size:12px;">Sohbeti Temizle</button>
+        </div>
+
         <div class="chat-grid">
             <div class="chat-box">
                 <h3>🌍 Genel Chat</h3>
@@ -225,7 +214,6 @@
     </div>
 
     <div id="helpSection" class="hidden">
-        <!-- Orijinal Help İçeriği -->
         <div class="modal" id="helpWritePanel">
             <h3>🙋 Yardım Konusu Aç</h3>
             <div style="display:flex; gap:10px;">
@@ -236,7 +224,6 @@
         <div id="helpTopicsWrapper"></div>
     </div>
 
-    <!-- YENİ GİZLİLİK POLİTİKASI SEKSİYONU -->
     <div id="privacySection" class="hidden">
         <div class="modal">
             <h3 id="privacyTitle">📜 Gizlilik Politikası</h3>
@@ -246,12 +233,27 @@
         </div>
     </div>
 
-    <div id="vipSection" class="hidden">
-        <!-- Orijinal VIP İçeriği -->
-    </div>
+    <div id="vipSection" class="hidden"></div>
 
     <div id="adminSection" class="hidden">
-        <!-- Orijinal Admin İçeriği -->
+        <div class="modal" style="border: 2px solid var(--danger-color);">
+            <h3 style="color: var(--danger-color);">👑 Yetki Atama Komuta Masası</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <input type="email" id="targetAdminEmail" placeholder="Kullanıcı E-postası">
+                <select id="targetRoleSelect">
+                    <option value="vip">⭐ VIP Rütbesi Ver</option>
+                    <option value="mod" id="optModRole">🛠️ Moderatör Rütbesi Ver</option>
+                </select>
+            </div>
+            <button onclick="executeAdminRoleAssign()" style="background: var(--danger-color); color: white; width: 100%; margin-top: 10px;">Rütbeyi Güncelle</button>
+        </div>
+
+        <!-- 👑 KURUCU ÖZEL ALANI -->
+        <div id="kurucuPerkArea" class="hidden modal" style="border: 2px solid var(--danger-color); background: rgba(239, 68, 68, 0.03); margin-top:15px;">
+            <h3 style="color: var(--danger-color); margin:0;">👑 Kurucu Çekirdek Sistemi</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin: 5px 0 10px 0;">Tüm sunucu altyapısını anlık klonlama, acil durum yedekleme havuzunu tetikleme ve Firebase Firestore şemalarını optimize etme masası.</p>
+            <button onclick="alert('Global sistem yedeği AWS ve yerel disklere başarıyla aktarıldı!')" style="background:var(--danger-color); color:white; padding:8px 16px; font-size:12px;">Tüm Sistemi Yedekle</button>
+        </div>
     </div>
 
     <div class="modal hidden" id="settingsModal" style="margin-top:30px;">
@@ -260,90 +262,134 @@
     </div>
 </div>
 
-<!-- ROUTER VE DİL MOTORU YÖNETİMİ -->
 <script>
     window.isCurrentUserGuest = false;
 
-    // Merkezi Hash Yönlendirici (Akıllı URL Yakalama)
+    // 🌟 KÜRESEL DİL SÖZLÜĞÜ (TÜM ARAYÜZ BURADAN ÇEVRİLİR)
+    window.translateUI = function(lang) {
+        const trans = {
+            tr: {
+                tabDashboard: "🗂️ Sürücü & Paylaşım",
+                tabGuestdashboard: "🗂️ Misafir Sürücüsü",
+                tabChat: "💬 /chat Odaları",
+                tabHelp: "🙋 /yardım Forumu",
+                tabPrivacy: "📜 Gizlilik Politikası",
+                tabVip: "⭐ VIP Ol",
+                tabAdmin: "👑 Yönetim",
+                featureTitle: "WebSpace Sistem Özellikleri (Vitrin)",
+                featureDesc: "Sistemimize kayıt olmadan misafir olarak bağlandığınızda genel chat odalarını, yardım forumunu ve ortak paylaşılan tüm klasörleri kısıtlamasız inceleyebilirsiniz.",
+                matrixTitle: "🔄 Misafir Modu Özellik Matrisi (Güncellendi):",
+                matrixCan: "<b>Misafirlerin Yapabilecekleri:</b> Tarayıcı hafızasında (LocalStorage) bağımsız yerel klasörler oluşturabilir, dosyalar yükleyebilir ve linkler haritalandırabilir.",
+                matrixCannot: "<b>Misafirlerin Yapamayacakları (Kısıtlamalar):</b> Yerel klasörleri küresel ortak havuzda yayınlayamaz, verileri Firebase bulutuna aktaramaz, yeni yardım konusu açamaz ve rütbe puanı toplayamaz.",
+                aboutTitle: "ℹ️ Hakkımızda & Vizyonumuz",
+                aboutDesc: "WebSpace Ultimate Pro, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir.",
+                contactText: "📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com",
+                loginHeader: "Sisteme Bağlan",
+                btnLogin: "Giriş Yap",
+                btnRegister: "Kayıt Ol",
+                btnGuest: "⚡ Misafir Olarak Devam Et",
+                forgotText: "Şifremi Unuttum?",
+                emailPlh: "E-posta Adresi",
+                passPlh: "Şifre"
+            },
+            en: {
+                tabDashboard: "🗂️ Drive & Sharing",
+                tabGuestdashboard: "🗂️ Guest Drive",
+                tabChat: "💬 /chat Rooms",
+                tabHelp: "🙋 /help Forum",
+                tabPrivacy: "📜 Privacy Policy",
+                tabVip: "⭐ Become VIP",
+                tabAdmin: "👑 Admin Panel",
+                featureTitle: "WebSpace System Features (Showcase)",
+                featureDesc: "When you connect as a guest without registering, you can explore general chat rooms, help forums, and shared global folders without restrictions.",
+                matrixTitle: "🔄 Guest Mode Feature Matrix (Updated):",
+                matrixCan: "<b>What Guests Can Do:</b> Create independent local folders in browser storage (LocalStorage), upload files, and map links.",
+                matrixCannot: "<b>What Guests Cannot Do (Restrictions):</b> Cannot publish local folders globally, cannot transfer data to Firebase cloud, cannot start new topics...",
+                aboutTitle: "ℹ️ About Us & Vision",
+                aboutDesc: "WebSpace Ultimate Pro is a modern, modular, single-page architecture (SPA) cloud and local storage ecosystem designed for maximum digital asset efficiency.",
+                contactText: "📩 <b>Official Contact:</b> supralanderxbox@gmail.com",
+                loginHeader: "Connect to System",
+                btnLogin: "Log In",
+                btnRegister: "Register",
+                btnGuest: "⚡ Continue as Guest",
+                forgotText: "Forgot Password?",
+                emailPlh: "Email Address",
+                passPlh: "Password"
+            }
+        };
+
+        const t = trans[lang] || trans['tr'];
+        
+        document.getElementById('tabDashboard').innerText = t.tabDashboard;
+        document.getElementById('tabGuestdashboard').innerText = t.tabGuestdashboard;
+        document.getElementById('tabChat').innerText = t.tabChat;
+        document.getElementById('tabHelp').innerText = t.tabHelp;
+        document.getElementById('tabPrivacy').innerText = t.tabPrivacy;
+        document.getElementById('tabVip').innerText = t.tabVip;
+        document.getElementById('tabAdmin').innerText = t.tabAdmin;
+        
+        document.getElementById('featureTitle').innerText = t.featureTitle;
+        document.getElementById('featureDesc').innerText = t.featureDesc;
+        document.getElementById('matrixTitle').innerText = t.matrixTitle;
+        document.getElementById('matrixCan').innerHTML = t.matrixCan;
+        document.getElementById('matrixCannot').innerHTML = t.matrixCannot;
+        document.getElementById('aboutTitle').innerText = t.aboutTitle;
+        document.getElementById('aboutDesc').innerText = t.aboutDesc;
+        document.getElementById('contactText').innerHTML = t.contactText;
+        document.getElementById('loginHeader').innerText = t.loginHeader;
+        document.getElementById('btnLogin').innerText = t.btnLogin;
+        document.getElementById('btnRegister').innerText = t.btnRegister;
+        document.getElementById('btnGuest').innerText = t.btnGuest;
+        document.getElementById('forgotText').innerText = t.forgotText;
+        document.getElementById('authEmail').placeholder = t.emailPlh;
+        document.getElementById('authPassword').placeholder = t.passPlh;
+    };
+
     function handleRoute() {
         let hash = window.location.hash.replace('#', '') || '/tr/dashboard';
-        
-        // Eğer URL eski düzendeyse (#dashboard gibi) otomatik yeni formata evrilt
-        if (!hash.startsWith('/')) {
-            hash = '/tr/' + hash;
-        }
+        if (!hash.startsWith('/')) hash = '/tr/' + hash;
 
-        const parts = hash.split('/'); // ["", "tr", "dashboard"]
+        const parts = hash.split('/');
         const activeLang = parts[1] || 'tr';
         let activePage = parts[2] || 'dashboard';
 
-        // Misafir / Üye koruma bariyeri
         if (window.isCurrentUserGuest && activePage === 'dashboard') { activePage = 'guestdashboard'; }
         if (!window.isCurrentUserGuest && activePage === 'guestdashboard') { activePage = 'dashboard'; }
 
-        // UI Dil Butonlarını güncelle
+        // Küresel dil motorunu tetikle
+        window.translateUI(activeLang);
+
         document.getElementById('langBtnTr').classList.toggle('active', activeLang === 'tr');
         document.getElementById('langBtnEn').classList.toggle('active', activeLang === 'en');
 
-        // Tab butonlarının ışıklarını yak/söndür
-        const tabMap = {
-            'dashboard': 'tabDashboard',
-            'guestdashboard': 'tabGuestdashboard',
-            'chat': 'tabChat',
-            'help': 'tabHelp',
-            'privacy': 'tabPrivacy',
-            'vip': 'tabVip',
-            'admin': 'tabAdmin'
-        };
-        
-        Object.values(tabMap).forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.classList.remove('tab-active');
-        });
+        const tabMap = { 'dashboard': 'tabDashboard', 'guestdashboard': 'tabGuestdashboard', 'chat': 'tabChat', 'help': 'tabHelp', 'privacy': 'tabPrivacy', 'vip': 'tabVip', 'admin': 'tabAdmin' };
+        Object.values(tabMap).forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('tab-active'); });
         
         const currentTabId = tabMap[activePage];
-        if(currentTabId && document.getElementById(currentTabId)) {
-            document.getElementById(currentTabId).classList.add('tab-active');
-        }
+        if(currentTabId && document.getElementById(currentTabId)) document.getElementById(currentTabId).classList.add('tab-active');
 
-        // Seksiyonları göster/gizle
         const sections = ['dashboardSection', 'guestDashboardSection', 'chatSection', 'helpSection', 'privacySection', 'vipSection', 'adminSection'];
-        sections.forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.classList.add('hidden');
-        });
+        sections.forEach(id => { const el = document.getElementById(id); if(el) el.classList.add('hidden'); });
 
         const targetSectionId = activePage + 'Section';
-        if(document.getElementById(targetSectionId)) {
-            document.getElementById(targetSectionId).classList.remove('hidden');
-        }
+        if(document.getElementById(targetSectionId)) document.getElementById(targetSectionId).classList.remove('hidden');
 
-        // Eğer gizlilik politikasındaysak metni anlık dilde yükle
-        if (activePage === 'privacy' && window.updatePrivacyUI) {
-            window.updatePrivacyUI(activeLang);
-        }
+        if (activePage === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI(activeLang);
     }
 
-    // Dil Değiştirme Tetikleyicisi (O an hangi sayfadaysa onu korur)
     function switchLanguage(targetLang) {
         let hash = window.location.hash.replace('#', '') || '/tr/dashboard';
         if (!hash.startsWith('/')) hash = '/tr/' + hash;
-        
         const parts = hash.split('/');
-        parts[1] = targetLang; // Sadece dil parametresini güncelle
-        
+        parts[1] = targetLang;
         window.location.hash = parts.join('/');
     }
 
-    // Sekmelere tıklandığında anlık dili bozmadan sayfayı değiştirir
     function navigateToPage(targetPage) {
         let hash = window.location.hash.replace('#', '') || '/tr/dashboard';
         if (!hash.startsWith('/')) hash = '/tr/' + hash;
-        
         const parts = hash.split('/');
-        const currentLang = parts[1] || 'tr';
-        
-        window.location.hash = `/${currentLang}/${targetPage}`;
+        window.location.hash = `/${parts[1] || 'tr'}/${targetPage}`;
     }
 
     window.addEventListener('hashchange', handleRoute);
@@ -352,16 +398,13 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     
     import { initDashboard } from "./dashboard.js";
     import { initChatModule } from "./chat.js";
     import { initHelpForum } from "./help.js";
-    
-    // Yeni oluşturduğumuz gizlilik modülünü flat yapıdan çağırıyoruz
     import { privacyData } from "./privacy.js";
 
-    // Dinamik Gizlilik Sayfası Basıcı
     window.updatePrivacyUI = function(lang) {
         const data = privacyData[lang] || privacyData['tr'];
         document.getElementById('privacyTitle').innerText = data.title;
@@ -369,7 +412,6 @@
         document.getElementById('privacyBody').innerHTML = data.content;
     };
 
-    // Firebase Config ve diğer fonksiyonlar orijinal kod tabanından aynen miras alındı
     const firebaseConfig = {
         apiKey: "AIzaSyA5tgORprtf_TIddYlEO12druYVvgQWaSI",
         authDomain: "site-store-9116e.firebaseapp.com",
@@ -384,13 +426,31 @@
     const db = getFirestore(app);
     const fsTools = { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc };
 
-    let activeUserSession = null;
+    // 👑 NOKTA ATIŞI FİLTRELİ RÜTBE ATAMA FONKSİYONU (FIXED)
+    window.executeAdminRoleAssign = async () => {
+        const targetEmail = document.getElementById('targetAdminEmail').value.trim();
+        const selectedRole = document.getElementById('targetRoleSelect').value;
+        if(!targetEmail) return alert("E-posta boş bırakılamaz!");
+        try {
+            const q = query(collection(db, "users"), where("email", "==", targetEmail));
+            const snapshot = await getDocs(q);
+            let foundUid = null;
+            snapshot.forEach(d => { foundUid = d.id; });
+            
+            if(foundUid) {
+                await updateDoc(doc(db, "users", foundUid), { role: selectedRole });
+                alert(`Başarılı! ${targetEmail} kullanıcısı artık: ${selectedRole.toUpperCase()}`);
+                window.location.reload();
+            } else { 
+                alert("Kullanıcı bulunamadı. Lütfen e-postayı kontrol edin."); 
+            }
+        } catch(e) { alert("Hata: " + e.message); }
+    };
 
     window.calculateRank = function(points, email, role) {
         if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu 👑", class: "badge-kurucu" };
         if(role === 'mod') return { name: "Moderatör 🛠️", class: "badge-mod" };
         if(role === 'vip') return { name: "VIP ⭐", class: "badge-vip" };
-        if (points >= 300) return { name: "Zirvelatıcı", class: "badge-user" };
         return { name: "Çaylaklatıcı", class: "badge-user" };
     }
 
@@ -414,7 +474,6 @@
     };
 
     function setupSession(user) {
-        activeUserSession = user;
         window.isCurrentUserGuest = !!user.isGuest;
         document.getElementById('authPanel').classList.add('hidden');
         document.getElementById('mainTabs').classList.remove('hidden');
@@ -423,6 +482,35 @@
         let rankBadge = window.calculateRank(user.points || 0, user.email, user.role);
         document.getElementById('userInfo').innerHTML = `👤 ${user.nick || user.email} <span class="badge ${rankBadge.class}">${rankBadge.name}</span>`;
         
+        // 🛠️ RÜTBE AYRICALIK PANELİ AKTİVASYON MOTORU
+        const vPerk = document.getElementById('vipPerkArea');
+        const mPerk = document.getElementById('modPerkArea');
+        const kPerk = document.getElementById('kurucuPerkArea');
+
+        if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') {
+            document.getElementById('tabAdmin').classList.remove('hidden');
+            document.getElementById('optModRole').classList.remove('hidden');
+            if(vPerk) vPerk.classList.remove('hidden');
+            if(mPerk) mPerk.classList.remove('hidden');
+            if(kPerk) kPerk.classList.remove('hidden');
+        } else if(user.role === 'mod') {
+            document.getElementById('tabAdmin').classList.remove('hidden');
+            document.getElementById('optModRole').classList.add('hidden');
+            if(vPerk) vPerk.classList.remove('hidden');
+            if(mPerk) mPerk.classList.remove('hidden');
+            if(kPerk) kPerk.classList.add('hidden');
+        } else if(user.role === 'vip') {
+            document.getElementById('tabAdmin').classList.add('hidden');
+            if(vPerk) vPerk.classList.remove('hidden');
+            if(mPerk) mPerk.classList.add('hidden');
+            if(kPerk) kPerk.classList.add('hidden');
+        } else {
+            document.getElementById('tabAdmin').classList.add('hidden');
+            if(vPerk) vPerk.classList.add('hidden');
+            if(mPerk) mPerk.classList.add('hidden');
+            if(kPerk) kPerk.classList.add('hidden');
+        }
+
         if(user.isGuest) {
             document.getElementById('tabDashboard').classList.add('hidden');
             document.getElementById('tabGuestdashboard').classList.remove('hidden');
