@@ -1,4 +1,4 @@
-// lang.js - CoreBase Küresel Açık Kaynak Çeviri Sözlüğü
+// lang.js - CoreBase Küresel Açık Kaynak Çeviri Sözlüğü (Güncellenmiş & Eksiksiz)
 export const uiTranslations = {
     tr: {
         // Genel & Navigasyon
@@ -34,7 +34,7 @@ export const uiTranslations = {
         // Üye Dashboard (Ana Üs)
         vip_perk_title: "✨ VIP Ayrıcalık Paneli Aktif",
         vip_perk_desc: "Sohbet odalarında altın isminiz parlıyor. Özel yüksek hızlı indirme ve sınırsız Firebase dosya yükleme kotanız sınırsız olarak tanımlandı!",
-        btn_vip_boost: "VIP Hızlandırıcıyı Aç",
+        btn_vip_boost: "VIP Sayfasına Git",
         create_folder_title: "📂 Yeni Klasör Yarat",
         btn_create: "Yarat",
         add_link_title: "📌 Klasöre Link Ekle",
@@ -77,7 +77,7 @@ export const uiTranslations = {
 
         // VIP Alanı
         vip_activation_title: "💎 VIP Üyelik Aktivasyon Alanı (5 TL)",
-        vip_activation_desc: "VIP rütbesini kaparak sohbette altın isme ve sınırsız önceliğe kavuş! Bilgileri doldurup ödeme emrini tetikleyebilirsin.",
+        vip_activation_desc: "VIP rütbesini kaparak sohbette altın isme ve sınırsız önceliğe kavuş! Ayrıca panelde özel yüksek hızlı indirme (VIP Hızlandırıcı) motorunu ve sınırsız dosya yükleme kotasını yasal olarak aktif edebilirsin.",
         btn_pay: "5.00 TL ÖDE",
         plh_card_name: "Kart Sahibinin Adı Soyadı",
 
@@ -110,7 +110,7 @@ export const uiTranslations = {
         showcase_desc: "When you connect as a guest without registering, you can explore general chat rooms, help forums, and shared global folders without restrictions.",
         matrix_title: "🔄 Guest Mode Feature Matrix (Updated):",
         matrix_can: "<b>What Guests Can Do:</b> Create independent local folders in browser storage (LocalStorage), upload files, and map links.",
-        matrix_cannot: "<b>What Guests Cannot Do (Restrictions):</b> Cannot publish local folders globally, cannot transfer data to Firebase cloud, cannot start new help topics...",
+        matrix_cannot: "<b>What Guests Cannot Do (Restrictions):</b> Cannot publish local folders globally, cannot transfer data to Firebase cloud, cannot start new help topics, and cannot collect rank points.",
         about_title: "ℹ️ About Us & Vision",
         about_desc: "WebSpace Ultimate Pro is a modern, modular, single-page architecture (SPA) cloud and local storage ecosystem designed for maximum digital asset efficiency. Our platform combines link grouping, secure encrypted file storage, real-time interactive chat channels, and a community-powered help forum under one roof.",
         official_contact: "📩 <b>Official Contact:</b> supralanderxbox@gmail.com",
@@ -125,7 +125,7 @@ export const uiTranslations = {
         // Üye Dashboard (Ana Üs)
         vip_perk_title: "✨ VIP Privileges Panel Active",
         vip_perk_desc: "Your golden name shines in chat rooms. Special high-speed downloads and unlimited Firebase file upload quotas are defined for you permanently!",
-        btn_vip_boost: "Open VIP Gold Boost",
+        btn_vip_boost: "Go to VIP Page",
         create_folder_title: "📂 Create New Folder",
         btn_create: "Create",
         add_link_title: "📌 Add Link to Folder",
@@ -161,14 +161,14 @@ export const uiTranslations = {
         plh_msg: "Message...",
         plh_url_chat: "Enter URL",
 
-        // Yardım Forumu
+        // Advisory Forum
         help_panel_title: "🙋 Open Help Topic",
         btn_publish: "Publish",
         plh_help_question: "What is your issue?",
 
         // VIP Alanı
         vip_activation_title: "💎 VIP Membership Activation Area (5 TL)",
-        vip_activation_desc: "Grab the VIP rank to get a golden name in chat and ultimate priority! Fill out the details to trigger the payment command.",
+        vip_activation_desc: "Grab the VIP rank to get a golden name in chat and ultimate priority! Also, you can legally activate the special high-speed download (VIP Booster) engine and unlimited file upload quota in the panel.",
         btn_pay: "PAY 5.00 TL",
         plh_card_name: "Cardholder Name and Surname",
 
