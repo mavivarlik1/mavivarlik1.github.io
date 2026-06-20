@@ -46,6 +46,11 @@
         
         .file-grid, .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
         .file-item, .folder-item { background: rgba(15, 23, 42, 0.7); border: var(--glass-border); padding: 15px; border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+        .folder-section { background: var(--glass-bg); backdrop-filter: blur(10px); padding: 20px; border-radius: 16px; border: var(--glass-border); margin-top: 20px; }
+        .folder-title { font-weight: 600; font-size: 18px; color: var(--text-color); margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .links-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+        .link-card { background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s; cursor: pointer; }
+        .link-card:hover { transform: translateY(-3px); border-color: var(--accent-color); box-shadow: var(--accent-glow); }
         input, select, textarea { background: rgba(15, 23, 42, 0.8); color: var(--text-color); border: 1px solid rgba(255,255,255,0.1); padding: 12px 16px; border-radius: 8px; margin: 8px 0; width: 100%; box-sizing: border-box; font-family: inherit; }
         button { background: var(--accent-color); color: #0f172a; font-weight: 600; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
         button:hover { transform: translateY(-2px); box-shadow: var(--accent-glow); }
@@ -56,9 +61,16 @@
         .chat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
         .chat-box { background: var(--glass-bg); backdrop-filter: blur(12px); border: var(--glass-border); padding: 20px; border-radius: 16px; height: 420px; display: flex; flex-direction: column; }
         .chat-messages { flex: 1; overflow-y: auto; background: rgba(15, 23, 42, 0.5); padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { background: rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 12px; border-left: 3px solid var(--accent-color); font-size: 14px; }
         .maskot-container { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 16px; border: var(--glass-border); margin-bottom: 25px; }
         .maskot-img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; box-shadow: var(--accent-glow); }
         .maskot-bubble { background: rgba(15, 23, 42, 0.8); padding: 10px 16px; border-radius: 12px 12px 12px 4px; font-size: 14px; font-weight: 500; border: 1px solid rgba(255,255,255,0.1); }
+        .viewer-modal-backdrop { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); display:flex; justify-content:center; align-items:center; z-index: 10000; }
+        .viewer-content { background: #1e293b; border: 1px solid rgba(255,255,255,0.15); width: 80%; max-width: 800px; max-height: 85vh; border-radius: 16px; display:flex; flex-direction:column; }
+        .viewer-body { padding: 20px; overflow-y: auto; flex:1; background: #0f172a; }
+        .viewer-text { width:100%; height: 350px; background:#0f172a; color:#a7f3d0; border:none; font-family: monospace; padding:15px; }
+        .viewer-img { max-width:100%; max-height:60vh; object-fit:contain; }
+        .credit-card-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 400px; margin: 20px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
         
         .lang-container { display: flex; gap: 8px; background: rgba(15, 23, 42, 0.5); padding: 4px; border-radius: 10px; border: var(--glass-border); }
         .lang-ui-btn { background: transparent; color: var(--text-muted); padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; border:none; cursor: pointer; transition: all 0.2s; }
@@ -103,7 +115,6 @@
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <!-- AUTH PANEL -->
     <div id="authPanel" class="modal">
         <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px;">
             <div>
@@ -112,14 +123,14 @@
                 
                 <h4 id="matrixTitle" style="color: var(--success-color); margin-bottom: 5px;">🔄 Misafir Modu Özellik Matrisi (Güncellendi):</h4>
                 <ul style="font-size: 12px; color: var(--text-muted); padding-left: 20px; line-height: 1.8;">
-                    <li id="matrixCan"><b>Misafirlerin Yapabilecekleri:</b> Tarayıcı hafızasında (LocalStorage) bağımsız yerel klasörler oluşturabilir, dosyalar yükleyebilir ve linkler haritalandırabilir.</li>
-                    <li id="matrixCannot"><b>Misafirlerin Yapamayacakları (Kısıtlamalar):</b> Yerel klasörleri küresel ortak havuzda yayınlayamaz, verileri Firebase bulutuna aktaramaz, yeni yardım konusu açamaz...</li>
+                    <li id="matrixCan"><b>Misafirlerin Yapabilecekleri:</b> Tarayıcı hafızasında (LocalStorage) bağımsız yerel klasörler oluşturabilir, dosyalar yükleyebilir...</li>
+                    <li id="matrixCannot"><b>Misafirlerin Yapamayacakları:</b> Yerel klasörleri küresel ortak havuzda yayınlayamaz, verileri Firebase bulutuna aktaramaz...</li>
                 </ul>
 
                 <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
                 <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
                 <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
-                    WebSpace Ultimate Pro, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir.
+                    WebSpace Ultimate Pro, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler bir bulut ekosistemidir.
                 </p>
                 <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
             </div>
@@ -137,77 +148,128 @@
         </div>
     </div>
 
-    <!-- SECTIONS -->
     <div id="dashboardSection" class="hidden">
-        <!-- ⭐ VIP ÖZEL ALANI -->
         <div id="vipPerkArea" class="hidden modal" style="border: 2px solid var(--gold-color); background: rgba(251, 191, 36, 0.03);">
-            <h3 style="color: var(--gold-color); margin:0;">✨ VIP Ayrıcalık Paneli Active</h3>
-            <p style="font-size:13px; color:var(--text-muted); margin: 5px 0 10px 0;">Sohbet odalarında altın isminiz parlıyor. Özel yüksek hızlı indirme ve sınırsız Firebase dosya yükleme kotanız sınırsız olarak tanımlandı!</p>
-            <button onclick="alert('VIP Gold Boost aktif edildi!')" style="background:var(--gold-color); color:#0f172a; padding:6px 12px; font-size:12px;">VIP Hızlandırıcıyı Aç</button>
+            <h3 id="vipPerkTitle" style="color: var(--gold-color); margin:0;">✨ VIP Ayrıcalık Paneli Active</h3>
+            <p id="vipPerkDesc" style="font-size:13px; color:var(--text-muted); margin: 5px 0 10px 0;">Sohbet odalarında altın isminiz parlıyor...</p>
+            <button id="btnVipBoost" onclick="alert('VIP Gold Boost aktif edildi!')" style="background:var(--gold-color); color:#0f172a; padding:6px 12px; font-size:12px;">VIP Hızlandırıcıyı Aç</button>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
             <div class="modal" style="margin-bottom:0;">
-                <h4 style="margin-top:0; color: var(--accent-color);">📂 Yeni Klasör Yarat</h4>
+                <h4 id="createFolderTitle" style="margin-top:0; color: var(--accent-color);">📂 Yeni Klasör Yarat</h4>
                 <div style="display:flex; gap:10px;">
                     <input type="text" id="newFolderNameInput" placeholder="Klasör İsmi" style="margin:0;">
-                    <button onclick="createNewFolder()" style="margin:0; white-space:nowrap;">Yarat</button>
+                    <button id="btnCreateFolder" onclick="createNewFolder()" style="margin:0; white-space:nowrap;">Yarat</button>
                 </div>
             </div>
             <div class="modal" style="margin-bottom:0;">
-                <h4 style="margin-top:0; color: var(--success-color);">📌 Klasöre Link Ekle</h4>
+                <h4 id="addLinkTitle" style="margin-top:0; color: var(--success-color);">📌 Klasöre Link Ekle</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <select id="folderSelect" style="margin:0;"><option value="">-- Klasör Seç --</option></select>
+                    <select id="folderSelect" style="margin:0;"><option value="" id="optSelectFolder">-- Klasör Seç --</option></select>
                     <input type="text" id="siteNameInput" placeholder="Başlık" style="margin:0;">
                 </div>
                 <div style="display:flex; gap:10px; margin-top:10px;">
                     <input type="text" id="siteUrlInput" placeholder="URL adresi" style="margin:0;">
-                    <button onclick="addNewLinkToFolder()" style="margin:0; background:var(--success-color); color:#064e3b; white-space:nowrap;">Ekle</button>
+                    <button id="btnAddLink" onclick="addNewLinkToFolder()" style="margin:0; background:var(--success-color); color:#064e3b; white-space:nowrap;">Ekle</button>
                 </div>
             </div>
         </div>
         
         <div class="modal">
-            <h3>🚀 Bulut Depolama</h3>
+            <h3 id="cloudStorageTitle">🚀 Bulut Depolama</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div>
                     <input type="text" id="newFileName" placeholder="notlar.txt">
                     <textarea id="newFileContent" placeholder="İçerik..." rows="3"></textarea>
-                    <button onclick="createNewTextFile()" style="width: 100%;">Kaydet</button>
+                    <button id="btnSaveFile" onclick="createNewTextFile()" style="width: 100%;">Kaydet</button>
                 </div>
                 <div>
                     <input type="file" id="localFileUploader" style="padding: 5px;">
-                    <button onclick="uploadLocalFile()" style="width: 100%; background: var(--success-color); color: #064e3b;">Yükle</button>
+                    <button id="btnUploadFile" onclick="uploadLocalFile()" style="width: 100%; background: var(--success-color); color: #064e3b;">Yükle</button>
                 </div>
             </div>
+            <hr style="border:0; border-top: 1px solid rgba(255,255,255,0.05); margin:20px 0;">
+            <h4 id="savedFilesTitle">📂 Kayıtlı Şifreli Dosyaların</h4>
             <div id="fileStorageWrapper" class="file-grid"></div>
         </div>
-        <div class="modal">
-            <h3>🌍 Ortak Paylaşılan Global Klasörler</h3>
+        <div class="modal" style="border: 1px solid rgba(56,189,248,0.2);">
+            <h3 id="globalSharedTitle">🌍 Ortak Paylaşılan Global Klasörler (Vitrin Verisi)</h3>
             <div id="sharedFoldersWrapper" class="folder-grid"></div>
         </div>
+        <h3 id="myDriverTitle" style="color: var(--accent-color);">🗂️ WebSpace Sürücüm</h3>
         <div id="foldersWrapper"></div>
     </div>
 
     <div id="guestDashboardSection" class="hidden">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+            <div class="modal" style="margin-bottom:0;">
+                <h4 id="guestCreateFolderTitle" style="margin-top:0; color: var(--accent-color);">📂 Yeni Yerel Klasör Yarat (LocalStorage)</h4>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="guestNewFolderNameInput" placeholder="Klasör İsmi" style="margin:0;">
+                    <button id="btnGuestCreateFolder" onclick="createGuestFolder()" style="margin:0; white-space:nowrap;">Yarat</button>
+                </div>
+            </div>
+            <div class="modal" style="margin-bottom:0;">
+                <h4 id="guestAddLinkTitle" style="margin-top:0; color: var(--success-color);">📌 Yerel Klasöre Link Ekle</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <select id="guestFolderSelect" style="margin:0;"><option value="" id="optGuestSelectFolder">-- Klasör Seç --</option></select>
+                    <input type="text" id="guestSiteNameInput" placeholder="Başlık" style="margin:0;">
+                </div>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <input type="text" id="guestSiteUrlInput" placeholder="URL adresi" style="margin:0;">
+                    <button id="btnGuestAddLink" onclick="addGuestLinkToFolder()" style="margin:0; background:var(--success-color); color:#064e3b; white-space:nowrap;">Ekle</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal">
+            <h3 id="guestStorageTitle">🚀 Yerel Dosya Depolama (Hafıza Güvenli)</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <input type="text" id="guestNewFileName" placeholder="notlar.txt">
+                    <textarea id="guestNewFileContent" placeholder="İçerik..." rows="3"></textarea>
+                    <button id="btnGuestSaveFile" onclick="createGuestTextFile()" style="width: 100%;">Yerel Kaydet</button>
+                </div>
+                <div>
+                    <input type="file" id="guestLocalFileUploader" style="padding: 5px;">
+                    <button id="btnGuestUploadFile" onclick="uploadGuestLocalFile()" style="width: 100%; background: var(--success-color); color: #064e3b;">Yükle</button>
+                </div>
+            </div>
+            <hr style="border:0; border-top: 1px solid rgba(255,255,255,0.05); margin:20px 0;">
+            <h4 id="guestSavedFilesTitle">📂 Tarayıcı Belleğindeki Dosyalar</h4>
+            <div id="guestFileStorageWrapper" class="file-grid"></div>
+        </div>
+        <div class="modal" style="border: 1px solid rgba(56,189,248,0.2);">
+            <h3 id="guestGlobalSharedTitle">🌍 Ortak Paylaşılan Global Klasörler (Vitrin Verisi)</h3>
+            <div id="guestSharedFoldersWrapper" class="folder-grid"></div>
+        </div>
+        <h3 id="guestDriverTitle" style="color: var(--accent-color);">🗂️ Yerel Sürücü Görünümü</h3>
         <div id="guestFoldersWrapper"></div>
     </div>
 
     <div id="chatSection" class="hidden">
-        <!-- 🛠️ MODERATÖR ÖZEL ALANI -->
         <div id="modPerkArea" class="hidden modal" style="border: 2px solid var(--success-color); background: rgba(16, 185, 129, 0.03);">
-            <h3 style="color: var(--success-color); margin:0;">🛠️ Moderatör Denetim Paneli Active</h3>
-            <p style="font-size:13px; color:var(--text-muted); margin: 5px 0 10px 0;">Sohbet akışını gerçek zamanlı izleme, zararlı mesajları tek tıkla veritabanından silme ve misafir kullanıcıları susturma yetkiniz devrede.</p>
-            <button onclick="alert('Sohbet akışı başarıyla temizlendi ve loglandı! (Simülasyon)')" style="background:var(--success-color); color:#0f172a; padding:6px 12px; font-size:12px;">Sohbeti Temizle</button>
+            <h3 id="modPerkTitle" style="color: var(--success-color); margin:0;">🛠️ Moderatör Denetim Paneli Active</h3>
+            <p id="modPerkDesc" style="font-size:13px; color:var(--text-muted); margin: 5px 0 10px 0;">Sohbet akışını gerçek zamanlı izleme...</p>
+            <button id="btnClearChat" onclick="alert('Cleared!')" style="background:var(--success-color); color:#0f172a; padding:6px 12px; font-size:12px;">Sohbeti Temizle</button>
         </div>
 
         <div class="chat-grid">
             <div class="chat-box">
-                <h3>🌍 Genel Chat</h3>
+                <h3 id="globalChatTitle">🌍 Genel Chat</h3>
                 <div id="globalChatMsgs" class="chat-messages"></div>
                 <div style="display:flex; gap:10px;">
                     <input type="text" id="globalMsgInput" placeholder="Mesaj...">
-                    <button onclick="sendChatMessage('global')">Gönder</button>
+                    <button id="btnSendGlobal" onclick="sendChatMessage('global')">Gönder</button>
+                </div>
+            </div>
+            <div class="chat-box">
+                <h3 id="urlChatTitle">🔗 URL Tartışma</h3>
+                <input type="text" id="urlChatTarget" placeholder="URL girin" oninput="loadUrlChat()" style="margin-bottom:15px;">
+                <div id="urlChatMsgs" class="chat-messages"></div>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="urlMsgInput" placeholder="Mesaj...">
+                    <button id="btnSendUrl" onclick="sendChatMessage('url')">Gönder</button>
                 </div>
             </div>
         </div>
@@ -215,10 +277,10 @@
 
     <div id="helpSection" class="hidden">
         <div class="modal" id="helpWritePanel">
-            <h3>🙋 Yardım Konusu Aç</h3>
+            <h3 id="helpPanelTitle">🙋 Yardım Konusu Aç</h3>
             <div style="display:flex; gap:10px;">
                 <input type="text" id="helpTitleInput" placeholder="Sorununuz nedir?" style="margin:0;">
-                <button onclick="createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
+                <button id="btnPublishHelp" onclick="createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
             </div>
         </div>
         <div id="helpTopicsWrapper"></div>
@@ -233,118 +295,103 @@
         </div>
     </div>
 
-    <div id="vipSection" class="hidden"></div>
+    <div id="vipSection" class="hidden">
+        <div class="modal" style="border: 2px solid var(--gold-color); text-align: center;">
+            <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 24px;">💎 VIP Üyelik Aktivasyon Alanı (5 TL)</h3>
+            <p id="vipActivationDesc" style="color: var(--text-muted); font-size: 14px; max-width: 600px; margin: 0 auto 20px auto;">VIP rütbesini kaparak...</p>
+            <div class="credit-card-box">
+                <input type="text" id="cardHolderName" placeholder="Kart Sahibinin Adı Soyadı">
+                <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19">
+                <button id="btnPayVip" onclick="handleCardPayment()" style="width: 100%; background: var(--gold-color); color: #1e293b; margin-top: 15px; font-size: 16px;">5.00 TL ÖDE</button>
+            </div>
+        </div>
+    </div>
 
     <div id="adminSection" class="hidden">
         <div class="modal" style="border: 2px solid var(--danger-color);">
-            <h3 style="color: var(--danger-color);">👑 Yetki Atama Komuta Masası</h3>
+            <h3 id="adminPanelTitle" style="color: var(--danger-color);">👑 Yetki Atama Komuta Masası</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <input type="email" id="targetAdminEmail" placeholder="Kullanıcı E-postası">
                 <select id="targetRoleSelect">
-                    <option value="vip">⭐ VIP Rütbesi Ver</option>
-                    <option value="mod" id="optModRole">🛠️ Moderatör Rütbesi Ver</option>
+                    <option value="vip" id="optGiveVip">⭐ VIP Rütbesi Ver</option>
+                    <option value="mod" id="optGiveMod">🛠️ Moderatör Rütbesi Ver</option>
                 </select>
             </div>
-            <button onclick="executeAdminRoleAssign()" style="background: var(--danger-color); color: white; width: 100%; margin-top: 10px;">Rütbeyi Güncelle</button>
+            <button id="btnUpdateRank" onclick="executeAdminRoleAssign()" style="background: var(--danger-color); color: white; width: 100%; margin-top: 10px;">Rütbeyi Güncelle</button>
         </div>
 
-        <!-- 👑 KURUCU ÖZEL ALANI -->
         <div id="kurucuPerkArea" class="hidden modal" style="border: 2px solid var(--danger-color); background: rgba(239, 68, 68, 0.03); margin-top:15px;">
-            <h3 style="color: var(--danger-color); margin:0;">👑 Kurucu Çekirdek Sistemi</h3>
-            <p style="font-size:13px; color:var(--text-muted); margin: 5px 0 10px 0;">Tüm sunucu altyapısını anlık klonlama, acil durum yedekleme havuzunu tetikleme ve Firebase Firestore şemalarını optimize etme masası.</p>
-            <button onclick="alert('Global sistem yedeği AWS ve yerel disklere başarıyla aktarıldı!')" style="background:var(--danger-color); color:white; padding:8px 16px; font-size:12px;">Tüm Sistemi Yedekle</button>
+            <h3 id="kurucuPerkTitle" style="color: var(--danger-color); margin:0;">👑 Kurucu Çekirdek Sistemi</h3>
+            <p id="kurucuPerkDesc" style="font-size:13px; color:var(--text-muted); margin: 5px 0 10px 0;">Tüm sunucu altyapısını...</p>
+            <button id="btnBackupSystem" onclick="alert('Backup triggered!')" style="background:var(--danger-color); color:white; padding:8px 16px; font-size:12px;">Tüm Sistemi Yedekle</button>
         </div>
     </div>
 
     <div class="modal hidden" id="settingsModal" style="margin-top:30px;">
-        <h3>⚙️ Ayarlar</h3>
-        <button onclick="handleLogout()" style="background: var(--danger-color); color: #fff;">Sistemden Çıkış Yap</button>
+        <h3 id="settingsTitle">⚙️ Ayarlar</h3>
+        <button id="btnLogout" onclick="handleLogout()" style="background: var(--danger-color); color: #fff;">Sistemden Çıkış Yap</button>
     </div>
 </div>
 
-<script>
-    window.isCurrentUserGuest = false;
+<script type="module">
+    import { uiTranslations } from "./lang.js";
 
-    // 🌟 KÜRESEL DİL SÖZLÜĞÜ (TÜM ARAYÜZ BURADAN ÇEVRİLİR)
+    // 🌟 KÜRESEL AÇIK KAYNAK ÇEVİRİ MOTORU (TAM SENKRONİZE)
     window.translateUI = function(lang) {
-        const trans = {
-            tr: {
-                tabDashboard: "🗂️ Sürücü & Paylaşım",
-                tabGuestdashboard: "🗂️ Misafir Sürücüsü",
-                tabChat: "💬 /chat Odaları",
-                tabHelp: "🙋 /yardım Forumu",
-                tabPrivacy: "📜 Gizlilik Politikası",
-                tabVip: "⭐ VIP Ol",
-                tabAdmin: "👑 Yönetim",
-                featureTitle: "WebSpace Sistem Özellikleri (Vitrin)",
-                featureDesc: "Sistemimize kayıt olmadan misafir olarak bağlandığınızda genel chat odalarını, yardım forumunu ve ortak paylaşılan tüm klasörleri kısıtlamasız inceleyebilirsiniz.",
-                matrixTitle: "🔄 Misafir Modu Özellik Matrisi (Güncellendi):",
-                matrixCan: "<b>Misafirlerin Yapabilecekleri:</b> Tarayıcı hafızasında (LocalStorage) bağımsız yerel klasörler oluşturabilir, dosyalar yükleyebilir ve linkler haritalandırabilir.",
-                matrixCannot: "<b>Misafirlerin Yapamayacakları (Kısıtlamalar):</b> Yerel klasörleri küresel ortak havuzda yayınlayamaz, verileri Firebase bulutuna aktaramaz, yeni yardım konusu açamaz ve rütbe puanı toplayamaz.",
-                aboutTitle: "ℹ️ Hakkımızda & Vizyonumuz",
-                aboutDesc: "WebSpace Ultimate Pro, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir.",
-                contactText: "📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com",
-                loginHeader: "Sisteme Bağlan",
-                btnLogin: "Giriş Yap",
-                btnRegister: "Kayıt Ol",
-                btnGuest: "⚡ Misafir Olarak Devam Et",
-                forgotText: "Şifremi Unuttum?",
-                emailPlh: "E-posta Adresi",
-                passPlh: "Şifre"
-            },
-            en: {
-                tabDashboard: "🗂️ Drive & Sharing",
-                tabGuestdashboard: "🗂️ Guest Drive",
-                tabChat: "💬 /chat Rooms",
-                tabHelp: "🙋 /help Forum",
-                tabPrivacy: "📜 Privacy Policy",
-                tabVip: "⭐ Become VIP",
-                tabAdmin: "👑 Admin Panel",
-                featureTitle: "WebSpace System Features (Showcase)",
-                featureDesc: "When you connect as a guest without registering, you can explore general chat rooms, help forums, and shared global folders without restrictions.",
-                matrixTitle: "🔄 Guest Mode Feature Matrix (Updated):",
-                matrixCan: "<b>What Guests Can Do:</b> Create independent local folders in browser storage (LocalStorage), upload files, and map links.",
-                matrixCannot: "<b>What Guests Cannot Do (Restrictions):</b> Cannot publish local folders globally, cannot transfer data to Firebase cloud, cannot start new topics...",
-                aboutTitle: "ℹ️ About Us & Vision",
-                aboutDesc: "WebSpace Ultimate Pro is a modern, modular, single-page architecture (SPA) cloud and local storage ecosystem designed for maximum digital asset efficiency.",
-                contactText: "📩 <b>Official Contact:</b> supralanderxbox@gmail.com",
-                loginHeader: "Connect to System",
-                btnLogin: "Log In",
-                btnRegister: "Register",
-                btnGuest: "⚡ Continue as Guest",
-                forgotText: "Forgot Password?",
-                emailPlh: "Email Address",
-                passPlh: "Password"
-            }
+        const t = uiTranslations[lang] || uiTranslations['tr'];
+        
+        // Element Metinleri (Inner Text)
+        const textElements = {
+            maskotSpeech: 'system_active', userInfo: 'waiting_login', tabDashboard: 'tab_drive',
+            tabGuestdashboard: 'tab_guest_drive', tabChat: 'tab_chat', tabHelp: 'tab_help',
+            tabPrivacy: 'tab_privacy', tabVip: 'tab_vip', tabAdmin: 'tab_admin', settingsTitle: 'settings_title',
+            btnLogout: 'btn_logout', featureTitle: 'system_active', featureDesc: 'showcase_desc',
+            matrixTitle: 'matrix_title', matrixCan: 'matrix_can', matrixCannot: 'matrix_cannot',
+            aboutTitle: 'about_title', aboutDesc: 'about_desc', contactText: 'official_contact',
+            loginHeader: 'login_header', forgotText: 'forgot_password', btnLogin: 'btn_login',
+            btnRegister: 'btn_register', btnGuest: 'btn_continue_guest', vipPerkTitle: 'vip_perk_title',
+            vipPerkDesc: 'vip_perk_desc', btnVipBoost: 'btn_vip_boost', createFolderTitle: 'create_folder_title',
+            btnCreateFolder: 'btn_create', addLinkTitle: 'add_link_title', optSelectFolder: 'opt_select_folder',
+            btnAddLink: 'btn_add', cloudStorageTitle: 'cloud_storage_title', btnSaveFile: 'btn_save',
+            btnUploadFile: 'btn_upload', savedFilesTitle: 'saved_files_title', globalSharedTitle: 'global_shared_title',
+            myDriverTitle: 'my_driver_title', guestCreateFolderTitle: 'guest_create_folder_title',
+            btnGuestCreateFolder: 'btn_create', guestAddLinkTitle: 'guest_add_link_title',
+            optGuestSelectFolder: 'opt_select_folder', btnGuestAddLink: 'btn_add', guestStorageTitle: 'guest_storage_title',
+            btnGuestSaveFile: 'btn_local_save', btnGuestUploadFile: 'btn_upload', guestSavedFilesTitle: 'guest_saved_files_title',
+            guestGlobalSharedTitle: 'global_shared_title', guestDriverTitle: 'guest_driver_title',
+            modPerkTitle: 'mod_perk_title', modPerkDesc: 'mod_perk_desc', btnClearChat: 'btn_clear_chat',
+            globalChatTitle: 'global_chat_title', urlChatTitle: 'url_chat_title', btnSendGlobal: 'btn_send',
+            btnSendUrl: 'btn_send', helpPanelTitle: 'help_panel_title', btnPublishHelp: 'btn_publish',
+            vipActivationTitle: 'vip_activation_title', vipActivationDesc: 'vip_activation_desc',
+            btnPayVip: 'btn_pay', adminPanelTitle: 'admin_panel_title', optGiveVip: 'opt_give_vip',
+            optGiveMod: 'opt_give_mod', btnUpdateRank: 'btn_update_rank', kurucuPerkTitle: 'kurucu_perk_title',
+            kurucuPerkDesc: 'kurucu_perk_desc', btnBackupSystem: 'btn_backup_system'
         };
 
-        const t = trans[lang] || trans['tr'];
-        
-        document.getElementById('tabDashboard').innerText = t.tabDashboard;
-        document.getElementById('tabGuestdashboard').innerText = t.tabGuestdashboard;
-        document.getElementById('tabChat').innerText = t.tabChat;
-        document.getElementById('tabHelp').innerText = t.tabHelp;
-        document.getElementById('tabPrivacy').innerText = t.tabPrivacy;
-        document.getElementById('tabVip').innerText = t.tabVip;
-        document.getElementById('tabAdmin').innerText = t.tabAdmin;
-        
-        document.getElementById('featureTitle').innerText = t.featureTitle;
-        document.getElementById('featureDesc').innerText = t.featureDesc;
-        document.getElementById('matrixTitle').innerText = t.matrixTitle;
-        document.getElementById('matrixCan').innerHTML = t.matrixCan;
-        document.getElementById('matrixCannot').innerHTML = t.matrixCannot;
-        document.getElementById('aboutTitle').innerText = t.aboutTitle;
-        document.getElementById('aboutDesc').innerText = t.aboutDesc;
-        document.getElementById('contactText').innerHTML = t.contactText;
-        document.getElementById('loginHeader').innerText = t.loginHeader;
-        document.getElementById('btnLogin').innerText = t.btnLogin;
-        document.getElementById('btnRegister').innerText = t.btnRegister;
-        document.getElementById('btnGuest').innerText = t.btnGuest;
-        document.getElementById('forgotText').innerText = t.forgotText;
-        document.getElementById('authEmail').placeholder = t.emailPlh;
-        document.getElementById('authPassword').placeholder = t.passPlh;
-    };
+        Object.keys(textElements).forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.innerHTML = t[textElements[id]] || el.innerHTML;
+        });
 
+        // Girdi İpuçları (Placeholders)
+        const placeholders = {
+            authEmail: 'plh_email', authPassword: 'plh_password', newFolderNameInput: 'plh_folder_name',
+            siteNameInput: 'plh_title', siteUrlInput: 'plh_url', newFileName: 'plh_file_name',
+            newFileContent: 'plh_file_content', guestNewFolderNameInput: 'plh_folder_name',
+            guestSiteNameInput: 'plh_title', guestSiteUrlInput: 'plh_url', guestNewFileName: 'plh_file_name',
+            guestNewFileContent: 'plh_file_content', globalMsgInput: 'plh_msg', urlChatTarget: 'plh_url_chat',
+            urlMsgInput: 'plh_msg', helpTitleInput: 'plh_help_question', cardHolderName: 'plh_card_name',
+            targetAdminEmail: 'plh_target_email'
+        };
+
+        Object.keys(placeholders).forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.placeholder = t[placeholders[id]] || el.placeholder;
+        });
+    };
+</script>
+
+<script>
     function handleRoute() {
         let hash = window.location.hash.replace('#', '') || '/tr/dashboard';
         if (!hash.startsWith('/')) hash = '/tr/' + hash;
@@ -353,11 +400,11 @@
         const activeLang = parts[1] || 'tr';
         let activePage = parts[2] || 'dashboard';
 
-        if (window.isCurrentUserGuest && activePage === 'dashboard') { activePage = 'guestdashboard'; }
-        if (!window.isCurrentUserGuest && activePage === 'guestdashboard') { activePage = 'dashboard'; }
+        if (window.isCurrentUserGuest && activePage === 'dashboard') activePage = 'guestdashboard';
+        if (!window.isCurrentUserGuest && activePage === 'guestdashboard') activePage = 'dashboard';
 
-        // Küresel dil motorunu tetikle
-        window.translateUI(activeLang);
+        // Motoru anlık dil parametresi ile tetikle
+        if (window.translateUI) window.translateUI(activeLang);
 
         document.getElementById('langBtnTr').classList.toggle('active', activeLang === 'tr');
         document.getElementById('langBtnEn').classList.toggle('active', activeLang === 'en');
@@ -426,7 +473,7 @@
     const db = getFirestore(app);
     const fsTools = { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc };
 
-    // 👑 NOKTA ATIŞI FİLTRELİ RÜTBE ATAMA FONKSİYONU (FIXED)
+    // 👑 NOKTA ATIŞI VE GÜVENLİ KURUCU ATAMA MOTORU
     window.executeAdminRoleAssign = async () => {
         const targetEmail = document.getElementById('targetAdminEmail').value.trim();
         const selectedRole = document.getElementById('targetRoleSelect').value;
@@ -439,10 +486,10 @@
             
             if(foundUid) {
                 await updateDoc(doc(db, "users", foundUid), { role: selectedRole });
-                alert(`Başarılı! ${targetEmail} kullanıcısı artık: ${selectedRole.toUpperCase()}`);
+                alert(`Başarılı! ${targetEmail} artık: ${selectedRole.toUpperCase()}`);
                 window.location.reload();
             } else { 
-                alert("Kullanıcı bulunamadı. Lütfen e-postayı kontrol edin."); 
+                alert("Kullanıcı veritabanında bulunamadı."); 
             }
         } catch(e) { alert("Hata: " + e.message); }
     };
@@ -482,20 +529,17 @@
         let rankBadge = window.calculateRank(user.points || 0, user.email, user.role);
         document.getElementById('userInfo').innerHTML = `👤 ${user.nick || user.email} <span class="badge ${rankBadge.class}">${rankBadge.name}</span>`;
         
-        // 🛠️ RÜTBE AYRICALIK PANELİ AKTİVASYON MOTORU
         const vPerk = document.getElementById('vipPerkArea');
         const mPerk = document.getElementById('modPerkArea');
         const kPerk = document.getElementById('kurucuPerkArea');
 
         if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') {
             document.getElementById('tabAdmin').classList.remove('hidden');
-            document.getElementById('optModRole').classList.remove('hidden');
             if(vPerk) vPerk.classList.remove('hidden');
             if(mPerk) mPerk.classList.remove('hidden');
             if(kPerk) kPerk.classList.remove('hidden');
         } else if(user.role === 'mod') {
             document.getElementById('tabAdmin').classList.remove('hidden');
-            document.getElementById('optModRole').classList.add('hidden');
             if(vPerk) vPerk.classList.remove('hidden');
             if(mPerk) mPerk.classList.remove('hidden');
             if(kPerk) kPerk.classList.add('hidden');
