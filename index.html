@@ -81,7 +81,6 @@
 </head>
 <body>
 
-<!-- 🤖 GEMINI AI ASİSTAN KUTULARI -->
 <div id="geminiAiTrigger" onclick="toggleAiChat()" style="position: fixed; top: 20px; right: 20px; z-index: 999999; cursor: pointer; transition: transform 0.3s;">
     <img src="site_profile.png" alt="AI Asistan" style="width: 52px; height: 52px; border-radius: 12px; border: var(--glass-border); box-shadow: var(--accent-glow); background: #0f172a;">
 </div>
@@ -174,7 +173,6 @@
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD -->
     <div id="dashboardSection" class="hidden">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
             <div class="modal" style="margin-bottom:0;">
@@ -223,7 +221,6 @@
         <div id="foldersWrapper"></div>
     </div>
 
-    <!-- GUEST DASHBOARD SECTION -->
     <div id="guestDashboardSection" class="hidden">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
             <div class="modal" style="margin-bottom:0;">
@@ -272,7 +269,6 @@
         <div id="guestFoldersWrapper"></div>
     </div>
 
-    <!-- CHAT SECTION -->
     <div id="chatSection" class="hidden">
         <div class="chat-grid">
             <div class="chat-box">
@@ -295,7 +291,6 @@
         </div>
     </div>
 
-    <!-- HELP SECTION -->
     <div id="helpSection" class="hidden">
         <div class="modal" id="helpWritePanel">
             <h3 id="helpPanelTitle">🙋 Yardım Konusu Aç</h3>
@@ -307,7 +302,6 @@
         <div id="helpTopicsWrapper"></div>
     </div>
 
-    <!-- PRIVACY SECTION -->
     <div id="privacySection" class="hidden">
         <div class="modal">
             <h3 id="privacyTitle">📜 Gizlilik Politikası</h3>
@@ -317,7 +311,6 @@
         </div>
     </div>
 
-    <!-- VIP SECTION -->
     <div id="vipSection" class="hidden">
         <div class="modal" style="border: 2px solid var(--gold-color); text-align: center;">
             <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 24px;">💎 VIP Üyelik Aktivasyon Alanı (5 TL)</h3>
@@ -338,7 +331,6 @@
         </div>
     </div>
 
-    <!-- ADMIN SECTION -->
     <div id="adminSection" class="hidden">
         <div class="modal" style="border: 2px solid var(--danger-color);">
             <h3 id="adminPanelTitle" style="color: var(--danger-color);">👑 Yetki Atama Komuta Masası</h3>
@@ -377,7 +369,6 @@
     </div>
 </footer>
 
-<!-- 🤖 GEMINI AI CONTROLLER SCRIPT -->
 <script>
     window.toggleAiChat = function() {
         const chatBox = document.getElementById('geminiAiChatBox');
@@ -414,7 +405,8 @@
         messagesContainer.appendChild(typingDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-        const apiKey = "AQ.Ab8RN6IXmTek5d0BjP7ynJERteAeBEqms6TQdEgfuyecH3b5EA";
+        // ⚡ GÜNCELLEME: Yeni verdiğin anahtar sisteme işlendi
+        const apiKey = "Ab8RN6ITiprSvgNlb4PBK4xpLRfNFHWpaYvIKgBB8r44UkaQmA";
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         const siteContext = `
@@ -458,7 +450,6 @@
     };
 </script>
 
-<!-- i18n ENGINE INTEGRATION -->
 <script type="module">
     import { uiTranslations } from "./lang.js";
 
