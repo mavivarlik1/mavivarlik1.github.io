@@ -126,11 +126,6 @@
         <a href="#admin" id="tabAdmin" class="tab-btn hidden" style="color: var(--danger-color);">👑 Yönetim</a>
     </div>
 
-    <div class="ads-container" style="margin:15px 0; text-align:center;">
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5865725607083870" data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-
     <!-- 🔐 AUTH PANEL -->
     <div id="authSection" class="hidden">
         <div class="modal">
@@ -148,7 +143,7 @@
                     <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
                     <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
                     <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
-                        CoreBase, kullanıcıların dijital içeriklerini ve bulut verilerini en yüksek verimlilikle organize etmesini sağlayan modern, modüler và tek sayfa mimarili (SPA) bir teknoloji ekosistemidir. Amacımız, web standartlarını modern arayüzlerle birleştirerek hızlı, reklamsız ve akıcı bir topluluk deneyimi sunmaktır.
+                        CoreBase, kullanıcıların dijital içeriklerini ve bulut verilerini en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir teknoloji ekosistemidir. Amacımız, web standartlarını modern arayüzlerle birleştirerek hızlı, reklamsız ve akıcı bir topluluk deneyimi sunmaktır.
                     </p>
                     <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
                 </div>
@@ -232,12 +227,16 @@
         <div id="foldersWrapper"></div>
     </div>
 
-    <!-- 📰 BLOG SECTION -->
+    <!-- 📰 BLOG SECTION (Multimedya Destekli Gelişmiş Tasarıma Alındı) -->
     <div id="blogSection" class="hidden">
-        <div class="modal" id="blogWritePanel">
-            <h3 style="color: var(--accent-color); margin-top:0;">✍️ Yeni Blog Yazısı Yayınla</h3>
-            <input type="text" id="blogTitleInput" placeholder="İçeriğin Çarpıcı Başlığı...">
-            <textarea id="blogContentInput" placeholder="Teknoloji gündemine dair makalenizi veya haberinizi buraya yazın..." rows="6"></textarea>
+        <div class="modal hidden" id="blogWritePanel">
+            <h3 style="color: var(--accent-color); margin-top:0;">✍️ Gelişmiş Multimedya & İçerik Yayınlama Paneli</h3>
+            <input type="text" id="blogTitleInput" placeholder="Makalenin Çarpıcı Başlığı...">
+            <textarea id="blogContentInput" placeholder="Teknoloji gündemine dair makalenizi buraya yazın... Kalın ara başlık oluşturmak için **başlık** formatını kullanabilirsiniz." rows="6"></textarea>
+            <div class="responsive-grid-2" style="gap: 10px; margin-bottom: 10px;">
+                <input type="text" id="blogImgInput" placeholder="Kapak veya İçerik Görsel URL Adresi (Opsiyonel)" style="margin:0;">
+                <input type="text" id="blogVideoInput" placeholder="YouTube Video / Embed URL Adresi (Opsiyonel)" style="margin:0;">
+            </div>
             <button id="btnPublishBlog" onclick="window.createNewBlogPost()" style="width:100%; background: var(--success-color); color: #064e3b; font-weight:700;">Yayınla ve Listeye Gönder</button>
         </div>
         <div id="blogPostsWrapper"></div>
@@ -291,7 +290,7 @@
     <!-- VIP SECTION -->
     <div id="vipSection" class="hidden">
         <div class="modal" style="border: 2px solid var(--gold-color); text-align: center;">
-            <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 24px;">💎 Ücretsiz VIP Altyapı Kazanım Alanı</h3>
+            <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 24px;">💎 Ücretsiz VIP Altyapı kazanım Alanı</h3>
             <p id="vipActivationDesc" style="color: var(--text-muted); font-size: 14px; max-width: 600px; margin: 0 auto 20px auto;">Sistemimizde eksik olan kritik bir özelliği (gerekli), harika bir geliştirme önerisini veya sisteme has bir yazılımsal hatayı (bug) bulup kurucuya bildiren tüm kullanıcılara VIP rütbesi tamamen ücretsiz tanımlanacaktır!</p>
             
             <div class="credit-card-box">
@@ -316,17 +315,25 @@
             <div class="responsive-grid-2" style="gap: 15px;">
                 <input type="email" id="targetAdminEmail" placeholder="Kullanıcı E-postası">
                 <select id="targetRoleSelect">
-                    <option value="vip" id="optGiveVip">⭐ VIP Rütbesi Tanımla</option>
-                    <option value="mod" id="optModRole">🛠️ Moderatör Rütbesi Tanımla</option>
+                    <option value="user">👤 Kullanıcı Rütbesine Çek</option>
+                    <option value="maker">⚙️ Üretici (Maker) Yetkisi Ver</option>
+                    <option value="mod">🛠️ Moderatör Yetkisi Ver</option>
+                    <option value="vip">⭐ VIP Yetkisi Ver</option>
                 </select>
             </div>
             <button id="btnUpdateRank" onclick="window.executeAdminRoleAssign()" style="background: var(--danger-color); color: white; width: 100%; margin-top: 10px;">Rütbeyi Güncelle</button>
         </div>
     </div>
 
+    <!-- ⚙️ YENİLENMİŞ PROFiL VE DETAYLI AYARLAR MODALİ -->
     <div class="modal hidden" id="settingsModal" style="margin-top:30px;">
-        <h3 id="settingsTitle">⚙️ Ayarlar</h3>
-        <button id="btnLogout" onclick="handleLogout()" style="background: var(--danger-color); color: #fff;">Sistemden Güvenli Çıkış Yap</button>
+        <h3 id="settingsTitle">⚙️ Profil & Hesap Ayarları</h3>
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 12px; border: var(--glass-border); margin-bottom: 15px; font-size: 14px; line-height: 1.8;">
+            <div>👤 <b>Kullanıcı Adı:</b> <span id="settingsNick" style="color: var(--accent-color); font-weight:600;">-</span></div>
+            <div>🛡️ <b>Hesap Tipi:</b> <span id="settingsRole" style="font-weight:600;">-</span></div>
+            <div>🏅 <b>Mevcut Rütbe:</b> <span id="settingsRank">-</span></div>
+        </div>
+        <button id="btnLogout" onclick="handleLogout()" style="background: var(--danger-color); color: #fff; width: 100%;">Sistemden Güvenli Çıkış Yap</button>
     </div>
 </div>
 
@@ -350,48 +357,31 @@
     </div>
 </footer>
 
+<!-- ⚙️ ZIRHLI GLOBAL RANK HESAPLAYICI ENGINE (KURUCU HATASI KESiN OLARAK FİXLENDİ!) -->
 <script>
-    function handleRoute() {
-        let fullHash = window.location.hash.replace('#', '') || 'dashboard';
-        let hashParts = fullHash.split('#');
-        let mainHash = hashParts[0];
-        let subHash = hashParts[1] || null;
-
-        window.currentBlogSubHash = subHash; 
-
-        const titleEl = document.getElementById('siteMainTitle');
-        if (titleEl) {
-            titleEl.innerText = `CoreBase - ${mainHash.toUpperCase()}`;
-        }
-
-        if (window.translateUI) window.translateUI('tr');
-
-        const links = ['tabDashboard', 'tabBlog', 'tabChat', 'tabHelp', 'tabVip', 'tabAdmin', 'tabPrivacy', 'tabAuth'];
-        links.forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.classList.toggle('tab-active', id.toLowerCase() === 'tab' + mainHash);
-        });
+    window.calculateRank = function(points, email, role) {
+        // Zırhlı Öncelik Kontrolü: Eğer kurucuysa puanına bakılmaksızın direkt Kurucu rozeti basılır.
+        if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu 👑", class: "badge-kurucu" };
+        if(role === 'mod') return { name: "Moderatör 🛠️", class: "badge-mod" };
+        if(role === 'maker') return { name: "Üretici ⚙️", class: "badge-vip" };
+        if(role === 'vip') return { name: "VIP ⭐", class: "badge-vip" };
         
-        const sections = ['dashboardSection', 'blogSection', 'chatSection', 'helpSection', 'vipSection', 'adminSection', 'privacySection', 'authSection'];
-        sections.forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.classList.toggle('hidden', el.id.toLowerCase() !== mainHash + 'section');
-        });
-
-        if (mainHash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI('tr');
-        
-        if (mainHash === 'blog' && window.refreshBlogRender) {
-            window.refreshBlogRender();
-        }
+        if (points >= 300) return { name: "Zirvelatıcı", class: "badge-user" };
+        if (points >= 250) return { name: "Efsanelatıcı", class: "badge-user" };
+        if (points >= 200) return { name: "Üstatlatıcı", class: "badge-user" };
+        if (points >= 165) return { name: "Uzmanlatıcı", class: "badge-user" };
+        if (points >= 135) return { name: "Ustalatıcı", class: "badge-user" };
+        if (points >= 110) return { name: "Sağlamlatıcı", class: "badge-user" };
+        if (points >= 95) return { name: "Canlatıcı", class: "badge-user" };
+        if (points >= 75) return { name: "Odaklatıcı", class: "badge-user" };
+        if (points >= 60) return { name: "Işılatıcı", class: "badge-user" };
+        if (points >= 45) return { name: "Hızlatıcı", class: "badge-user" };
+        if (points >= 30) return { name: "Katlatıcı", class: "badge-user" };
+        if (points >= 20) return { name: "Tırmalatıcı", class: "badge-user" };
+        if (points >= 10) return { name: "Adımlatıcı", class: "badge-user" };
+        if (points >= 5) return { name: "Başlatıcı", class: "badge-user" };
+        return { name: "Çaylaklatıcı", class: "badge-user" };
     }
-
-    function switchLanguage(targetLang) {
-        const currentHash = window.location.hash || '#dashboard';
-        window.location.href = window.location.origin + window.location.pathname + '?lang=' + targetLang + currentHash;
-    }
-
-    window.addEventListener('hashchange', handleRoute);
-    window.addEventListener('load', handleRoute);
 </script>
 
 <script type="module">
@@ -404,13 +394,6 @@
     import { initHelpForum } from "./help.js";
     import { initBlogModule } from "./blog.js";
     import { privacyData } from "./privacy.js";
-
-    window.updatePrivacyUI = function(lang) {
-        const data = privacyData[lang] || privacyData['tr'];
-        document.getElementById('privacyTitle').innerText = data.title;
-        document.getElementById('privacyDate').innerText = data.date;
-        document.getElementById('privacyBody').innerHTML = data.content;
-    };
 
     const firebaseConfig = {
         apiKey: "AIzaSyA5tgORprtf_TIddYlEO12druYVvgQWaSI",
@@ -436,8 +419,8 @@
             snapshot.forEach(d => { if(d.data().email === targetEmail) foundUid = d.id; });
             if(foundUid) {
                 await updateDoc(doc(db, "users", foundUid), { role: selectedRole });
-                alert("Kullanıcı yetkileri başarıyla güncellendi ve veritabanına işlendi.");
-            } else { alert("Girilen e-posta adresine ait bir kullanıcı veritabanında bulunamadı."); }
+                alert("Kullanıcı hesap tipi başarıyla güncellendi.");
+            } else { alert("Girilen e-posta adresine ait bir kullanıcı bulunamadı."); }
         } catch(e) { alert("Yetkilendirme hatası: " + e.message); }
     };
 
@@ -465,25 +448,37 @@
         window.isCurrentUserGuest = !!user.isGuest;
         document.getElementById('settingsModal').classList.remove('hidden');
         
+        // ⚙️ AYARLAR VE PROFİL PANELİNİN DİNAMİK OLARAK DOLDURULMASI
+        document.getElementById('settingsNick').innerText = user.nick;
+        let displayRole = "Kullanıcı (Standart) 👤";
+        if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') displayRole = "Kurucu Masası 👑";
+        else if (user.role === 'mod') displayRole = "Moderatör 🛠️";
+        else if (user.role === 'maker') displayRole = "Üretici (Maker) ⚙️";
+        else if (user.role === 'vip') displayRole = "VIP Üye ⭐";
+        document.getElementById('settingsRole').innerText = displayRole;
+
+        if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') {
+            document.getElementById('settingsRole').style.color = '#ef4444';
+        } else if (user.role === 'maker') {
+            document.getElementById('settingsRole').style.color = 'var(--gold-color)';
+        } else {
+            document.getElementById('settingsRole').style.color = 'var(--text-color)';
+        }
+
         const userInfoEl = document.getElementById('userInfo');
-        if(userInfoEl && window.calculateRank) {
+        if(window.calculateRank) {
             let rankBadge = window.calculateRank(user.points || 0, user.email, user.role);
-            userInfoEl.innerHTML = `👤 ${user.nick} <span class="badge ${rankBadge.class}">${rankBadge.name}</span> (Puan: ${user.points || 0})`;
+            if(userInfoEl) userInfoEl.innerHTML = `👤 ${user.nick} <span class="badge ${rankBadge.class}">${rankBadge.name}</span>`;
+            document.getElementById('settingsRank').innerHTML = `<span class="badge ${rankBadge.class}">${rankBadge.name}</span> (Puan: ${user.points || 0})`;
         }
         
-        if(user.isGuest) {
-            document.getElementById('tabAuth').classList.remove('hidden'); 
-        } else {
-            document.getElementById('tabAuth').classList.add('hidden'); 
-        }
+        if(user.isGuest) document.getElementById('tabAuth').classList.remove('hidden'); 
+        else document.getElementById('tabAuth').classList.add('hidden'); 
 
-        if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') {
-            document.getElementById('tabAdmin').classList.remove('hidden');
-        } else {
-            document.getElementById('tabAdmin').classList.add('hidden');
-        }
+        if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') document.getElementById('tabAdmin').classList.remove('hidden');
+        else document.getElementById('tabAdmin').classList.add('hidden');
 
-        handleRoute();
+        if(window.handleRoute) window.handleRoute();
         initDashboard(db, user, fsTools);
         initChatModule(db, user, fsTools);
         initHelpForum(db, user, fsTools);
@@ -497,7 +492,8 @@
             let points = 0, nick = user.email.split('@')[0];
             if(docSnap.exists()) {
                 points = docSnap.data().points || 0;
-                if(docSnap.data().role && user.email !== 'supralanderxbox@gmail.com') role = docSnap.data().role;
+                if(docSnap.data().role) role = docSnap.data().role;
+                if(user.email === 'supralanderxbox@gmail.com') role = "kurucu";
             } else {
                 await setDoc(doc(db, "users", user.uid), { email: user.email, points: 0, role: role, folders: {}, files: [] });
             }
@@ -505,22 +501,13 @@
         } else {
             let guestUid = localStorage.getItem('corebase_guest_uid');
             let guestNick = localStorage.getItem('corebase_guest_nick');
-            
             if (!guestUid) {
                 const randomID = Math.floor(1000 + Math.random() * 9000);
-                guestUid = "guest_" + randomID;
-                guestNick = `User${randomID}`;
+                guestUid = "guest_" + randomID; guestNick = `User${randomID}`;
                 localStorage.setItem('corebase_guest_uid', guestUid);
                 localStorage.setItem('corebase_guest_nick', guestNick);
             }
-            
             setupSession({ uid: guestUid, email: "guest", isGuest: true, nick: guestNick, points: 0, role: "user" });
-            
-            let currentMainHash = window.location.hash.split('#')[1] || 'dashboard';
-            const allowedHashes = ['dashboard', 'blog', 'chat', 'help', 'privacy', 'auth', 'vip', 'admin'];
-            if (!allowedHashes.includes(currentMainHash)) {
-                window.location.hash = '#dashboard';
-            }
         }
     });
 </script>
