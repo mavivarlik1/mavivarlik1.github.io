@@ -4,7 +4,6 @@ export function initBlogModule(db, user, fsTools) {
     
     const blogWritePanel = document.getElementById('blogWritePanel');
     const blogPostsWrapper = document.getElementById('blogPostsWrapper');
-    
     if (!blogPostsWrapper) return;
 
     let localBlogCache = [];
@@ -16,7 +15,7 @@ export function initBlogModule(db, user, fsTools) {
         return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     }
 
-    // 🎨 AKILLI RE-RENDER ENGINE
+    // 🎨 AKILLI COMPACT / DETAY GÖRÜNÜM MOTORU
     window.refreshBlogRender = function() {
         window.activeCommentUnsubs.forEach(unsub => unsub());
         window.activeCommentUnsubs = [];
@@ -30,11 +29,24 @@ export function initBlogModule(db, user, fsTools) {
         }
 
         if (subHash) {
-            // 🔒 FİX: Detay sayfasındayken yeni blog oluşturma panelini gizle, çakışmayı engelle!
+            // Detay sayfasında yazma panelini her şartta kilitle ve gizle
             if (blogWritePanel) blogWritePanel.classList.add('hidden');
 
             const post = localBlogCache.find(b => b.customId === subHash);
             if (post) {
+                // 🛠️ MULTIMEDYA ENJEKSİYON MOTORU (Google Kalite Politikası Uyumu)
+                let mediaHtml = '';
+                if (post.imageUrl) {
+                    mediaHtml += `<div style="margin: 15px 0; text-align:center;"><img src="${post.imageUrl}" style="max-width:100%; max-height:400px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.4);" alt="Haber Görseli"></div>`;
+                }
+                if (post.videoUrl) {
+                    let embedUrl = post.videoUrl;
+                    if (embedUrl.includes("watch?v=")) embedUrl = embedUrl.replace("watch?v=", "embed/");
+                    else if (embedUrl.includes("youtu.be/")) embedUrl = embedUrl.replace("youtu.be/", "youtube.com/embed/");
+                    
+                    mediaHtml += `<div style="margin: 15px 0; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.1);"><iframe src="${embedUrl}" style="width:100%; height:360px; border:none;" allowfullscreen></iframe></div>`;
+                }
+
                 const card = document.createElement('div');
                 card.className = 'blog-card';
                 card.innerHTML = `
@@ -45,6 +57,9 @@ export function initBlogModule(db, user, fsTools) {
                         <span>📅 ${post.formattedDate}</span>
                     </div>
                     <div class="blog-content">${parseMarkdownBold(post.content)}</div>
+                    
+                    <!-- Dinamik Multimedya Havuzu -->
+                    ${mediaHtml}
                     
                     <hr style="border:0; border-top:1px solid rgba(255,255,255,0.05); margin:20px 0;">
                     <h4 style="margin:0 0 10px 0; font-size:15px; color:var(--accent-color);">Yorumlar</h4>
@@ -63,8 +78,7 @@ export function initBlogModule(db, user, fsTools) {
                 const commentsQ = query(collection(db, `blogs/${post.id}/comments`), orderBy("createdAt", "asc"));
                 const unsubComments = onSnapshot(commentsQ, (commentSnap) => {
                     const listEl = document.getElementById(`comments-list-${post.id}`);
-                    if (!listEl) return;
-                    listEl.innerHTML = '';
+                    if (!listEl) return; listEl.innerHTML = '';
                     if (commentSnap.empty) {
                         listEl.innerHTML = `<div style="font-size:12px; color:var(--text-muted); font-style:italic;">Henüz yorum yapılmamış. İlk yorumu siz yazın!</div>`;
                         return;
@@ -85,8 +99,14 @@ export function initBlogModule(db, user, fsTools) {
                 blogPostsWrapper.innerHTML = `<div class="modal" style="text-align:center; color:var(--danger-color);">⚠️ İstenen makale bulunamadı! <a href="#blog" style="color:var(--accent-color);">Listeye Dön</a></div>`;
             }
         } else {
-            // Ana listedeyken yazma panelini tekrar göster
-            if (blogWritePanel && user.role === 'kurucu') blogWritePanel.classList.remove('hidden');
+            // 🛡️ AKILLI ROL KORUMASI: Kullanıcı rütbesindekiler yazma panelini asla göremez
+            if (blogWritePanel) {
+                if (user.role === 'kurucu' || user.role === 'maker') {
+                    blogWritePanel.classList.remove('hidden');
+                } else {
+                    blogWritePanel.classList.add('hidden');
+                }
+            }
 
             localBlogCache.forEach(post => {
                 const card = document.createElement('div');
@@ -96,7 +116,7 @@ export function initBlogModule(db, user, fsTools) {
                     <div class="blog-meta" style="margin-bottom:0;">
                         <span>👤 Yazar: <b>${post.author}</b></span>
                         <span>📅 ${post.formattedDate}</span>
-                        <span style="color:var(--accent-color); cursor:pointer; font-weight:600; font-size:12px; text-decoration:underline;" onclick="window.location.hash='#blog#${post.customId}'">Devamını Oku & Yorumlar →</span>
+                        <span style="color:var(--accent-color); cursor:pointer; font-weight:600; font-size:12px; text-decoration:underline;" onclick="window.location.hash='#blog#${post.customId}'">Devamını Oku & Multimedya İçerik →</span>
                     </div>
                 `;
                 blogPostsWrapper.appendChild(card);
@@ -104,49 +124,7 @@ export function initBlogModule(db, user, fsTools) {
         }
     };
 
-    // 🔔 BILDIRIM PANEL ENJEKTÖRÜ
-    if (!document.getElementById('notificationToggleArea')) {
-        const toggleArea = document.createElement('div');
-        toggleArea.id = 'notificationToggleArea';
-        toggleArea.className = 'modal';
-        toggleArea.style.padding = '15px';
-        toggleArea.style.marginBottom = '15px';
-        toggleArea.style.display = 'flex';
-        toggleArea.style.justifyContent = 'space-between';
-        toggleArea.style.alignItems = 'center';
-        toggleArea.style.flexWrap = 'wrap';
-        toggleArea.style.gap = '10px';
-        
-        const isFollowed = localStorage.getItem('corebase_notifications') === 'true';
-        toggleArea.innerHTML = `
-            <span style="font-size:14px; font-weight:600; color:var(--text-color);">🔔 Platform Bildirimleri</span>
-            <button id="btnToggleNotifications" style="padding:8px 16px; font-size:12px; border-radius:6px; background:${isFollowed ? 'var(--danger-color)' : 'var(--success-color)'}; color:${isFollowed ? 'white' : '#0f172a'}">
-                ${isFollowed ? 'Takibi Bırak' : 'Sanal Bildirimleri Aç'}
-            </button>
-        `;
-        blogPostsWrapper.parentNode.insertBefore(toggleArea, blogPostsWrapper);
-        
-        document.getElementById('btnToggleNotifications').onclick = async function() {
-            const currentStatus = localStorage.getItem('corebase_notifications') === 'true';
-            if (!currentStatus) {
-                const permission = await Notification.requestPermission();
-                if (permission === 'granted') {
-                    localStorage.setItem('corebase_notifications', 'true');
-                    this.innerText = 'Takibi Bırak';
-                    this.style.background = 'var(--danger-color)';
-                    this.style.color = 'white';
-                    alert(`Teşekkürler ${user.nick}! Artık yeni bir içerik yayınlandığında anında bildirim alacaksınız.`);
-                } else { alert('Bildirim izinleri engellendi.'); }
-            } else {
-                localStorage.setItem('corebase_notifications', 'false');
-                this.innerText = 'Sanal Bildirimleri Aç';
-                this.style.background = 'var(--success-color)';
-                this.style.color = '#0f172a';
-                alert('Bildirim takibi sonlandırıldı.');
-            }
-        };
-    }
-
+    // 📥 KÜRESEL BLOG VERİ TABANI DİNLEYİCİSİ
     const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"));
     onSnapshot(q, (snapshot) => {
         localBlogCache = [];
@@ -171,20 +149,17 @@ export function initBlogModule(db, user, fsTools) {
                 customId: customId,
                 title: data.title,
                 content: data.content,
+                imageUrl: data.imageUrl || null,
+                videoUrl: data.videoUrl || null,
                 author: data.author,
                 formattedDate: formattedDate
             });
         });
 
-        if (!isInitialLoad) {
+        if (!isInitialLoad && localStorage.getItem('corebase_notifications') === 'true') {
             snapshot.docChanges().forEach((change) => {
-                if (change.type === "added" && localStorage.getItem('corebase_notifications') === 'true') {
-                    if (Notification.permission === "granted") {
-                        new Notification("CoreBase", {
-                            body: `📰 Yeni İçerik Yayında: ${change.doc.data().title}`,
-                            icon: 'site_profile.png'
-                        });
-                    }
+                if (change.type === "added" && Notification.permission === "granted") {
+                    new Notification("CoreBase", { body: `📰 Yeni İçerik Yayında: ${change.doc.data().title}`, icon: 'site_profile.png' });
                 }
             });
         }
@@ -200,22 +175,26 @@ export function initBlogModule(db, user, fsTools) {
 
         try {
             await addDoc(collection(db, `blogs/${blogId}/comments`), {
-                author: user.nick,
-                text: text,
-                createdAt: Date.now(),
-                uid: user.uid
+                author: user.nick, uid: user.uid, text: text, createdAt: Date.now()
             });
             input.value = '';
         } catch(e) { alert("Yorum iletim hatası: " + e.message); }
     };
 
+    // 📤 DETAYLANDIRILMIŞ VE MULTIMEDYA DESTEKLİ BLOG OLUŞTURUCU MOTOR
     window.createNewBlogPost = async function() {
         const titleInput = document.getElementById('blogTitleInput');
         const contentInput = document.getElementById('blogContentInput');
+        const imgInput = document.getElementById('blogImgInput');
+        const videoInput = document.getElementById('blogVideoInput');
+        
         if (!titleInput || !contentInput) return;
         
         const title = titleInput.value.trim();
         const content = contentInput.value.trim();
+        const imageUrl = imgInput ? imgInput.value.trim() : '';
+        const videoUrl = videoInput ? videoInput.value.trim() : '';
+        
         if (!title || !content) return alert(`Lütfen başlık ve makale içeriğini eksiksiz doldurun, ${user.nick}!`);
 
         const customId = Math.floor(100000000000 + Math.random() * 900000000000).toString();
@@ -224,15 +203,17 @@ export function initBlogModule(db, user, fsTools) {
             await addDoc(collection(db, "blogs"), {
                 title: title,
                 content: content,
+                imageUrl: imageUrl,
+                videoUrl: videoUrl,
                 customId: customId,
                 author: user.nick,
                 uid: user.uid,
                 createdAt: new Date()
             });
-            titleInput.value = '';
-            contentInput.value = '';
-            alert("İçeriğiniz başarıyla listeye kaydedildi ve yayına alındı.");
-            window.location.hash = "#blog"; // Yazı yayınlanınca otomatik listeye atar
+            titleInput.value = ''; contentInput.value = '';
+            if(imgInput) imgInput.value = ''; if(videoInput) videoInput.value = '';
+            alert("Görsel ve video destekli makaleniz başarıyla sisteme işlendi.");
+            window.location.hash = "#blog";
         } catch (error) { alert("Yayınlama hatası: " + error.message); }
     };
 }
