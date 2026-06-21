@@ -31,6 +31,7 @@
             --success-color: #16a34a;
             --gold-color: #d97706;
             --inner-bg: #f8fafc;
+            --site-font: 'Poppins', sans-serif;
         }
 
         body.theme-tech {
@@ -45,6 +46,7 @@
             --success-color: #4ade80;
             --gold-color: #fbbf24;
             --inner-bg: rgba(15, 23, 42, 0.5);
+            --site-font: 'Poppins', sans-serif;
         }
 
         body.theme-notepad {
@@ -59,17 +61,17 @@
             --success-color: #2b7a4b;
             --gold-color: #b58900;
             --inner-bg: #f5eedc;
-            font-family: 'Courier New', Courier, monospace !important;
+            --site-font: 'Courier New', Courier, monospace;
         }
 
-        body { font-family: 'Poppins', sans-serif; background: var(--bg-gradient); color: var(--text-color); margin: 0; padding: 20px; min-height: 100vh; background-attachment: fixed; box-sizing: border-box; transition: background 0.3s, color 0.3s; }
+        body { font-family: var(--site-font); background: var(--bg-gradient); color: var(--text-color); margin: 0; padding: 20px; min-height: 100vh; background-attachment: fixed; box-sizing: border-box; transition: background 0.3s, color 0.3s; }
         .container { max-width: 1100px; margin: auto; padding-bottom: 80px; }
         
         header { display: flex; justify-content: space-between; align-items: center; border-bottom: var(--glass-border); padding-bottom: 15px; margin-bottom: 25px; gap: 15px; }
-        header h1 { font-size: 24px; margin: 0; font-weight: 700; color: var(--text-color); }
+        header h1 { font-size: 24px; margin: 0; font-weight: 700; color: var(--text-color); font-family: var(--site-font) !important; }
         
         .modal { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 25px; border-radius: 12px; border: var(--glass-border); margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-        .modal h3 { margin-top: 0; color: var(--accent-color); font-weight: 600; font-size: 18px; }
+        .modal h3 { margin-top: 0; color: var(--accent-color); font-weight: 600; font-size: 18px; font-family: var(--site-font) !important; }
         
         .badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; margin-left: 5px; display: inline-block;}
         .badge-kurucu { background: var(--danger-color); color: #fff; }
@@ -89,15 +91,15 @@
         .link-card { background: var(--inner-bg); padding: 12px; border-radius: 8px; text-align: center; border: var(--glass-border); transition: all 0.2s; cursor: pointer; text-decoration: none; color: var(--text-color); font-size: 14px; }
         .link-card:hover { border-color: var(--accent-color); box-shadow: var(--accent-glow); }
         
-        input, select, textarea { background: var(--inner-bg); color: var(--text-color); border: var(--glass-border); padding: 10px 14px; border-radius: 6px; margin: 6px 0; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; outline: none; }
+        input, select, textarea { background: var(--inner-bg); color: var(--text-color); border: var(--glass-border); padding: 10px 14px; border-radius: 6px; margin: 6px 0; width: 100%; box-sizing: border-box; font-family: inherit !important; font-size: 14px; outline: none; }
         input:focus, select:focus, textarea:focus { border-color: var(--accent-color); }
         
-        button { background: var(--accent-color); color: #fff; font-weight: 500; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-size: 14px; }
+        button { background: var(--accent-color); color: #fff; font-weight: 500; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-size: 14px; font-family: inherit !important; }
         button:hover { opacity: 0.9; box-shadow: var(--accent-glow); }
         .hidden { display: none !important; }
         
         .tabs { display: flex; gap: 8px; margin-bottom: 25px; flex-wrap: wrap; }
-        .tab-btn { background: var(--glass-bg); border: var(--glass-border); color: var(--text-muted); text-decoration: none; padding: 8px 14px; border-radius: 6px; font-weight: 500; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+        .tab-btn { background: var(--glass-bg); border: var(--glass-border); color: var(--text-muted); text-decoration: none; padding: 8px 14px; border-radius: 6px; font-weight: 500; font-size: 13px; cursor: pointer; transition: all 0.2s; font-family: inherit !important; }
         .tab-active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
         
         .chat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
@@ -119,11 +121,46 @@
         .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-top: 5px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; border-bottom: var(--glass-border); padding-bottom: 8px; }
         .blog-content { font-size: 14px; line-height: 1.7; color: var(--text-color); text-align: justify; white-space: pre-wrap; word-break: break-word; }
         
-        /* Google Translate Stil İyileştirmeleri */
-        .goog-te-gadget-simple { background-color: var(--inner-bg) !important; border: var(--glass-border) !important; border-radius: 6px !important; padding: 6px 10px !important; font-family: inherit !important; font-size: 12px !important; cursor: pointer; }
-        .goog-te-gadget-simple span { color: var(--text-color) !important; }
-        .goog-te-banner-frame { display: none !important; }
+        /* 🌐 ULTRA MODERN VE DİNAMİK GOOGLE TRANSLATE MASKESİ */
+        #corebase_translator {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .goog-te-gadget-simple {
+            background-color: var(--inner-bg) !important;
+            border: var(--glass-border) !important;
+            border-radius: 6px !important;
+            padding: 6px 14px !important;
+            font-family: var(--site-font) !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer !important;
+        }
+        .goog-te-gadget-simple:hover {
+            border-color: var(--accent-color) !important;
+            box-shadow: var(--accent-glow) !important;
+        }
+        .goog-te-gadget-icon {
+            display: none !important;
+        }
+        .goog-te-gadget-simple span, .goog-te-menu-value span {
+            color: var(--text-color) !important;
+            background: none !important;
+            border: none !important;
+            font-family: var(--site-font) !important;
+        }
+        .goog-te-banner-frame, .goog-te-banner, .skiptranslate, .goog-te-gadget-simple img {
+            display: none !important;
+        }
         body { top: 0px !important; }
+        .goog-te-menu-frame {
+            box-shadow: 0 4px 25px rgba(0,0,0,0.1) !important;
+            border: var(--glass-border) !important;
+            border-radius: 8px !important;
+        }
 
         @media (max-width: 768px) {
             body { padding: 10px; }
@@ -411,7 +448,7 @@
     const savedTheme = localStorage.getItem('corebase_theme') || 'simple';
     window.changeTheme(savedTheme);
 
-    // 🏅 SIKLAŞTIRILMIŞ VE DENGELENMİŞ YENİ RÜTBE MOTORU
+    // 🏅 SIKLAŞTIRILMIŞ DENGELİ RÜTBE MOTORU
     window.calculateRank = function(points, email, role) {
         if (email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu", class: "badge-kurucu" };
         if (role === 'mod') return { name: "Moderatör", class: "badge-mod" };
