@@ -121,7 +121,7 @@
         .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-top: 5px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; border-bottom: var(--glass-border); padding-bottom: 8px; }
         .blog-content { font-size: 14px; line-height: 1.7; color: var(--text-color); text-align: justify; white-space: pre-wrap; word-break: break-word; }
         
-        /* 🛠️ YENİLİKÇİ ÖZEL HTML DİL BUTONLARI CSS ALANI */
+        /* 🎛️ ÖZEL DİL BUTONLARI TASARIMI */
         .custom-lang-container {
             display: flex;
             gap: 4px;
@@ -151,7 +151,7 @@
             box-shadow: var(--accent-glow);
         }
 
-        /* Google'ın o Windows 96 tarzı çirkin widget'ını ve üst barını tamamen dünyadan siliyoruz */
+        /* Arka plandaki ham Google Translate motoru tamamen görünmez yapıldı */
         #corebase_translator, .goog-te-banner-frame, .goog-te-banner, .skiptranslate {
             display: none !important;
         }
@@ -167,6 +167,7 @@
 </head>
 <body class="theme-simple">
 
+<!-- Görünmez Google Translate Yuvası -->
 <div id="corebase_translator"></div>
 
 <div class="container">
@@ -201,6 +202,7 @@
         <a href="#admin" id="tabAdmin" class="tab-btn hidden" style="color: var(--danger-color);">Yönetim</a>
     </div>
 
+    <!-- AUTH PANEL -->
     <div id="authSection" class="hidden">
         <div class="modal">
             <div class="responsive-grid-2">
@@ -221,6 +223,7 @@
         </div>
     </div>
 
+    <!-- MAIN UNIFIED DASHBOARD -->
     <div id="dashboardSection" class="hidden">
         <div class="responsive-grid-2" style="margin-bottom: 25px;">
             <div class="modal" style="margin-bottom:0;">
@@ -288,6 +291,7 @@
         <div id="foldersWrapper"></div>
     </div>
 
+    <!-- BLOG SECTION -->
     <div id="blogSection" class="hidden">
         <div class="modal hidden" id="blogWritePanel">
             <h3 style="color: var(--accent-color); margin-top:0;">İçerik Yayınlama Paneli</h3>
@@ -298,6 +302,7 @@
         <div id="blogPostsWrapper"></div>
     </div>
 
+    <!-- CHAT SECTION -->
     <div id="chatSection" class="hidden">
         <div class="chat-grid">
             <div class="chat-box">
@@ -320,6 +325,7 @@
         </div>
     </div>
 
+    <!-- HELP SECTION -->
     <div id="helpSection" class="hidden">
         <div class="modal" id="helpWritePanel">
             <h3 id="helpPanelTitle">Topluluğa Teknik Soru Sor</h3>
@@ -331,6 +337,7 @@
         <div id="helpTopicsWrapper"></div>
     </div>
 
+    <!-- PRIVACY SECTION -->
     <div id="privacySection" class="hidden">
         <div class="modal">
             <h3 id="privacyTitle">Gizlilik Politikası</h3>
@@ -340,6 +347,7 @@
         </div>
     </div>
 
+    <!-- VIP SECTION -->
     <div id="vipSection" class="hidden">
         <div class="modal" style="text-align: center;">
             <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 20px;">VIP Aktivasyon Modülü</h3>
@@ -367,6 +375,7 @@
         </div>
     </div>
 
+    <!-- ADMIN SECTION -->
     <div id="adminSection" class="hidden">
         <div class="modal">
             <h3 id="adminPanelTitle" style="color: var(--danger-color);">Rütbe Yönetim Merkezi</h3>
@@ -383,6 +392,7 @@
         </div>
     </div>
 
+    <!-- PROFiL VE DETAYLI AYARLAR MODALİ -->
     <div class="modal hidden" id="settingsModal" style="margin-top:30px;">
         <h3 id="settingsTitle">Profil & Hesap Ayarları</h3>
         
@@ -424,6 +434,7 @@
     </div>
 </div>
 
+<!-- 🌐 GOOGLE TRANSLATOR ENGINE ARKA PLAN KURULUMU -->
 <script type="text/javascript">
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
@@ -436,20 +447,19 @@
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <script>
-    // 🎛️ GEZGIN GİZLİ TETİKLEME VE BUTON MOTORU
+    // 🎛️ GEZGİN ARKA PLAN TETİKLEME MOTORU (TR GERİ DÖNÜŞ DESTEKLİ)
     window.executeSecretTranslation = function(langCode) {
-        // 1. Sayfadaki gizli Google select box'ını bulup tetikliyoruz
         const googleSelect = document.querySelector('.goog-te-combo');
         if (googleSelect) {
-            googleSelect.value = langCode;
+            // 🛠️ KRİTİK HİLE: Eğer TR seçildiyse, Google'ın orijinal metne dönmesi için boş string ('') gönderiyoruz.
+            googleSelect.value = (langCode === 'tr') ? '' : langCode;
             googleSelect.dispatchEvent(new Event('change'));
         }
         
-        // 2. Butonların aktiflik durumunu görsel olarak güncelliyoruz
+        // Butonların aktiflik durumunu güncelle
         document.getElementById('langNodeTr').classList.toggle('lang-active-node', langCode === 'tr');
         document.getElementById('langNodeEn').classList.toggle('lang-active-node', langCode === 'en');
         
-        // 3. Tercihi hafızaya yazıyoruz
         localStorage.setItem('corebase_lang', langCode);
     };
 
@@ -464,7 +474,7 @@
     const savedTheme = localStorage.getItem('corebase_theme') || 'simple';
     window.changeTheme(savedTheme);
 
-    // Sayfa ilk yüklendiğinde hafızadaki dili otomatik tetikle (Google'ın yüklenmesini hafifçe bekler)
+    // İlk yüklemede hafızadaki dili geri çağır
     window.addEventListener('load', () => {
         const savedLang = localStorage.getItem('corebase_lang') || 'tr';
         setTimeout(() => {
@@ -472,6 +482,7 @@
         }, 1200);
     });
 
+    // 🏅 DENGELİ RÜTBE MOTORU
     window.calculateRank = function(points, email, role) {
         if (email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu", class: "badge-kurucu" };
         if (role === 'mod') return { name: "Moderatör", class: "badge-mod" };
