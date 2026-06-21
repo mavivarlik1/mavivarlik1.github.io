@@ -12,106 +12,13 @@ export function initBlogModule(db, user, fsTools) {
     window.activeCommentUnsubs = window.activeCommentUnsubs || [];
     let isInitialLoad = true;
 
+    // ⚙️ 1. YARDIMCI MARKDOWN MOTORU: **yazı** formatını anında algılar ve kalınlaştırır
     function parseMarkdownBold(text) {
         if (!text) return "";
         return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     }
 
-    if (!document.getElementById('notificationToggleArea')) {
-        const toggleArea = document.createElement('div');
-        toggleArea.id = 'notificationToggleArea';
-        toggleArea.className = 'modal';
-        toggleArea.style.padding = '15px';
-        toggleArea.style.marginBottom = '15px';
-        toggleArea.style.display = 'flex';
-        toggleArea.style.justifyContent = 'space-between';
-        toggleArea.style.alignItems = 'center';
-        toggleArea.style.flexWrap = 'wrap';
-        toggleArea.style.gap = '10px';
-        
-        const isFollowed = localStorage.getItem('corebase_notifications') === 'true';
-        toggleArea.innerHTML = `
-            <span style="font-size:14px; font-weight:600; color:var(--text-color);">🔔 Blog Bildirimleri (Takip Sistemi)</span>
-            <button id="btnToggleNotifications" style="padding:8px 16px; font-size:12px; border-radius:6px; background:${isFollowed ? 'var(--danger-color)' : 'var(--success-color)'}; color:${isFollowed ? 'white' : '#0f172a'}">
-                ${isFollowed ? 'Takibi Bırak' : 'Siteyi Takip Et (Bildirimleri Aç)'}
-            </button>
-        `;
-        blogPostsWrapper.parentNode.insertBefore(toggleArea, blogPostsWrapper);
-        
-        document.getElementById('btnToggleNotifications').onclick = async function() {
-            const currentStatus = localStorage.getItem('corebase_notifications') === 'true';
-            if (!currentStatus) {
-                const permission = await Notification.requestPermission();
-                if (permission === 'granted') {
-                    localStorage.setItem('corebase_notifications', 'true');
-                    this.innerText = 'Takibi Bırak';
-                    this.style.background = 'var(--danger-color)';
-                    this.style.color = 'white';
-                    alert('Harika mavi varlık! Artık yeni blog yayınlandığında anında push bildirim alacaksın.');
-                } else {
-                    alert('Bildirim izni reddedildi! Tarayıcı ayarlarından izin vermen gerekiyor.');
-                }
-            } else {
-                localStorage.setItem('corebase_notifications', 'false');
-                this.innerText = 'Siteyi Takip Et (Bildirimleri Aç)';
-                this.style.background = 'var(--success-color)';
-                this.style.color = '#0f172a';
-                alert('Takip bırakıldı, bildirimler kapatıldı.');
-            }
-        };
-    }
-
-    const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"));
-    onSnapshot(q, (snapshot) => {
-        localBlogCache = [];
-        
-        snapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            
-            let dateObj = new Date();
-            if (data.createdAt) {
-                if (typeof data.createdAt.toDate === 'function') dateObj = data.createdAt.toDate();
-                else dateObj = new Date(data.createdAt);
-            }
-            const formattedDate = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-
-            // 🔐 SABİT KİMLİK MOTORU FİX: Sayfa yenilenince şifreleme değişmesin diye döküman ID'sini matematiksel koda çevirir
-            let customId = data.customId;
-            if (!customId) {
-                let numericHash = "";
-                for (let i = 0; i < docSnap.id.length; i++) {
-                    numericHash += docSnap.id.charCodeAt(i).toString();
-                }
-                customId = numericHash.substring(0, 12);
-            }
-
-            localBlogCache.push({
-                id: docSnap.id,
-                customId: customId,
-                title: data.title,
-                content: data.content,
-                author: data.author,
-                formattedDate: formattedDate
-            });
-        });
-
-        if (!isInitialLoad) {
-            snapshot.docChanges().forEach((change) => {
-                if (change.type === "added" && localStorage.getItem('corebase_notifications') === 'true') {
-                    if (Notification.permission === "granted") {
-                        new Notification("CoreBase Ekosistemi", {
-                            body: `📰 Yeni Blog Yayında: ${change.doc.data().title}`,
-                            icon: 'site_profile.png'
-                        });
-                    }
-                }
-            });
-        }
-        isInitialLoad = false;
-
-        window.refreshBlogRender();
-    });
-
+    // 🎨 2. AKILLI COMPACT/FULL ÇİZİM MOTORU (OnSnapshot'tan önce tanımlandı ki çökme yaşanmasın!)
     window.refreshBlogRender = function() {
         window.activeCommentUnsubs.forEach(unsub => unsub());
         window.activeCommentUnsubs = [];
@@ -125,6 +32,7 @@ export function initBlogModule(db, user, fsTools) {
         }
 
         if (subHash) {
+            // 🔎 DETAY SAYFASI: Başlığa basınca açılan, sadece o yazıya özel şanlı alan
             const post = localBlogCache.find(b => b.customId === subHash);
             if (post) {
                 const card = document.createElement('div');
@@ -177,6 +85,7 @@ export function initBlogModule(db, user, fsTools) {
                 blogPostsWrapper.innerHTML = `<div class="modal" style="text-align:center; color:var(--danger-color);">⚠️ Aranan blog yazısı bulunamadı! <a href="#blog" style="color:var(--accent-color);">Listeye Dön</a></div>`;
             }
         } else {
+            // 📝 COMPACT LİSTELEME GÖRÜNÜMÜ: Sadece başlıkların listelendiği o temiz arayüz
             localBlogCache.forEach(post => {
                 const card = document.createElement('div');
                 card.className = 'blog-card';
@@ -193,6 +102,102 @@ export function initBlogModule(db, user, fsTools) {
         }
     };
 
+    // 🔔 3. BİLDİRİM PANELİ ENJEKSİYONU
+    if (!document.getElementById('notificationToggleArea')) {
+        const toggleArea = document.createElement('div');
+        toggleArea.id = 'notificationToggleArea';
+        toggleArea.className = 'modal';
+        toggleArea.style.padding = '15px';
+        toggleArea.style.marginBottom = '15px';
+        toggleArea.style.display = 'flex';
+        toggleArea.style.justifyContent = 'space-between';
+        toggleArea.style.alignItems = 'center';
+        toggleArea.style.flexWrap = 'wrap';
+        toggleArea.style.gap = '10px';
+        
+        const isFollowed = localStorage.getItem('corebase_notifications') === 'true';
+        toggleArea.innerHTML = `
+            <span style="font-size:14px; font-weight:600; color:var(--text-color);">🔔 Blog Bildirimleri (Takip Sistemi)</span>
+            <button id="btnToggleNotifications" style="padding:8px 16px; font-size:12px; border-radius:6px; background:${isFollowed ? 'var(--danger-color)' : 'var(--success-color)'}; color:${isFollowed ? 'white' : '#0f172a'}">
+                ${isFollowed ? 'Takibi Bırak' : 'Siteyi Takip Et (Bildirimleri Aç)'}
+            </button>
+        `;
+        blogPostsWrapper.parentNode.insertBefore(toggleArea, blogPostsWrapper);
+        
+        document.getElementById('btnToggleNotifications').onclick = async function() {
+            const currentStatus = localStorage.getItem('corebase_notifications') === 'true';
+            if (!currentStatus) {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    localStorage.setItem('corebase_notifications', 'true');
+                    this.innerText = 'Takibi Bırak';
+                    this.style.background = 'var(--danger-color)';
+                    this.style.color = 'white';
+                    alert('Harika mavi varlık! Artık yeni blog yayınlandığında anında push bildirim alacaksın.');
+                } else {
+                    alert('Bildirim izni reddedildi!');
+                }
+            } else {
+                localStorage.setItem('corebase_notifications', 'false');
+                this.innerText = 'Siteyi Takip Et (Bildirimleri Aç)';
+                this.style.background = 'var(--success-color)';
+                this.style.color = '#0f172a';
+                alert('Takip bırakıldı.');
+            }
+        };
+    }
+
+    // 📥 4. EN SON ANA DİNLEYİCİ BAĞLANTISI (Artık motor yukarıda kurulu olduğu için çökmez)
+    const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+        localBlogCache = [];
+        
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            
+            let dateObj = new Date();
+            if (data.createdAt) {
+                if (typeof data.createdAt.toDate === 'function') dateObj = data.createdAt.toDate();
+                else dateObj = new Date(data.createdAt);
+            }
+            const formattedDate = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+            let customId = data.customId;
+            if (!customId) {
+                let numericHash = "";
+                for (let i = 0; i < docSnap.id.length; i++) {
+                    numericHash += docSnap.id.charCodeAt(i).toString();
+                }
+                customId = numericHash.substring(0, 12);
+            }
+
+            localBlogCache.push({
+                id: docSnap.id,
+                customId: customId,
+                title: data.title,
+                content: data.content,
+                author: data.author,
+                formattedDate: formattedDate
+            });
+        });
+
+        if (!isInitialLoad) {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added" && localStorage.getItem('corebase_notifications') === 'true') {
+                    if (Notification.permission === "granted") {
+                        new Notification("CoreBase Ekosistemi", {
+                            body: `📰 Yeni Blog Yayında: ${change.doc.data().title}`,
+                            icon: 'site_profile.png'
+                        });
+                    }
+                }
+            });
+        }
+        isInitialLoad = false;
+
+        window.refreshBlogRender();
+    });
+
     window.addBlogComment = async function(blogId) {
         const input = document.getElementById(`comment-input-${blogId}`);
         if (!input) return;
@@ -207,7 +212,7 @@ export function initBlogModule(db, user, fsTools) {
                 uid: user.uid
             });
             input.value = '';
-        } catch(e) { alert("Yorum gönderilemedi: " + e.message); }
+        } catch(e) { alert("Yorum iletilemedi: " + e.message); }
     };
 
     window.createNewBlogPost = async function() {
@@ -233,7 +238,7 @@ export function initBlogModule(db, user, fsTools) {
             });
             titleInput.value = '';
             contentInput.value = '';
-            alert("Blog başarıyla 12 haneli özel koduyla yayına alındı! 🚀");
+            alert("Blog başarıyla yayına alındı! 🚀");
         } catch (error) { alert("Yayınlama hatası: " + error.message); }
     };
 }
