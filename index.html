@@ -44,7 +44,6 @@
         .badge-vip { background: var(--gold-color); color: #1e293b; box-shadow: 0 0 10px rgba(251, 191, 36, 0.6); }
         .badge-user { background: rgba(56, 189, 248, 0.2); color: var(--accent-color); }
         
-        /* ⚡ EVRENSEL RESPONSIVE GRID SISTEMI */
         .responsive-grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .file-grid, .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
         .file-item, .folder-item { background: rgba(15, 23, 42, 0.7); border: var(--glass-border); padding: 15px; border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
@@ -80,11 +79,10 @@
         .lang-ui-btn.active { background: var(--accent-color); color: #0f172a; box-shadow: var(--accent-glow); }
 
         .blog-card { background: var(--glass-bg); border: var(--glass-border); padding: 20px; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: transform 0.2s; max-width: 100%; box-sizing: border-box; }
-        .blog-card:hover { transform: scale(1.005); border-color: rgba(56, 189, 248, 0.3); }
+        .blog-card:hover { transform: scale(1.002); border-color: rgba(56, 189, 248, 0.3); }
         .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-bottom: 10px; align-items: center; flex-wrap: wrap; }
         .blog-content { font-size: 14px; line-height: 1.6; color: rgba(248, 250, 252, 0.9); text-align: justify; white-space: pre-line; word-break: break-word; }
 
-        /* 📱 MOBİL ÖNCELİKLİ MEDYA SORGULARI */
         @media (max-width: 768px) {
             body { padding: 10px; }
             header { flex-direction: column; text-align: center; gap: 12px; }
@@ -133,7 +131,7 @@
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <!-- 🔐 AUTH & VITRIN PANEL (Tamamen Duyarlı Grid Yapıldı) -->
+    <!-- 🔐 AUTH & VITRIN PANEL -->
     <div id="authSection" class="hidden">
         <div class="modal">
             <div class="responsive-grid-2">
@@ -150,7 +148,7 @@
                     <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
                     <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
                     <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
-                        CoreBase, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir. Amacımız, web standartlarını sonuna kadar esneterek kullanıcılara reklamsız, hızlı ve akıcı bir topluluk deneyimi sunmaktır.
+                        CoreBase, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir. Amacımız, web standartlarını sonuna kadar esneterek kullanıcılara reklamsız, hızlı und akıcı bir topluluk deneyimi sunmaktır.
                     </p>
                     <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
                 </div>
@@ -399,23 +397,22 @@
                 userInfoEl.innerHTML = `👤 ${window.activeUser.nick} <span class="badge ${rankBadge.class}">${rankBadge.name}</span> (Puan: ${window.activeUser.points || 0})`;
             }
         }
-
-        let hash = window.location.hash.replace('#', '') || 'dashboard';
-        const titleEl = document.getElementById('siteMainTitle');
-        if (titleEl) {
-            titleEl.innerText = `CoreBase - ${hash.toUpperCase()}`;
-        }
     };
 </script>
 
 <script>
-    // ⚡ RESPONSIVE DINAMIK ROUTER
+    // ⚡ DİNAMİK ÇİFT HASH ROUTER MOTORU (#blog#12Hane Desteği)
     function handleRoute() {
-        let hash = window.location.hash.replace('#', '') || 'dashboard';
+        let fullHash = window.location.hash.replace('#', '') || 'dashboard';
+        let hashParts = fullHash.split('#');
+        let mainHash = hashParts[0];
+        let subHash = hashParts[1] || null;
+
+        window.currentBlogSubHash = subHash; // Alt kimliği blog.js için global yap
 
         const titleEl = document.getElementById('siteMainTitle');
         if (titleEl) {
-            titleEl.innerText = `CoreBase - ${hash.toUpperCase()}`;
+            titleEl.innerText = `CoreBase - ${mainHash.toUpperCase()}`;
         }
 
         if (window.translateUI) window.translateUI('tr');
@@ -423,16 +420,21 @@
         const links = ['tabDashboard', 'tabBlog', 'tabChat', 'tabHelp', 'tabVip', 'tabAdmin', 'tabPrivacy', 'tabAuth'];
         links.forEach(id => {
             const el = document.getElementById(id);
-            if(el) el.classList.toggle('tab-active', id.toLowerCase() === 'tab' + hash);
+            if(el) el.classList.toggle('tab-active', id.toLowerCase() === 'tab' + mainHash);
         });
         
         const sections = ['dashboardSection', 'blogSection', 'chatSection', 'helpSection', 'vipSection', 'adminSection', 'privacySection', 'authSection'];
         sections.forEach(id => {
             const el = document.getElementById(id);
-            if(el) el.classList.toggle('hidden', el.id.toLowerCase() !== hash + 'section');
+            if(el) el.classList.toggle('hidden', el.id.toLowerCase() !== mainHash + 'section');
         });
 
-        if (hash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI('tr');
+        if (mainHash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI('tr');
+        
+        // Router tetiklendiğinde eğer blog sekmesindeysek görünümü anlık yenile
+        if (mainHash === 'blog' && window.refreshBlogRender) {
+            window.refreshBlogRender();
+        }
     }
 
     function switchLanguage(targetLang) {
@@ -444,6 +446,7 @@
     window.addEventListener('load', handleRoute);
 </script>
 
+<!-- ⚡ FIREBASE EKOSİSTEM ENTEGRASYONU -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
