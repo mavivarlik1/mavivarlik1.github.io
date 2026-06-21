@@ -6,9 +6,8 @@ export function initBlogModule(db, user, fsTools) {
     const blogPostsWrapper = document.getElementById('blogPostsWrapper');
     
     if (!blogPostsWrapper) return;
-    if (blogWritePanel) blogWritePanel.classList.remove('hidden'); // Herkese açık panel
+    if (blogWritePanel) blogWritePanel.classList.remove('hidden');
 
-    // 📥 Canlı Blog Akışı Dinleyicisi
     const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"));
     onSnapshot(q, (snapshot) => {
         blogPostsWrapper.innerHTML = '';
@@ -18,7 +17,16 @@ export function initBlogModule(db, user, fsTools) {
         }
         snapshot.forEach((doc) => {
             const data = doc.data();
-            const dateObj = data.createdAt ? data.createdAt.toDate() : new Date();
+            
+            // 🛡️ ZIRHLI TARİH MOTORU: Bozuk veya eski format tarihleri süzerek sistemi çökmeden korur
+            let dateObj = new Date();
+            if (data.createdAt) {
+                if (typeof data.createdAt.toDate === 'function') {
+                    dateObj = data.createdAt.toDate();
+                } else {
+                    dateObj = new Date(data.createdAt);
+                }
+            }
             const formattedDate = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
             const card = document.createElement('div');
@@ -35,7 +43,6 @@ export function initBlogModule(db, user, fsTools) {
         });
     });
 
-    // 📤 Blog Gönderme Tetikleyicisi
     window.createNewBlogPost = async function() {
         const titleInput = document.getElementById('blogTitleInput');
         const contentInput = document.getElementById('blogContentInput');
