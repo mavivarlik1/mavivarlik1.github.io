@@ -73,17 +73,8 @@
         .viewer-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .viewer-body { padding: 20px; overflow-y: auto; flex:1; background: #0f172a; border-radius: 0 0 16px 16px; }
         .viewer-text { width:100%; height: 380px; background:#0f172a; color:#38bdf8; border:1px solid rgba(255,255,255,0.1); font-family:monospace; padding:15px; box-sizing:border-box; border-radius:8px; font-size:13px; line-height:1.5; outline:none; resize:none; }
-        .credit-card-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 400px; margin: 20px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+        .credit-card-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.4); box-sizing: border-box; }
         
-        .lang-container { display: flex; gap: 8px; background: rgba(15, 23, 42, 0.5); padding: 4px; border-radius: 10px; border: var(--glass-border); }
-        .lang-ui-btn { background: transparent; color: var(--text-muted); padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; border:none; cursor: pointer; transition: all 0.2s; }
-        .lang-ui-btn.active { background: var(--accent-color); color: #0f172a; box-shadow: var(--accent-glow); }
-
-        .blog-card { background: var(--glass-bg); border: var(--glass-border); padding: 20px; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: transform 0.2s; max-width: 100%; box-sizing: border-box; }
-        .blog-card:hover { transform: scale(1.002); border-color: rgba(56, 189, 248, 0.3); }
-        .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-bottom: 10px; align-items: center; flex-wrap: wrap; }
-        .blog-content { font-size: 14px; line-height: 1.6; color: rgba(248, 250, 252, 0.9); text-align: justify; white-space: pre-line; word-break: break-word; }
-
         @media (max-width: 768px) {
             body { padding: 10px; }
             header { flex-direction: column; text-align: center; gap: 12px; }
@@ -144,7 +135,7 @@
                     <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
                     <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
                     <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
-                        CoreBase, kullanıcıların dijital içeriklerini ve bulut verilerini en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir teknoloji ekosistemidir. Amacımız, web standartlarını modern arayüzlerle birleştirerek hızlı, reklamsız ve akıcı bir topluluk deneyimi sunmaktır.
+                        CoreBase, kullanıcıların dijital içeriklerini ve bulut verilerini en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir teknoloji ekosistemidir. Amacımız, web standardsını modern arayüzlerle birleştirerek hızlı, reklamsız ve akıcı bir topluluk deneyimi sunmaktır.
                     </p>
                     <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
                 </div>
@@ -272,7 +263,7 @@
             <h3 id="helpPanelTitle">🙋 Topluluğa Sor / Yardım Konusu Aç</h3>
             <div style="display:flex; gap:10px;">
                 <input type="text" id="helpTitleInput" placeholder="Karşılaştığınız teknik problem nedir?" style="margin:0;">
-                <button id="btnPublishHelp" onclick="window.createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
+                <button id="btnPublishHelp" onclick="createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
             </div>
         </div>
         <div id="helpTopicsWrapper"></div>
@@ -288,19 +279,40 @@
         </div>
     </div>
 
-    <!-- VIP SECTION -->
+    <!-- 💎 YENİLENMİŞ VIP AKTİVASYON MASASI (ÇİFT KULVARLI GERÇEKÇİ PANEL) -->
     <div id="vipSection" class="hidden">
         <div class="modal" style="border: 2px solid var(--gold-color); text-align: center;">
-            <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 24px;">💎 Ücretsiz VIP Altyapı Kazanım Alanı</h3>
-            <p id="vipActivationDesc" style="color: var(--text-muted); font-size: 14px; max-width: 600px; margin: 0 auto 20px auto;">Sistemimizde eksik olan kritik bir özelliği (gerekli), harika bir geliştirme önerisini veya sisteme has bir yazılımsal hatayı (bug) bulup kurucuya bildiren tüm kullanıcılara VIP rütbesi tamamen ücretsiz tanımlanacaktır!</p>
+            <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 24px;">💎 VIP Üyelik Aktivasyon Merkezi</h3>
+            <p id="vipActivationDesc" style="color: var(--text-muted); font-size: 14px; max-width: 800px; margin: 0 auto 25px auto;">
+                Sohbette rütbe unvanına, altın renkli isme ve özel sınırsız dosya depolama önceliklerine kavuşmak için ister <b>5.00 TL</b> ödeme yapabilir, ister sistemde kritik bir hata (bug) veya gerekli bir geliştirme önerisi bularak <b>tamamen ücretsiz</b> VIP rütbesi kazanabilirsiniz!
+            </p>
             
-            <div class="credit-card-box">
-                <div style="text-align: left; font-size: 11px; color: var(--accent-color); font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;">💳 SİSTEM GERİ BİLDİRİM ALANI</div>
-                <input type="text" id="cardHolderName" placeholder="Öneri / Hata / Bug Başlığı" style="background:rgba(15,23,42,0.95);">
-                <textarea id="vipSuggestionContent" placeholder="VIP rütbenizin onaylanması için bulduğunuz bug veya gerekli öneriyi detaylıca yazın..." rows="3" style="margin-top:8px;"></textarea>
-                <button id="btnPayVip" onclick="window.handleCardPayment()" style="width: 100%; background: var(--gold-color); color: #1e293b; margin-top: 15px; font-size: 15px; font-weight: 700; box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);">
-                    BİLDİRİM YAP VE KAZAN
-                </button>
+            <div class="responsive-grid-2" style="gap:20px; text-align:left;">
+                <!-- KULVAR 1: Gerçekçi Kart ile Ödeme Altyapısı -->
+                <div class="credit-card-box" style="margin:0;">
+                    <div style="text-align: left; font-size: 11px; color: var(--accent-color); font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;">💳 ANINDA KART İLE AKTİVASYON (5.00 TL)</div>
+                    <input type="text" id="cardHolderNamePay" placeholder="Kart Sahibinin Adı Soyadı">
+                    <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="text" id="cardExpiry" placeholder="AA/YY" maxlength="5">
+                        <input type="password" id="cardCvc" placeholder="CVC" maxlength="3">
+                    </div>
+                    <button id="btnPayVipCard" onclick="window.handleRealCardPayment()" style="width: 100%; background: var(--gold-color); color: #1e293b; margin-top: 15px; font-size: 15px; font-weight: 700; box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);">
+                        5.00 TL GÜVENLİ ÖDE
+                    </button>
+                </div>
+                
+                <!-- KULVAR 2: Geri Bildirim ile Ücretsiz Hak Kazanma -->
+                <div style="background: rgba(15, 23, 42, 0.6); padding: 20px; border-radius: 12px; border: var(--glass-border); display:flex; flex-direction:column; justify-content:space-between;">
+                    <div>
+                        <div style="font-size: 11px; color: var(--success-color); font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;">🎁 ÖNERİ / BUG BİLDİR (ÜCRETSİZ VIP KAP)</div>
+                        <input type="text" id="vipSuggestionTitle" placeholder="Hata Başlığı veya Eksik Özellik Adı">
+                        <textarea id="vipSuggestionContent" placeholder="VIP rütbenizin ücretsiz onaylanması için bulduğunuz bug veya gerekli öneriyi detaylıca buraya dökün..." rows="4" style="margin-top:8px;"></textarea>
+                    </div>
+                    <button id="btnPayVipBug" onclick="window.handleBugVipPayment()" style="width: 100%; background: var(--success-color); color: #064e3b; margin-top: 15px; font-size: 15px; font-weight: 700;">
+                        BİLDİRİMİ GÖNDER VE VIP TALEP ET
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -344,49 +356,41 @@
     </div>
 </div>
 
+<footer style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; text-align: center; font-size: 13px;">
+    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <a href="#dashboard" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">🗂️ Küresel Bulut Sürücüsü</a>
+        <span style="color: rgba(255,255,255,0.2);">|</span>
+        <a href="#blog" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">📰 Güncel İçerik Blogu</a>
+        <span style="color: rgba(255,255,255,0.2);">|</span>
+        <a href="#help" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">🙋 Canlı Yardım Forumu</a>
+    </div>
+</footer>
+
 <script>
-    // ⚡ RESPONSIVE DİNAMIK ÇİFT HASH ROUTER MOTORU (SABİT KÜRESEL)
-    function handleRoute() {
-        let fullHash = window.location.hash.replace('#', '') || 'dashboard';
-        let hashParts = fullHash.split('#');
-        let mainHash = hashParts[0];
-        let subHash = hashParts[1] || null;
-
-        window.currentBlogSubHash = subHash; 
-
-        const titleEl = document.getElementById('siteMainTitle');
-        if (titleEl) {
-            titleEl.innerText = `CoreBase - ${mainHash.toUpperCase()}`;
-        }
-
-        if (window.translateUI) window.translateUI('tr');
-
-        const links = ['tabDashboard', 'tabBlog', 'tabChat', 'tabHelp', 'tabVip', 'tabAdmin', 'tabPrivacy', 'tabAuth'];
-        links.forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.classList.toggle('tab-active', id.toLowerCase() === 'tab' + mainHash);
-        });
+    window.calculateRank = function(points, email, role) {
+        if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu 👑", class: "badge-kurucu" };
+        if(role === 'mod') return { name: "Moderatör 🛠️", class: "badge-mod" };
+        if(role === 'maker') return { name: "Üretici ⚙️", class: "badge-vip" };
+        if(role === 'vip') return { name: "VIP ⭐", class: "badge-vip" };
         
-        const sections = ['dashboardSection', 'blogSection', 'chatSection', 'helpSection', 'vipSection', 'adminSection', 'privacySection', 'authSection'];
-        sections.forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.classList.toggle('hidden', el.id.toLowerCase() !== mainHash + 'section');
-        });
-
-        if (mainHash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI('tr');
-        if (mainHash === 'blog' && window.refreshBlogRender) window.refreshBlogRender();
+        if (points >= 300) return { name: "Zirvelatıcı", class: "badge-user" };
+        if (points >= 250) return { name: "Efsanelatıcı", class: "badge-user" };
+        if (points >= 200) return { name: "Üstatlatıcı", class: "badge-user" };
+        if (points >= 165) return { name: "Uzmanlatıcı", class: "badge-user" };
+        if (points >= 135) return { name: "Ustalatıcı", class: "badge-user" };
+        if (points >= 110) return { name: "Sağlamlatıcı", class: "badge-user" };
+        if (points >= 95) return { name: "Canlatıcı", class: "badge-user" };
+        if (points >= 75) return { name: "Odaklatıcı", class: "badge-user" };
+        if (points >= 60) return { name: "Işılatıcı", class: "badge-user" };
+        if (points >= 45) return { name: "Hızlatıcı", class: "badge-user" };
+        if (points >= 30) return { name: "Katlatıcı", class: "badge-user" };
+        if (points >= 20) return { name: "Tırmalatıcı", class: "badge-user" };
+        if (points >= 10) return { name: "Adımlatıcı", class: "badge-user" };
+        if (points >= 5) return { name: "Başlatıcı", class: "badge-user" };
+        return { name: "Çaylaklatıcı", class: "badge-user" };
     }
-
-    function switchLanguage(targetLang) {
-        const currentHash = window.location.hash || '#dashboard';
-        window.location.href = window.location.origin + window.location.pathname + '?lang=' + targetLang + currentHash;
-    }
-
-    window.addEventListener('hashchange', handleRoute);
-    window.addEventListener('load', handleRoute);
 </script>
 
-<!-- ⚡ FIREBASE CORE VE MODÜL GÜVENLİK KAFESİ -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -419,7 +423,6 @@
     const db = getFirestore(app);
     const fsTools = { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc, limit };
 
-    // 👑 TAMİR EDİLMİŞ BÜTÜNSEL EVENT INTERFACE BAĞLANTILARI
     window.executeAdminRoleAssign = async () => {
         const targetEmail = document.getElementById('targetAdminEmail').value.trim();
         const selectedRole = document.getElementById('targetRoleSelect').value;
