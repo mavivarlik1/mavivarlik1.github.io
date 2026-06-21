@@ -1,41 +1,48 @@
-let db, user, fsTools;
+// help.js
+export function initHelpForum(db, user, fsTools) {
+    const { collection, addDoc, query, orderBy, onSnapshot } = fsTools;
 
-export function initHelpForum(database, currentUser, firestoreTools) {
-    db = database; user = currentUser; fsTools = firestoreTools;
-    listenHelpForum();
-}
-
-window.createNewHelpTopic = async () => {
-    if(user.isGuest) return;
-    const title = document.getElementById('helpTitleInput').value.trim(); if(!title) return; 
-    await fsTools.addDoc(fsTools.collection(db, "forum_topics"), { 
-        title: title, creator: user.nick || user.email.split('@')[0], creatorUid: user.uid, timestamp: Date.now(), solved: false 
-    });
-    document.getElementById('helpTitleInput').value = '';
-};
-
-window.solveHelpTopic = async (docId, creatorUid) => {
-    if(user.isGuest) return;
-    try {
-        await fsTools.updateDoc(fsTools.doc(db, "forum_topics", docId), { solved: true });
-        const userSnap = await fsTools.getDoc(fsTools.doc(db, "users", user.uid));
-        if(userSnap.exists()) {
-            await fsTools.updateDoc(fsTools.doc(db, "users", user.uid), { points: (userSnap.data().points || 0) + 20 });
-            alert("Sorun başarıyla kapatıldı! Hesabınıza +20 Rütbe Puanı eklendi.");
-            setTimeout(() => window.location.reload(), 1000);
+    // 📥 Konuları Canlı Dinle
+    const q = query(collection(db, "forum_topics"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+        const wrapper = document.getElementById('helpTopicsWrapper');
+        if(!wrapper) return;
+        wrapper.innerHTML = '';
+        
+        if(snapshot.empty) {
+            wrapper.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding: 20px;">🙋 Henüz hiç teknik yardım konusu açılmamış. İlk soruyu sen sor!</div>`;
+            return;
         }
-    } catch(e) { alert(e.message); }
-};
 
-function listenHelpForum() {
-    fsTools.onSnapshot(fsTools.query(fsTools.collection(db, "forum_topics"), fsTools.orderBy("timestamp", "desc")), (snapshot) => {
-        const wrapper = document.getElementById('helpTopicsWrapper'); wrapper.innerHTML = '';
         snapshot.forEach(docSnap => {
-            let topic = docSnap.data(); let div = document.createElement('div');
-            div.style = `background: var(--glass-bg); padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left:4px solid ${topic.solved ? 'var(--success-color)' : 'var(--danger-color)'};`;
-            let solveButton = (!topic.solved && !user.isGuest) ? `<button onclick="solveHelpTopic('${docSnap.id}', '${topic.creatorUid}')" style="background:var(--success-color); color:#064e3b; font-size:12px; padding:4px 10px; margin:0;">Sorunu Çözdüm (+20 Puan)</button>` : '';
-            div.innerHTML = `<div style="display:flex; justify-content:between; align-items:center;"><div><h4 style="margin:0;">🚨 ${topic.title}</h4><p style="font-size:12px; color:var(--text-muted); margin:4px 0 0 0;">Açan: <b>${topic.creator}</b> | Durum: ${topic.solved ? '✅ Çözüldü' : '⏳ Çözüm Bekliyor'}</p></div><div style="margin-left:auto;">${solveButton}</div></div>`;
+            const d = docSnap.data();
+            const div = document.createElement('div');
+            div.className = 'modal';
+            div.innerHTML = `
+                <h4 style="margin-top:0; color:var(--accent-color); font-size:16px;">❓ ${d.title}</h4>
+                <div style="font-size:11px; color:var(--text-muted);">Soran: <b>${d.author}</b> | Yetki: <span style="color:var(--accent-color);">${d.authorRole.toUpperCase()}</span></div>
+                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.05); margin:10px 0;">
+                <p style="font-size:13px; color:var(--text-muted); margin:0;">💬 Bu tartışma konusu herkese açık olarak indekslenmiştir. Çözüm önerileri yakında eklenecektir.</p>
+            `;
             wrapper.appendChild(div);
         });
     });
+
+    // 📤 Yeni Başlık Açma
+    window.createNewHelpTopic = async function() {
+        const title = document.getElementById('helpTitleInput').value.trim();
+        if(!title) return alert("Konu başlığı boş bırakılamaz!");
+
+        try {
+            await addDoc(collection(db, "forum_topics"), {
+                title: title,
+                author: user.nick,
+                authorRole: user.role || "user",
+                uid: user.uid,
+                createdAt: Date.now()
+            });
+            document.getElementById('helpTitleInput').value = '';
+            alert("Yardım konusu başarıyla foruma eklendi!");
+        } catch(e) { alert("Forum hatası: " + e.message); }
+    };
 }
