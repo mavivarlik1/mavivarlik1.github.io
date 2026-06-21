@@ -6,7 +6,6 @@ export function initBlogModule(db, user, fsTools) {
     const blogPostsWrapper = document.getElementById('blogPostsWrapper');
     
     if (!blogPostsWrapper) return;
-    if (blogWritePanel) blogWritePanel.classList.remove('hidden');
 
     let localBlogCache = [];
     window.activeCommentUnsubs = window.activeCommentUnsubs || [];
@@ -31,6 +30,9 @@ export function initBlogModule(db, user, fsTools) {
         }
 
         if (subHash) {
+            // 🔒 FİX: Detay sayfasındayken yeni blog oluşturma panelini gizle, çakışmayı engelle!
+            if (blogWritePanel) blogWritePanel.classList.add('hidden');
+
             const post = localBlogCache.find(b => b.customId === subHash);
             if (post) {
                 const card = document.createElement('div');
@@ -83,6 +85,9 @@ export function initBlogModule(db, user, fsTools) {
                 blogPostsWrapper.innerHTML = `<div class="modal" style="text-align:center; color:var(--danger-color);">⚠️ İstenen makale bulunamadı! <a href="#blog" style="color:var(--accent-color);">Listeye Dön</a></div>`;
             }
         } else {
+            // Ana listedeyken yazma panelini tekrar göster
+            if (blogWritePanel && user.role === 'kurucu') blogWritePanel.classList.remove('hidden');
+
             localBlogCache.forEach(post => {
                 const card = document.createElement('div');
                 card.className = 'blog-card';
@@ -99,7 +104,7 @@ export function initBlogModule(db, user, fsTools) {
         }
     };
 
-    // 🔔 BILDIRIM TAKIP PANEL ENJEKTÖRÜ
+    // 🔔 BILDIRIM PANEL ENJEKTÖRÜ
     if (!document.getElementById('notificationToggleArea')) {
         const toggleArea = document.createElement('div');
         toggleArea.id = 'notificationToggleArea';
@@ -130,10 +135,8 @@ export function initBlogModule(db, user, fsTools) {
                     this.innerText = 'Takibi Bırak';
                     this.style.background = 'var(--danger-color)';
                     this.style.color = 'white';
-                    alert(`Teşekkürler ${user.nick}! Artık yeni bir içerik yayınlandığında anında anlık bildirim alacaksınız.`);
-                } else {
-                    alert('Bildirim izinleri tarayıcınız tarafından engellendi.');
-                }
+                    alert(`Teşekkürler ${user.nick}! Artık yeni bir içerik yayınlandığında anında bildirim alacaksınız.`);
+                } else { alert('Bildirim izinleri engellendi.'); }
             } else {
                 localStorage.setItem('corebase_notifications', 'false');
                 this.innerText = 'Sanal Bildirimleri Aç';
@@ -147,10 +150,8 @@ export function initBlogModule(db, user, fsTools) {
     const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"));
     onSnapshot(q, (snapshot) => {
         localBlogCache = [];
-        
         snapshot.forEach((docSnap) => {
             const data = docSnap.data();
-            
             let dateObj = new Date();
             if (data.createdAt) {
                 if (typeof data.createdAt.toDate === 'function') dateObj = data.createdAt.toDate();
@@ -161,9 +162,7 @@ export function initBlogModule(db, user, fsTools) {
             let customId = data.customId;
             if (!customId) {
                 let numericHash = "";
-                for (let i = 0; i < docSnap.id.length; i++) {
-                    numericHash += docSnap.id.charCodeAt(i).toString();
-                }
+                for (let i = 0; i < docSnap.id.length; i++) { numericHash += docSnap.id.charCodeAt(i).toString(); }
                 customId = numericHash.substring(0, 12);
             }
 
@@ -190,7 +189,6 @@ export function initBlogModule(db, user, fsTools) {
             });
         }
         isInitialLoad = false;
-
         window.refreshBlogRender();
     });
 
@@ -218,7 +216,6 @@ export function initBlogModule(db, user, fsTools) {
         
         const title = titleInput.value.trim();
         const content = contentInput.value.trim();
-        
         if (!title || !content) return alert(`Lütfen başlık ve makale içeriğini eksiksiz doldurun, ${user.nick}!`);
 
         const customId = Math.floor(100000000000 + Math.random() * 900000000000).toString();
@@ -234,7 +231,8 @@ export function initBlogModule(db, user, fsTools) {
             });
             titleInput.value = '';
             contentInput.value = '';
-            alert("İçeriğiniz başarıyla havuz sistemine kaydedildi ve yayına alındı.");
+            alert("İçeriğiniz başarıyla listeye kaydedildi ve yayına alındı.");
+            window.location.hash = "#blog"; // Yazı yayınlanınca otomatik listeye atar
         } catch (error) { alert("Yayınlama hatası: " + error.message); }
     };
 }
