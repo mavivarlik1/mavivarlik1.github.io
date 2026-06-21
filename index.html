@@ -100,8 +100,8 @@
         
         <div style="display: flex; align-items: center; gap: 15px;">
             <div class="lang-container">
-                <button class="lang-ui-btn" id="langBtnTr" onclick="switchLanguage('tr')">TR</button>
-                <button class="lang-ui-btn" id="langBtnEn" onclick="switchLanguage('en')">EN</button>
+                <button class="lang-ui-btn" id="langBtnTr" onclick="window.switchLanguage('tr')">TR</button>
+                <button class="lang-ui-btn" id="langBtnEn" onclick="window.switchLanguage('en')">EN</button>
             </div>
             <div id="userInfo" style="font-weight: 500; color: var(--text-muted);">Bağlanıyor...</div>
         </div>
@@ -118,7 +118,6 @@
         <a href="#admin" id="tabAdmin" class="tab-btn hidden" style="color: var(--danger-color);">👑 Yönetim</a>
     </div>
 
-    <!-- 🔐 AUTH PANEL -->
     <div id="authSection" class="hidden">
         <div class="modal">
             <div class="responsive-grid-2">
@@ -135,7 +134,7 @@
                     <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
                     <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
                     <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
-                        CoreBase, kullanıcıların dijital içeriklerini ve bulut verilerini en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir teknoloji ekosistemidir. Amacımız, web standardsını modern arayüzlerle birleştirerek hızlı, reklamsız ve akıcı bir topluluk deneyimi sunmaktır.
+                        CoreBase, kullanıcıların dijital içeriklerini ve bulut verilerini en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir teknoloji ekosistemidir. Amacımız, web standartlarını modern arayüzlerle birleştirerek hızlı, reklamsız ve akıcı bir topluluk deneyimi sunmaktır.
                     </p>
                     <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
                 </div>
@@ -153,7 +152,6 @@
         </div>
     </div>
 
-    <!-- MAIN UNIFIED DASHBOARD -->
     <div id="dashboardSection" class="hidden">
         <div class="responsive-grid-2" style="margin-bottom: 25px;">
             <div class="modal" style="margin-bottom:0;">
@@ -219,7 +217,6 @@
         <div id="foldersWrapper"></div>
     </div>
 
-    <!-- 📰 BLOG SECTION -->
     <div id="blogSection" class="hidden">
         <div class="modal hidden" id="blogWritePanel">
             <h3 style="color: var(--accent-color); margin-top:0;">✍️ Gelişmiş Multimedya & İçerik Yayınlama Paneli</h3>
@@ -234,7 +231,6 @@
         <div id="blogPostsWrapper"></div>
     </div>
 
-    <!-- CHAT SECTION -->
     <div id="chatSection" class="hidden">
         <div class="chat-grid">
             <div class="chat-box">
@@ -257,7 +253,6 @@
         </div>
     </div>
 
-    <!-- HELP SECTION -->
     <div id="helpSection" class="hidden">
         <div class="modal" id="helpWritePanel">
             <h3 id="helpPanelTitle">🙋 Topluluğa Sor / Yardım Konusu Aç</h3>
@@ -269,7 +264,6 @@
         <div id="helpTopicsWrapper"></div>
     </div>
 
-    <!-- PRIVACY SECTION -->
     <div id="privacySection" class="hidden">
         <div class="modal">
             <h3 id="privacyTitle">📜 Gizlilik Politikası</h3>
@@ -279,7 +273,6 @@
         </div>
     </div>
 
-    <!-- 💎 YENİLENMİŞ VIP AKTİVASYON MASASI (ÇİFT KULVARLI GERÇEKÇİ PANEL) -->
     <div id="vipSection" class="hidden">
         <div class="modal" style="border: 2px solid var(--gold-color); text-align: center;">
             <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 24px;">💎 VIP Üyelik Aktivasyon Merkezi</h3>
@@ -288,7 +281,6 @@
             </p>
             
             <div class="responsive-grid-2" style="gap:20px; text-align:left;">
-                <!-- KULVAR 1: Gerçekçi Kart ile Ödeme Altyapısı -->
                 <div class="credit-card-box" style="margin:0;">
                     <div style="text-align: left; font-size: 11px; color: var(--accent-color); font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;">💳 ANINDA KART İLE AKTİVASYON (5.00 TL)</div>
                     <input type="text" id="cardHolderNamePay" placeholder="Kart Sahibinin Adı Soyadı">
@@ -302,7 +294,6 @@
                     </button>
                 </div>
                 
-                <!-- KULVAR 2: Geri Bildirim ile Ücretsiz Hak Kazanma -->
                 <div style="background: rgba(15, 23, 42, 0.6); padding: 20px; border-radius: 12px; border: var(--glass-border); display:flex; flex-direction:column; justify-content:space-between;">
                     <div>
                         <div style="font-size: 11px; color: var(--success-color); font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;">🎁 ÖNERİ / BUG BİLDİR (ÜCRETSİZ VIP KAP)</div>
@@ -317,7 +308,6 @@
         </div>
     </div>
 
-    <!-- ADMIN SECTION -->
     <div id="adminSection" class="hidden">
         <div class="modal" style="border: 2px solid var(--danger-color);">
             <h3 id="adminPanelTitle" style="color: var(--danger-color);">👑 Rütbe Yönetim Merkezi</h3>
@@ -334,7 +324,6 @@
         </div>
     </div>
 
-    <!-- ⚙️ PROFiL VE DETAYLI AYARLAR MODALİ -->
     <div class="modal hidden" id="settingsModal" style="margin-top:30px;">
         <h3 id="settingsTitle">⚙️ Profil & Hesap Ayarları</h3>
         <div style="background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 12px; border: var(--glass-border); margin-bottom: 15px; font-size: 14px; line-height: 1.8;">
@@ -347,12 +336,14 @@
 </div>
 
 <div id="fileViewerModal" class="viewer-modal-backdrop hidden">
-    <div class="viewer-content">
-        <div class="viewer-header">
-            <h3 id="viewerTitle" style="margin:0; color:var(--accent-color); font-size:16px;">📄 Dosya Önizleme</h3>
-            <button onclick="window.closeFileViewer()" style="margin:0; background:rgba(255,255,255,0.1); color:white; padding:5px 12px; border-radius:6px; cursor:pointer;">✕ Kapat</button>
+    <div class="container visual-model" style="max-width:800px; padding:0;">
+        <div class="viewer-content">
+            <div class="viewer-header">
+                <h3 id="viewerTitle" style="margin:0; color:var(--accent-color); font-size:16px;">📄 Dosya Önizleme</h3>
+                <button onclick="window.closeFileViewer()" style="margin:0; background:rgba(255,255,255,0.1); color:white; padding:5px 12px; border-radius:6px; cursor:pointer;">✕ Kapat</button>
+            </div>
+            <div id="viewerBody" class="viewer-body"></div>
         </div>
-        <div id="viewerBody" class="viewer-body"></div>
     </div>
 </div>
 
@@ -367,28 +358,44 @@
 </footer>
 
 <script>
-    window.calculateRank = function(points, email, role) {
-        if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu 👑", class: "badge-kurucu" };
-        if(role === 'mod') return { name: "Moderatör 🛠️", class: "badge-mod" };
-        if(role === 'maker') return { name: "Üretici ⚙️", class: "badge-vip" };
-        if(role === 'vip') return { name: "VIP ⭐", class: "badge-vip" };
+    window.handleRoute = function() {
+        let fullHash = window.location.hash.replace('#', '') || 'dashboard';
+        let hashParts = fullHash.split('#');
+        let mainHash = hashParts[0];
+        let subHash = hashParts[1] || null;
+
+        window.currentBlogSubHash = subHash; 
+
+        const titleEl = document.getElementById('siteMainTitle');
+        if (titleEl) {
+            titleEl.innerText = `CoreBase - ${mainHash.toUpperCase()}`;
+        }
+
+        if (window.translateUI) window.translateUI('tr');
+
+        const links = ['tabDashboard', 'tabBlog', 'tabChat', 'tabHelp', 'tabVip', 'tabAdmin', 'tabPrivacy', 'tabAuth'];
+        links.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.classList.toggle('tab-active', id.toLowerCase() === 'tab' + mainHash);
+        });
         
-        if (points >= 300) return { name: "Zirvelatıcı", class: "badge-user" };
-        if (points >= 250) return { name: "Efsanelatıcı", class: "badge-user" };
-        if (points >= 200) return { name: "Üstatlatıcı", class: "badge-user" };
-        if (points >= 165) return { name: "Uzmanlatıcı", class: "badge-user" };
-        if (points >= 135) return { name: "Ustalatıcı", class: "badge-user" };
-        if (points >= 110) return { name: "Sağlamlatıcı", class: "badge-user" };
-        if (points >= 95) return { name: "Canlatıcı", class: "badge-user" };
-        if (points >= 75) return { name: "Odaklatıcı", class: "badge-user" };
-        if (points >= 60) return { name: "Işılatıcı", class: "badge-user" };
-        if (points >= 45) return { name: "Hızlatıcı", class: "badge-user" };
-        if (points >= 30) return { name: "Katlatıcı", class: "badge-user" };
-        if (points >= 20) return { name: "Tırmalatıcı", class: "badge-user" };
-        if (points >= 10) return { name: "Adımlatıcı", class: "badge-user" };
-        if (points >= 5) return { name: "Başlatıcı", class: "badge-user" };
-        return { name: "Çaylaklatıcı", class: "badge-user" };
-    }
+        const sections = ['dashboardSection', 'blogSection', 'chatSection', 'helpSection', 'vipSection', 'adminSection', 'privacySection', 'authSection'];
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.classList.toggle('hidden', el.id.toLowerCase() !== mainHash + 'section');
+        });
+
+        if (mainHash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI('tr');
+        if (mainHash === 'blog' && window.refreshBlogRender) window.refreshBlogRender();
+    };
+
+    window.switchLanguage = function(targetLang) {
+        const currentHash = window.location.hash || '#dashboard';
+        window.location.href = window.location.origin + window.location.pathname + '?lang=' + targetLang + currentHash;
+    };
+
+    window.addEventListener('hashchange', window.handleRoute);
+    window.addEventListener('load', window.handleRoute);
 </script>
 
 <script type="module">
@@ -491,7 +498,11 @@
         if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') document.getElementById('tabAdmin').classList.remove('hidden');
         else document.getElementById('tabAdmin').classList.add('hidden');
 
-        handleRoute();
+        // 🔒 ARTIK WINDOW ÜZERİNDEN KESİN OLARAK ÇAĞRILIYOR, HATA VERİP KİLİTLENMEZ!
+        if (window.handleRoute) {
+            window.handleRoute();
+        }
+        
         initDashboard(db, user, fsTools);
         initChatModule(db, user, fsTools);
         initHelpForum(db, user, fsTools);
