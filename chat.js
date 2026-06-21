@@ -1,41 +1,56 @@
-let db, user, fsTools;
+// chat.js
+export function initChatModule(db, user, fsTools) {
+    const { collection, addDoc, query, orderBy, onSnapshot } = fsTools;
+    let currentUrlChatListener = null;
 
-export function initChatModule(database, currentUser, firestoreTools) {
-    db = database; user = currentUser; fsTools = firestoreTools;
-    listenChatRoom("global_chat", "globalChatMsgs");
-}
-
-function listenChatRoom(collectionPath, elementId) {
-    fsTools.onSnapshot(fsTools.query(fsTools.collection(db, collectionPath), fsTools.orderBy("timestamp", "asc")), (snapshot) => {
-        const box = document.getElementById(elementId); box.innerHTML = '';
+    // 🌍 Genel Odası Dinleyicisi
+    const qGlobal = query(collection(db, "global_chat"), orderBy("timestamp", "asc"));
+    onSnapshot(qGlobal, (snapshot) => {
+        const box = document.getElementById('globalChatMsgs');
+        if(!box) return;
+        box.innerHTML = '';
         snapshot.forEach(doc => {
-            let d = doc.data();
-            let rankData = window.calculateRank(d.points || 0, d.email || '', d.role || 'user');
-            box.innerHTML += `<div class="msg"><span class="badge ${rankData.class}">${rankData.name}</span> <b>${d.user}</b>: <span style="color: #cbd5e1;">${d.text}</span></div>`;
+            const d = doc.data();
+            box.innerHTML += `<div class="msg"><b style="color:var(--accent-color);">${d.sender}:</b> ${d.text}</div>`;
         });
         box.scrollTop = box.scrollHeight;
     });
-}
 
-window.sendChatMessage = async (type) => {
-    const inp = document.getElementById(type === 'global' ? 'globalMsgInput' : 'urlMsgInput');
-    if(!inp.value.trim()) return;
-
-    let chatData = {
-        user: user.nick || user.email.split('@')[0],
-        text: inp.value.trim(),
-        timestamp: Date.now(),
-        points: user.points || 0,
-        role: user.role || 'user',
-        email: user.email || ''
+    // 🔗 Dinamik URL Odası Dinleyicisi
+    window.loadUrlChat = function() {
+        let url = document.getElementById('urlChatTarget').value.trim().toLowerCase();
+        if(!url) { document.getElementById('urlChatMsgs').innerHTML = ''; return; }
+        
+        let safeUrl = url.replace(/[^a-z0-9]/g, '_');
+        if(currentUrlChatListener) currentUrlChatListener(); 
+        
+        const qUrl = query(collection(db, `url_chats/${safeUrl}/messages`), orderBy("timestamp", "asc"));
+        currentUrlChatListener = onSnapshot(qUrl, (snapshot) => {
+            const box = document.getElementById('urlChatMsgs');
+            if(!box) return;
+            box.innerHTML = '';
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                box.innerHTML += `<div class="msg"><b style="color:var(--success-color);">${d.sender}:</b> ${d.text}</div>`;
+            });
+            box.scrollTop = box.scrollHeight;
+        });
     };
 
-    if(type === 'global') {
-        await fsTools.addDoc(fsTools.collection(db, "global_chat"), chatData);
-    } else {
-        let rawUrl = document.getElementById('urlChatTarget').value.trim(); if(!rawUrl) return alert("Önce hedef URL girin!");
-        let room = rawUrl.replace(/[\.\/]/g, "_");
-        await fsTools.addDoc(fsTools.collection(db, `url_chats/${room}/messages`), chatData);
-    }
-    inp.value = '';
-};
+    // ✉️ Mesaj Gönderici
+    window.sendChatMessage = async function(type) {
+        if(type === 'global') {
+            const txt = document.getElementById('globalMsgInput').value.trim();
+            if(!txt) return;
+            await addDoc(collection(db, "global_chat"), { sender: user.nick, text: txt, timestamp: Date.now(), uid: user.uid });
+            document.getElementById('globalMsgInput').value = '';
+        } else if (type === 'url') {
+            const url = document.getElementById('urlChatTarget').value.trim().toLowerCase();
+            const txt = document.getElementById('urlMsgInput').value.trim();
+            if(!url || !txt) return;
+            let safeUrl = url.replace(/[^a-z0-9]/g, '_');
+            await addDoc(collection(db, `url_chats/${safeUrl}/messages`), { sender: user.nick, text: txt, timestamp: Date.now(), uid: user.uid });
+            document.getElementById('urlMsgInput').value = '';
+        }
+    };
+}
