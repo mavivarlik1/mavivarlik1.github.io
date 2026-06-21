@@ -18,7 +18,7 @@ export function initBlogModule(db, user, fsTools) {
         snapshot.forEach((doc) => {
             const data = doc.data();
             
-            // 🛡️ ZIRHLI TARİH MOTORU: Bozuk veya eski format tarihleri süzerek sistemi çökmeden korur
+            // 🛡️ ZIRHLI TARİH MOTORU: Eski veya farklı format bozuk verileri süzerek sistem çökmesini kesin olarak engeller
             let dateObj = new Date();
             if (data.createdAt) {
                 if (typeof data.createdAt.toDate === 'function') {
