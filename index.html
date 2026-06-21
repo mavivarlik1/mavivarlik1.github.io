@@ -75,12 +75,6 @@
         .lang-container { display: flex; gap: 8px; background: rgba(15, 23, 42, 0.5); padding: 4px; border-radius: 10px; border: var(--glass-border); }
         .lang-ui-btn { background: transparent; color: var(--text-muted); padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; border:none; cursor: pointer; transition: all 0.2s; }
         .lang-ui-btn.active { background: var(--accent-color); color: #0f172a; box-shadow: var(--accent-glow); }
-
-        /* Blog Tasarım CSS */
-        .blog-card { background: var(--glass-bg); border: var(--glass-border); padding: 20px; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: transform 0.2s; }
-        .blog-card:hover { transform: scale(1.005); border-color: rgba(56, 189, 248, 0.3); }
-        .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-bottom: 10px; align-items: center; }
-        .blog-content { font-size: 14px; line-height: 1.6; color: rgba(248, 250, 252, 0.9); text-align: justify; white-space: pre-line; }
     </style>
 </head>
 <body>
@@ -122,6 +116,7 @@
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
+    <!-- 🔐 AUTH & VITRIN PANEL -->
     <div id="authSection" class="hidden">
         <div class="modal">
             <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px;">
@@ -138,7 +133,7 @@
                     <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
                     <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
                     <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
-                        CoreBase, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir. Amacımız, web standardslarını sonuna kadar esneterek kullanıcılara reklamsız, hızlı ve akıcı bir topluluk deneyimi sunmaktır.
+                        CoreBase, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir. Amacımız, web standartlarını sonuna kadar esneterek kullanıcılara reklamsız, hızlı ve akıcı bir topluluk deneyimi sunmaktır.
                     </p>
                     <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
                 </div>
@@ -156,6 +151,7 @@
         </div>
     </div>
 
+    <!-- MAIN UNIFIED DASHBOARD -->
     <div id="dashboardSection" class="hidden">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
             <div class="modal" style="margin-bottom:0;">
@@ -204,6 +200,7 @@
         <div id="foldersWrapper"></div>
     </div>
 
+    <!-- 📰 BLOG SECTION -->
     <div id="blogSection" class="hidden">
         <div class="modal" id="blogWritePanel">
             <h3 style="color: var(--accent-color); margin-top:0;">✍️ Yeni Blog Yazısı Yayınla</h3>
@@ -214,6 +211,7 @@
         <div id="blogPostsWrapper"></div>
     </div>
 
+    <!-- CHAT SECTION -->
     <div id="chatSection" class="hidden">
         <div class="chat-grid">
             <div class="chat-box">
@@ -236,6 +234,7 @@
         </div>
     </div>
 
+    <!-- HELP SECTION -->
     <div id="helpSection" class="hidden">
         <div class="modal" id="helpWritePanel">
             <h3 id="helpPanelTitle">🙋 Yardım Konusu Aç</h3>
@@ -247,6 +246,7 @@
         <div id="helpTopicsWrapper"></div>
     </div>
 
+    <!-- PRIVACY SECTION -->
     <div id="privacySection" class="hidden">
         <div class="modal">
             <h3 id="privacyTitle">📜 Gizlilik Politikası</h3>
@@ -256,6 +256,7 @@
         </div>
     </div>
 
+    <!-- VIP SECTION -->
     <div id="vipSection" class="hidden">
         <div class="modal" style="border: 2px solid var(--gold-color); text-align: center;">
             <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 24px;">💎 VIP Üyelik Aktivasyon Alanı (5 TL)</h3>
@@ -276,6 +277,7 @@
         </div>
     </div>
 
+    <!-- ADMIN SECTION -->
     <div id="adminSection" class="hidden">
         <div class="modal" style="border: 2px solid var(--danger-color);">
             <h3 id="adminPanelTitle" style="color: var(--danger-color);">👑 Yetki Atama Komuta Masası</h3>
@@ -316,6 +318,7 @@
     </div>
 </footer>
 
+<!-- ⚙️ GLOBAL RANK HESAPLAYICI ENGINE -->
 <script>
     window.calculateRank = function(points, email, role) {
         if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu 👑", class: "badge-kurucu" };
@@ -340,6 +343,7 @@
     }
 </script>
 
+<!-- i18n ENGINE INTEGRATION -->
 <script type="module">
     import { uiTranslations } from "./lang.js";
 
@@ -422,10 +426,11 @@
     window.addEventListener('load', handleRoute);
 </script>
 
+<!-- ⚡ SÜPER TAMİR EDİLMİŞ FIREBASE ENTEGRASYONU -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; // GÜNCEL VE TAMİR EDİLMİŞ SATIR!
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     
     import { initDashboard } from "./dashboard.js";
     import { initChatModule } from "./chat.js";
