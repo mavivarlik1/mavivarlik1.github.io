@@ -7,7 +7,7 @@
     
     <link rel="icon" type="image/png" href="site_profile.png">
     
-    <meta name="description" content="CoreBase; gelişmiş bulut dosya depolama çözümleri, anlık interaktif sohbet odaları, teknik yardım forumları und dinamik klasör paylaşım ağı sunan yeni nesil bir web uygulaması ekosistemidir.">
+    <meta name="description" content="CoreBase; gelişmiş bulut dosya depolama çözümleri, anlık interaktif sohbet odaları, teknik yardım forumları ve dinamik klasör paylaşım ağı sunan yeni nesil bir web uygulaması ekosistemidir.">
     <meta name="keywords" content="bulut depolama, dosya paylaşımı, canlı chat, forum, web uygulaması, pwa, teknoloji rehberi, blog">
     
     <link rel="manifest" href="manifest.json">
@@ -148,7 +148,7 @@
                     <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
                     <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
                     <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
-                        CoreBase, kullanıcıların dijital içeriklerini ve bulut verilerini en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir teknoloji ekosistemidir. Amacımız, web standartlarını modern arayüzlerle birleştirerek hızlı, reklamsız ve akıcı bir topluluk deneyimi sunmaktır.
+                        CoreBase, kullanıcıların dijital içeriklerini ve bulut verilerini en yüksek verimlilikle organize etmesini sağlayan modern, modüler và tek sayfa mimarili (SPA) bir teknoloji ekosistemidir. Amacımız, web standartlarını modern arayüzlerle birleştirerek hızlı, reklamsız ve akıcı bir topluluk deneyimi sunmaktır.
                     </p>
                     <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
                 </div>
@@ -189,23 +189,40 @@
             </div>
         </div>
         <div class="modal">
-            <h3 id="cloudStorageTitle">🚀 Bulut Depolama</h3>
+            <h3 id="cloudStorageTitle">🚀 Bulut Depolama & Geliştirici Sürücüsü</h3>
             <div class="responsive-grid-2">
                 <div>
-                    <h4 style="margin:0; color: var(--accent-color);">Metin Dosyası Oluştur</h4>
-                    <input type="text" id="newFileName" placeholder="notlar.txt">
-                    <textarea id="newFileContent" placeholder="Dosya içeriği..." rows="3"></textarea>
-                    <button id="btnSaveFile" onclick="createNewTextFile()" style="width: 100%;">Kaydet</button>
+                    <h4 style="margin:0; color: var(--accent-color);">Metin / Kod Dosyası Oluştur</h4>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin: 6px 0;">
+                        <input type="text" id="newFileName" placeholder="dosya_adi" style="margin:0;">
+                        <select id="newFileExtension" style="margin:0;">
+                            <option value=".txt">.txt</option>
+                            <option value=".html">.html</option>
+                            <option value=".css">.css</option>
+                            <option value=".js">.js</option>
+                            <option value=".py">.py</option>
+                            <option value=".json">.json</option>
+                        </select>
+                    </div>
+                    <select id="newFilePrivacy" style="margin-bottom:8px;">
+                        <option value="private">🔒 Özel Sürücüme Kaydet</option>
+                        <option value="global">🌍 Küresel Havuzda Paylaş</option>
+                    </select>
+                    <textarea id="newFileContent" placeholder="Kodlarınızı veya metin içeriğini buraya girin..." rows="4"></textarea>
+                    <button id="btnSaveFile" onclick="window.createNewTextFile()" style="width: 100%;">Dosyayı Sürücüye İşle</button>
                 </div>
                 <div>
-                    <h4 style="margin:0; color: var(--success-color);">Cihazdan Dosya Yükle</h4>
+                    <h4 style="margin:0; color: var(--success-color);">Cihazdan Yerel Dosya Yükle</h4>
                     <input type="file" id="localFileUploader" style="padding: 5px;">
                     <button id="btnUploadFile" onclick="uploadLocalFile()" style="width: 100%; background: var(--success-color); color: #064e3b;">Yükle</button>
                 </div>
             </div>
             <hr style="border:0; border-top: 1px solid rgba(255,255,255,0.05); margin:20px 0;">
-            <h4 id="savedFilesTitle">📂 Kayıtlı Güvenli Dosyalarınız</h4>
+            <h4 id="savedFilesTitle">🔒 Şifreli Özel Dosyalarınız</h4>
             <div id="fileStorageWrapper" class="file-grid"></div>
+            
+            <h4 id="globalFilesTitle" style="color: var(--success-color); margin-top:25px;">🌍 Ortak Paylaşılan Küresel Kodlar & Belgeler</h4>
+            <div id="globalFileStorageWrapper" class="file-grid"></div>
         </div>
         <div class="modal" style="border: 1px solid rgba(56,189,248,0.2);">
             <h3 id="globalSharedTitle">🌍 Ortak Paylaşılan Küresel Klasörler</h3>
@@ -334,7 +351,6 @@
 </footer>
 
 <script>
-    // ⚡ RESPONSIVE DİNAMIK ÇİFT HASH ROUTER MOTORU
     function handleRoute() {
         let fullHash = window.location.hash.replace('#', '') || 'dashboard';
         let hashParts = fullHash.split('#');
@@ -378,7 +394,6 @@
     window.addEventListener('load', handleRoute);
 </script>
 
-<!-- ⚡ FIREBASE CORE VE MODÜL KAFESİ -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -411,7 +426,6 @@
     const db = getFirestore(app);
     const fsTools = { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc, limit };
 
-    // 👑 TAMİR EDİLMİŞ GLOBAL YÖNETİCİ ATAMA MOTORU (MODÜL İÇİNE BAĞLANDI)
     window.executeAdminRoleAssign = async () => {
         const targetEmail = document.getElementById('targetAdminEmail').value.trim();
         const selectedRole = document.getElementById('targetRoleSelect').value;
