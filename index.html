@@ -11,7 +11,7 @@
     <meta name="keywords" content="bulut depolama, dosya paylaşımı, canlı chat, forum, web uygulaması, pwa, teknoloji rehberi, blog">
     
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#f1f5f9">
     <link class="apple-touch-icon" href="icon-192x192.png">
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5865725607083870" crossorigin="anonymous"></script>
@@ -19,20 +19,6 @@
     
     <style>
         /* 🎨 DİNAMİK TEMA DEĞİŞKENLERİ MİMARİSİ */
-        body.theme-tech {
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --glass-bg: rgba(30, 41, 59, 0.6);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
-            --text-color: #f8fafc; 
-            --text-muted: #94a3b8;
-            --accent-color: #38bdf8; 
-            --accent-glow: 0 0 15px rgba(56, 189, 248, 0.2);
-            --danger-color: #fb7185;
-            --success-color: #4ade80;
-            --gold-color: #fbbf24;
-            --inner-bg: rgba(15, 23, 42, 0.5);
-        }
-
         body.theme-simple {
             --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
             --glass-bg: #ffffff;
@@ -45,6 +31,20 @@
             --success-color: #16a34a;
             --gold-color: #d97706;
             --inner-bg: #f8fafc;
+        }
+
+        body.theme-tech {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --glass-bg: rgba(30, 41, 59, 0.6);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --text-color: #f8fafc; 
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8; 
+            --accent-glow: 0 0 15px rgba(56, 189, 248, 0.2);
+            --danger-color: #fb7185;
+            --success-color: #4ade80;
+            --gold-color: #fbbf24;
+            --inner-bg: rgba(15, 23, 42, 0.5);
         }
 
         body.theme-notepad {
@@ -104,7 +104,6 @@
         .chat-box { background: var(--glass-bg); border: var(--glass-border); padding: 20px; border-radius: 12px; height: 450px; display: flex; flex-direction: column; }
         .chat-messages { flex: 1; overflow-y: auto; background: var(--inner-bg); padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 8px; }
         
-        /* 💬 KURUMSAL SADELEŞTİRİLMİŞ SOHBET TASARIMI */
         .msg { background: var(--glass-bg); padding: 8px 12px; border-radius: 6px; font-size: 13px; border: var(--glass-border); line-height: 1.5; word-break: break-word; }
         
         .maskot-container { display: flex; align-items: center; gap: 15px; background: var(--glass-bg); padding: 12px 20px; border-radius: 12px; border: var(--glass-border); margin-bottom: 25px; }
@@ -131,7 +130,7 @@
         }
     </style>
 </head>
-<body class="theme-tech">
+<body class="theme-simple">
 
 <div class="container">
     <div class="maskot-container">
@@ -165,7 +164,6 @@
         <a href="#admin" id="tabAdmin" class="tab-btn hidden" style="color: var(--danger-color);">Yönetim</a>
     </div>
 
-    <!-- AUTH PANEL -->
     <div id="authSection" class="hidden">
         <div class="modal">
             <div class="responsive-grid-2">
@@ -186,7 +184,6 @@
         </div>
     </div>
 
-    <!-- MAIN UNIFIED DASHBOARD -->
     <div id="dashboardSection" class="hidden">
         <div class="responsive-grid-2" style="margin-bottom: 25px;">
             <div class="modal" style="margin-bottom:0;">
@@ -245,7 +242,6 @@
             <div id="globalFileStorageWrapper" class="file-grid"></div>
         </div>
         
-        <!-- 🌍 GERİ EKLENEN KÜRESEL KLASÖR PAYLAŞIM ALANI -->
         <div class="modal">
             <h3 id="globalSharedTitle">Ortak Paylaşılan Küresel Klasörler</h3>
             <div id="sharedFoldersWrapper" class="folder-grid"></div>
@@ -255,7 +251,6 @@
         <div id="foldersWrapper"></div>
     </div>
 
-    <!-- BLOG SECTION -->
     <div id="blogSection" class="hidden">
         <div class="modal hidden" id="blogWritePanel">
             <h3 style="color: var(--accent-color); margin-top:0;">İçerik Yayınlama Paneli</h3>
@@ -266,7 +261,6 @@
         <div id="blogPostsWrapper"></div>
     </div>
 
-    <!-- CHAT SECTION -->
     <div id="chatSection" class="hidden">
         <div class="chat-grid">
             <div class="chat-box">
@@ -289,7 +283,6 @@
         </div>
     </div>
 
-    <!-- HELP SECTION -->
     <div id="helpSection" class="hidden">
         <div class="modal" id="helpWritePanel">
             <h3 id="helpPanelTitle">Topluluğa Teknik Soru Sor</h3>
@@ -301,7 +294,6 @@
         <div id="helpTopicsWrapper"></div>
     </div>
 
-    <!-- PRIVACY SECTION -->
     <div id="privacySection" class="hidden">
         <div class="modal">
             <h3 id="privacyTitle">Gizlilik Politikası</h3>
@@ -311,7 +303,6 @@
         </div>
     </div>
 
-    <!-- VIP SECTION -->
     <div id="vipSection" class="hidden">
         <div class="modal" style="text-align: center;">
             <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 20px;">VIP Aktivasyon Modülü</h3>
@@ -339,7 +330,6 @@
         </div>
     </div>
 
-    <!-- ADMIN SECTION -->
     <div id="adminSection" class="hidden">
         <div class="modal">
             <h3 id="adminPanelTitle" style="color: var(--danger-color);">Rütbe Yönetim Merkezi</h3>
@@ -356,21 +346,18 @@
         </div>
     </div>
 
-    <!-- PROFiL VE DETAYLI AYARLAR MODALİ -->
     <div class="modal hidden" id="settingsModal" style="margin-top:30px;">
         <h3 id="settingsTitle">Profil & Hesap Ayarları</h3>
         
-        <!-- ⚙️ 3 FARKLI ARKA PLAN STİLİ SEÇİCİSİ -->
         <div style="margin-bottom: 20px;">
             <label style="font-size: 13px; font-weight: 500; display: block; margin-bottom: 5px;">Görünüm Teması:</label>
             <select id="themeSelect" onchange="window.changeTheme(this.value)">
-                <option value="tech">Teknoloji & Cam Efekti (Varsayılan)</option>
                 <option value="simple">Sade & Minimalist (Açık Renk)</option>
+                <option value="tech">Teknoloji & Cam Efekti (Koyu)</option>
                 <option value="notepad">Not Defteri Tasarımı (Klasik)</option>
             </select>
         </div>
 
-        <!-- ⚙️ KULLANICI İSMİ DEĞİŞTİRME ALANI -->
         <div style="margin-bottom: 20px;">
             <label style="font-size: 13px; font-weight: 500; display: block; margin-bottom: 5px;">Kullanıcı Adını Değiştir:</label>
             <div style="display: flex; gap: 10px;">
@@ -401,7 +388,6 @@
 </div>
 
 <script>
-    // 🎨 TEMA DEĞİŞTİRME MOTORU
     window.changeTheme = function(themeName) {
         document.body.className = '';
         document.body.classList.add('theme-' + themeName);
@@ -410,11 +396,10 @@
         if(select) select.value = themeName;
     };
 
-    // Sayfa yüklenirken temayı geri yükle
-    const savedTheme = localStorage.getItem('corebase_theme') || 'tech';
+    // 🛠️ VARSAYILAN ATAMA DEĞİŞTİRİLDİ (simple)
+    const savedTheme = localStorage.getItem('corebase_theme') || 'simple';
     window.changeTheme(savedTheme);
 
-    // 🏅 RÜTBE HESAPLAMA MOTORU (Eksik alan tamamlandı)
     window.calculateRank = function(points, email, role) {
         if (email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu", class: "badge-kurucu" };
         if (role === 'mod') return { name: "Moderatör", class: "badge-mod" };
@@ -426,7 +411,6 @@
         return { name: "Üye", class: "badge-user" };
     };
 
-    // 🌐 DİL GEÇİŞ MOTORU (Mobil ve hash uyumlu hale getirildi)
     window.switchLanguage = function(targetLang) {
         localStorage.setItem('corebase_lang', targetLang);
         if (window.translateUI) window.translateUI(targetLang);
@@ -492,7 +476,6 @@
     const db = getFirestore(app);
     const fsTools = { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc, limit };
 
-    // ⚙️ KULLANICI NICKNAME GÜNCELLEME MOTORU
     window.updateUserNickname = async () => {
         const changeInput = document.getElementById('changeNickInput');
         if (!changeInput) return;
