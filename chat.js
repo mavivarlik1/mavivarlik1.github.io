@@ -1,56 +1,122 @@
 // chat.js
 export function initChatModule(db, user, fsTools) {
-    const { collection, addDoc, query, orderBy, onSnapshot } = fsTools;
-    let currentUrlChatListener = null;
+    const { collection, addDoc, query, orderBy, onSnapshot, limit } = fsTools;
+    
+    const globalChatMsgs = document.getElementById('globalChatMsgs');
+    const urlChatMsgs = document.getElementById('urlChatMsgs');
+    if (!globalChatMsgs) return;
 
-    // 🌍 Genel Odası Dinleyicisi
-    const qGlobal = query(collection(db, "global_chat"), orderBy("timestamp", "asc"));
-    onSnapshot(qGlobal, (snapshot) => {
-        const box = document.getElementById('globalChatMsgs');
-        if(!box) return;
-        box.innerHTML = '';
-        snapshot.forEach(doc => {
-            const d = doc.data();
-            box.innerHTML += `<div class="msg"><b style="color:var(--accent-color);">${d.sender}:</b> ${d.text}</div>`;
+    // 🌎 GENEL CHAT AKIŞI VE RENK MOTORU
+    const globalQ = query(collection(db, "global_chat"), orderBy("createdAt", "desc"), limit(50));
+    onSnapshot(globalQ, (snapshot) => {
+        globalChatMsgs.innerHTML = '';
+        let msgs = [];
+        snapshot.forEach(docSnap => msgs.push(docSnap.data()));
+        
+        msgs.reverse().forEach(msg => {
+            let rank = { name: "Çaylaklatıcı", class: "badge-user" };
+            if (window.calculateRank) {
+                rank = window.calculateRank(msg.points || 0, msg.email || '', msg.role || 'user');
+            }
+            
+            // 🎨 Rütbeye Göre İsim Renklendirme Filtresi
+            let nameStyle = "color: var(--accent-color); font-weight:600; cursor:default;";
+            if (msg.role === 'kurucu' || msg.email === 'supralanderxbox@gmail.com') {
+                nameStyle = "color: #ef4444; font-weight:700; text-shadow: 0 0 8px rgba(239,68,68,0.4);";
+            } else if (msg.role === 'mod') {
+                nameStyle = "color: #10b981; font-weight:600;";
+            } else if (msg.role === 'vip') {
+                nameStyle = "color: var(--gold-color); font-weight:700; text-shadow: 0 0 8px rgba(251,191,36,0.4);";
+            }
+
+            globalChatMsgs.innerHTML += `
+                <div class="msg" style="border-left: 3px solid ${msg.role === 'kurucu' ? '#ef4444' : (msg.role === 'vip' ? 'var(--gold-color)' : 'var(--accent-color)')}">
+                    <span style="${nameStyle}">${msg.author}</span>
+                    <span class="badge ${rank.class}">${rank.name}</span>
+                    <span style="color: var(--text-color); font-size:13px; margin-left:4px;">: ${msg.text}</span>
+                </div>
+            `;
         });
-        box.scrollTop = box.scrollHeight;
+        globalChatMsgs.scrollTop = globalChatMsgs.scrollHeight;
     });
 
-    // 🔗 Dinamik URL Odası Dinleyicisi
-    window.loadUrlChat = function() {
-        let url = document.getElementById('urlChatTarget').value.trim().toLowerCase();
-        if(!url) { document.getElementById('urlChatMsgs').innerHTML = ''; return; }
-        
-        let safeUrl = url.replace(/[^a-z0-9]/g, '_');
-        if(currentUrlChatListener) currentUrlChatListener(); 
-        
-        const qUrl = query(collection(db, `url_chats/${safeUrl}/messages`), orderBy("timestamp", "asc"));
-        currentUrlChatListener = onSnapshot(qUrl, (snapshot) => {
-            const box = document.getElementById('urlChatMsgs');
-            if(!box) return;
-            box.innerHTML = '';
-            snapshot.forEach(doc => {
-                const d = doc.data();
-                box.innerHTML += `<div class="msg"><b style="color:var(--success-color);">${d.sender}:</b> ${d.text}</div>`;
-            });
-            box.scrollTop = box.scrollHeight;
-        });
+    window.sendChatMessage = async function(type) {
+        let inputId = type === 'global' ? 'globalMsgInput' : 'urlMsgInput';
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        const text = input.value.trim();
+        if (!text) return;
+
+        if (type === 'global') {
+            try {
+                await addDoc(collection(db, "global_chat"), {
+                    author: user.nick,
+                    uid: user.uid,
+                    email: user.email || 'guest',
+                    role: user.role || 'user',
+                    points: user.points || 0,
+                    text: text,
+                    createdAt: Date.now()
+                });
+                input.value = '';
+            } catch(e) { alert("Mesaj iletilemedi: " + e.message); }
+        } else {
+            const urlTarget = document.getElementById('urlChatTarget').value.trim();
+            if (!urlTarget) return alert("Lütfen önce tartışılacak geçerli bir web adresi girin.");
+            let safeUrl = btoa(urlTarget).replace(/=/g, '');
+            try {
+                await addDoc(collection(db, `url_chats/${safeUrl}/messages`), {
+                    author: user.nick,
+                    uid: user.uid,
+                    email: user.email || 'guest',
+                    role: user.role || 'user',
+                    points: user.points || 0,
+                    text: text,
+                    createdAt: Date.now()
+                });
+                input.value = '';
+            } catch(e) { alert("Mesaj iletilemedi: " + e.message); }
+        }
     };
 
-    // ✉️ Mesaj Gönderici
-    window.sendChatMessage = async function(type) {
-        if(type === 'global') {
-            const txt = document.getElementById('globalMsgInput').value.trim();
-            if(!txt) return;
-            await addDoc(collection(db, "global_chat"), { sender: user.nick, text: txt, timestamp: Date.now(), uid: user.uid });
-            document.getElementById('globalMsgInput').value = '';
-        } else if (type === 'url') {
-            const url = document.getElementById('urlChatTarget').value.trim().toLowerCase();
-            const txt = document.getElementById('urlMsgInput').value.trim();
-            if(!url || !txt) return;
-            let safeUrl = url.replace(/[^a-z0-9]/g, '_');
-            await addDoc(collection(db, `url_chats/${safeUrl}/messages`), { sender: user.nick, text: txt, timestamp: Date.now(), uid: user.uid });
-            document.getElementById('urlMsgInput').value = '';
+    // 🔗 URL TARTIŞMA ODASI AKIŞI
+    let currentUrlUnsub = null;
+    window.loadUrlChat = function() {
+        const urlTarget = document.getElementById('urlChatTarget').value.trim();
+        if (!urlTarget) {
+            urlChatMsgs.innerHTML = '';
+            return;
         }
+        if (currentUrlUnsub) currentUrlUnsub();
+        
+        let safeUrl = btoa(urlTarget).replace(/=/g, '');
+        const urlQ = query(collection(db, `url_chats/${safeUrl}/messages`), orderBy("createdAt", "desc"), limit(50));
+        
+        currentUrlUnsub = onSnapshot(urlQ, (snapshot) => {
+            urlChatMsgs.innerHTML = '';
+            let msgs = [];
+            snapshot.forEach(docSnap => msgs.push(docSnap.data()));
+            
+            msgs.reverse().forEach(msg => {
+                let rank = { name: "Çaylaklatıcı", class: "badge-user" };
+                if (window.calculateRank) {
+                    rank = window.calculateRank(msg.points || 0, msg.email || '', msg.role || 'user');
+                }
+                
+                let nameStyle = "color: var(--accent-color); font-weight:600;";
+                if (msg.role === 'kurucu' || msg.email === 'supralanderxbox@gmail.com') nameStyle = "color: #ef4444; font-weight:700;";
+                else if (msg.role === 'mod') nameStyle = "color: #10b981; font-weight:600;";
+                else if (msg.role === 'vip') nameStyle = "color: var(--gold-color); font-weight:700;";
+
+                urlChatMsgs.innerHTML += `
+                    <div class="msg">
+                        <span style="${nameStyle}">${msg.author}</span>
+                        <span class="badge ${rank.class}">${rank.name}</span>
+                        <span style="color: var(--text-color); font-size:13px; margin-left:4px;">: ${msg.text}</span>
+                    </div>
+                `;
+            });
+            urlChatMsgs.scrollTop = urlChatMsgs.scrollHeight;
+        });
     };
 }
