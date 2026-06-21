@@ -119,8 +119,11 @@
         .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-top: 5px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; border-bottom: var(--glass-border); padding-bottom: 8px; }
         .blog-content { font-size: 14px; line-height: 1.7; color: var(--text-color); text-align: justify; white-space: pre-wrap; word-break: break-word; }
         
-        .lang-container { display: flex; gap: 5px; }
-        .lang-ui-btn { padding: 4px 8px; font-size: 11px; background: var(--inner-bg); border: var(--glass-border); color: var(--text-muted); border-radius: 4px; }
+        /* Google Translate Stil İyileştirmeleri */
+        .goog-te-gadget-simple { background-color: var(--inner-bg) !important; border: var(--glass-border) !important; border-radius: 6px !important; padding: 6px 10px !important; font-family: inherit !important; font-size: 12px !important; cursor: pointer; }
+        .goog-te-gadget-simple span { color: var(--text-color) !important; }
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0px !important; }
 
         @media (max-width: 768px) {
             body { padding: 10px; }
@@ -145,10 +148,7 @@
         </div>
         
         <div style="display: flex; align-items: center; gap: 15px;">
-            <div class="lang-container">
-                <button class="lang-ui-btn" onclick="window.switchLanguage('tr')">TR</button>
-                <button class="lang-ui-btn" onclick="window.switchLanguage('en')">EN</button>
-            </div>
+            <div id="corebase_translator"></div>
             <div id="userInfo" style="font-weight: 500; font-size: 13px; color: var(--text-muted);">-</div>
         </div>
     </header>
@@ -307,7 +307,7 @@
         <div class="modal" style="text-align: center;">
             <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 20px;">VIP Aktivasyon Modülü</h3>
             <p id="vipActivationDesc" style="color: var(--text-muted); font-size: 13px; max-width: 800px; margin: 0 auto 25px auto;">
-                Sistem mimarisindeki rütbe önceliklerine kavuşmak için geliştirme önerisi sunabilir veya hata bildiriminde bulunarak ücretsiz VIP statüsü talep edebilirsiniz.
+                Sistem mimarisindeki rütbe unvanlarına kavuşmak için geliştirme önerisi sunabilir veya hata bildiriminde bulunarak ücretsiz VIP statüsü talep edebilirsiniz.
             </p>
             <div class="responsive-grid-2" style="gap:20px; text-align:left;">
                 <div class="credit-card-box" style="margin:0;">
@@ -387,6 +387,18 @@
     </div>
 </div>
 
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'tr',
+            includedLanguages: 'en,tr,de,fr,es,it',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+        }, 'corebase_translator');
+    }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 <script>
     window.changeTheme = function(themeName) {
         document.body.className = '';
@@ -396,25 +408,23 @@
         if(select) select.value = themeName;
     };
 
-    // 🛠️ VARSAYILAN ATAMA DEĞİŞTİRİLDİ (simple)
     const savedTheme = localStorage.getItem('corebase_theme') || 'simple';
     window.changeTheme(savedTheme);
 
+    // 🏅 SIKLAŞTIRILMIŞ VE DENGELENMİŞ YENİ RÜTBE MOTORU
     window.calculateRank = function(points, email, role) {
         if (email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu", class: "badge-kurucu" };
         if (role === 'mod') return { name: "Moderatör", class: "badge-mod" };
         if (role === 'maker') return { name: "Maker", class: "badge-maker" };
         if (role === 'vip') return { name: "VIP", class: "badge-vip" };
         
-        if (points >= 500) return { name: "Zirvedatör", class: "badge-user" };
-        if (points >= 200) return { name: "Usta", class: "badge-user" };
-        return { name: "Üye", class: "badge-user" };
-    };
-
-    window.switchLanguage = function(targetLang) {
-        localStorage.setItem('corebase_lang', targetLang);
-        if (window.translateUI) window.translateUI(targetLang);
-        if (window.updatePrivacyUI) window.updatePrivacyUI(targetLang);
+        if (points >= 1000) return { name: "Zirvedatör", class: "badge-user" };
+        if (points >= 600) return { name: "Kıdemli", class: "badge-user" };
+        if (points >= 350) return { name: "Usta", class: "badge-user" };
+        if (points >= 150) return { name: "Uzman", class: "badge-user" };
+        if (points >= 60) return { name: "Kâşif", class: "badge-user" };
+        if (points >= 20) return { name: "Çaylak", class: "badge-user" };
+        return { name: "Yeni Üye", class: "badge-user" };
     };
 
     window.handleRoute = function() {
@@ -428,9 +438,6 @@
         const titleEl = document.getElementById('siteMainTitle');
         if (titleEl) titleEl.innerText = `CoreBase - ${mainHash.toUpperCase()}`;
 
-        const activeLang = localStorage.getItem('corebase_lang') || 'tr';
-        if (window.translateUI) window.translateUI(activeLang);
-
         const links = ['tabDashboard', 'tabBlog', 'tabChat', 'tabHelp', 'tabVip', 'tabAdmin', 'tabPrivacy', 'tabAuth'];
         links.forEach(id => {
             const el = document.getElementById(id);
@@ -443,7 +450,6 @@
             if(el) el.classList.toggle('hidden', el.id.toLowerCase() !== mainHash + 'section');
         });
 
-        if (mainHash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI(activeLang);
         if (mainHash === 'blog' && window.refreshBlogRender) window.refreshBlogRender();
     };
 
@@ -460,7 +466,6 @@
     import { initChatModule } from "./chat.js";
     import { initHelpForum } from "./help.js";
     import { initBlogModule } from "./blog.js";
-    import { privacyData } from "./privacy.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyA5tgORprtf_TIddYlEO12druYVvgQWaSI",
