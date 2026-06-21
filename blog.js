@@ -12,13 +12,11 @@ export function initBlogModule(db, user, fsTools) {
     window.activeCommentUnsubs = window.activeCommentUnsubs || [];
     let isInitialLoad = true;
 
-    // ⚙️ MARKDOWN KALIN YAZI PARSÖRÜ: **yazı** algılayıp <strong> tagına çevirir
     function parseMarkdownBold(text) {
         if (!text) return "";
         return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     }
 
-    // 🔔 TAKİP VE PUSH BİLDİRİM PANELİ ENJEKSİYONU
     if (!document.getElementById('notificationToggleArea')) {
         const toggleArea = document.createElement('div');
         toggleArea.id = 'notificationToggleArea';
@@ -63,7 +61,6 @@ export function initBlogModule(db, user, fsTools) {
         };
     }
 
-    // 📥 ANA DİNLEYİCİ: Eş Zamanlı Veritabanı Akışı
     const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"));
     onSnapshot(q, (snapshot) => {
         localBlogCache = [];
@@ -78,8 +75,15 @@ export function initBlogModule(db, user, fsTools) {
             }
             const formattedDate = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-            // 12 Haneli özel sayı kontrolü (Yoksa döküman kimliğinden kırp)
-            const customId = data.customId || docSnap.id.substring(0, 12).replace(/[^0-9]/g, () => Math.floor(Math.random()*10));
+            // 🔐 SABİT KİMLİK MOTORU FİX: Sayfa yenilenince şifreleme değişmesin diye döküman ID'sini matematiksel koda çevirir
+            let customId = data.customId;
+            if (!customId) {
+                let numericHash = "";
+                for (let i = 0; i < docSnap.id.length; i++) {
+                    numericHash += docSnap.id.charCodeAt(i).toString();
+                }
+                customId = numericHash.substring(0, 12);
+            }
 
             localBlogCache.push({
                 id: docSnap.id,
@@ -91,7 +95,6 @@ export function initBlogModule(db, user, fsTools) {
             });
         });
 
-        // 🔔 CANLI PUSH BİLDİRİM TETİKLEYİCİSİ
         if (!isInitialLoad) {
             snapshot.docChanges().forEach((change) => {
                 if (change.type === "added" && localStorage.getItem('corebase_notifications') === 'true') {
@@ -106,17 +109,15 @@ export function initBlogModule(db, user, fsTools) {
         }
         isInitialLoad = false;
 
-        // Arayüzü çizdir
         window.refreshBlogRender();
     });
 
-    // 🎨 AKILLI COMPACT/FULL ÇİZİM MOTORU
     window.refreshBlogRender = function() {
         window.activeCommentUnsubs.forEach(unsub => unsub());
         window.activeCommentUnsubs = [];
         blogPostsWrapper.innerHTML = '';
 
-        const subHash = window.currentBlogSubHash; // #blog#123456789012 formatındaki 12 hane
+        const subHash = window.currentBlogSubHash; 
 
         if (localBlogCache.length === 0) {
             blogPostsWrapper.innerHTML = `<div class="modal" style="text-align:center; color:var(--text-muted);">📰 Henüz blog yazısı yayınlanmadı.</div>`;
@@ -124,7 +125,6 @@ export function initBlogModule(db, user, fsTools) {
         }
 
         if (subHash) {
-            // 🔎 TEK BİR BLOG GÖSTERİMİ (Başlığa Basınca Açılan Özel Sayfa)
             const post = localBlogCache.find(b => b.customId === subHash);
             if (post) {
                 const card = document.createElement('div');
@@ -152,7 +152,6 @@ export function initBlogModule(db, user, fsTools) {
                 `;
                 blogPostsWrapper.appendChild(card);
 
-                // Yorum Alt Dinleyicisi
                 const commentsQ = query(collection(db, `blogs/${post.id}/comments`), orderBy("createdAt", "asc"));
                 const unsubComments = onSnapshot(commentsQ, (commentSnap) => {
                     const listEl = document.getElementById(`comments-list-${post.id}`);
@@ -178,7 +177,6 @@ export function initBlogModule(db, user, fsTools) {
                 blogPostsWrapper.innerHTML = `<div class="modal" style="text-align:center; color:var(--danger-color);">⚠️ Aranan blog yazısı bulunamadı! <a href="#blog" style="color:var(--accent-color);">Listeye Dön</a></div>`;
             }
         } else {
-            // 📝 SADECE BAŞLIK LİSTELEME GÖRÜNÜMÜ (Gözü Yormayan Temiz Yapı)
             localBlogCache.forEach(post => {
                 const card = document.createElement('div');
                 card.className = 'blog-card';
@@ -195,7 +193,6 @@ export function initBlogModule(db, user, fsTools) {
         }
     };
 
-    // 📤 YORUM YAZMA MOTORU
     window.addBlogComment = async function(blogId) {
         const input = document.getElementById(`comment-input-${blogId}`);
         if (!input) return;
@@ -213,7 +210,6 @@ export function initBlogModule(db, user, fsTools) {
         } catch(e) { alert("Yorum gönderilemedi: " + e.message); }
     };
 
-    // 📤 YENİ BLOG GÖNDERME MOTORU (12 Haneli Sayı Üreticiyle Birlikte)
     window.createNewBlogPost = async function() {
         const titleInput = document.getElementById('blogTitleInput');
         const contentInput = document.getElementById('blogContentInput');
@@ -224,7 +220,6 @@ export function initBlogModule(db, user, fsTools) {
         
         if (!title || !content) return alert("Başlık ve içerik doldur mavi varlık!");
 
-        // Tamamen rastgele 12 haneli sayı kodlaması üretimi
         const customId = Math.floor(100000000000 + Math.random() * 900000000000).toString();
 
         try {
