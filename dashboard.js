@@ -23,6 +23,7 @@ export function initDashboard(db, user, fsTools) {
         inputEl.parentNode.insertBefore(select, inputEl);
     }
 
+    // 🔒 1. DİNLEYİCİ: Özel Sürücüyü Dinle
     onSnapshot(userDocRef, (docSnap) => {
         if(docSnap.exists()) {
             const data = docSnap.data();
@@ -42,6 +43,7 @@ export function initDashboard(db, user, fsTools) {
         }
     });
 
+    // 🌍 2. DİNLEYİCİ: Küresel Klasörleri Dinle
     const qGlobalFolders = query(collection(db, "global_folders"), orderBy("createdAt", "desc"));
     onSnapshot(qGlobalFolders, (snapshot) => {
         localGlobalFolders = [];
@@ -52,10 +54,105 @@ export function initDashboard(db, user, fsTools) {
         refreshFolderSelect();
     });
 
+    // 🌍 3. DİNLEYİCİ: Küresel Havuzdaki Paylaşılan Kod/Txt Dosyalarını Dinle
+    const qGlobalFiles = query(collection(db, "global_files"), orderBy("createdAt", "desc"));
+    onSnapshot(qGlobalFiles, (snapshot) => {
+        const wrapper = document.getElementById('globalFileStorageWrapper');
+        if(!wrapper) return;
+        wrapper.innerHTML = '';
+        
+        snapshot.forEach((docSnap) => {
+            const f = docSnap.data();
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            
+            let safeName = f.name.replace(/'/g, "\\'");
+            let safeContent = f.content.replace(/'/g, "\\'").replace(/\n/g, "\\n");
+
+            div.innerHTML = `
+                <div style="font-weight:600; color:var(--success-color);">🌍 ${f.name}</div>
+                <div style="font-size:10px; color:var(--text-muted); margin-top:-6px;">Paylaşan: ${f.creator || 'Anonim'}</div>
+                <div style="display:flex; gap:6px; margin-top:4px;">
+                    <button onclick="window.viewFileContent('${safeName}', '${safeContent}')" style="padding:4px 8px; font-size:11px; flex:1;">Önizle</button>
+                    <button onclick="window.downloadFile('${safeName}', '${safeContent}')" style="padding:4px 8px; font-size:11px; background:var(--success-color); color:#064e3b; flex:1;">İndir</button>
+                </div>
+            `;
+            wrapper.appendChild(div);
+        });
+    });
+
+    // ⚙️ DOSYA OLUŞTURMA MOTORU (Özel Sürücü veya Küresel Havuz Seçenekli)
+    window.createNewTextFile = async function() {
+        const nameInput = document.getElementById('newFileName').value.trim();
+        const ext = document.getElementById('newFileExtension').value;
+        const privacy = document.getElementById('newFilePrivacy').value;
+        const content = document.getElementById('newFileContent').value.trim();
+        
+        if(!nameInput || !content) return alert("Lütfen dosya adını ve içeriğini eksiksiz doldurun.");
+        
+        const fullName = nameInput.endsWith(ext) ? nameInput : nameInput + ext;
+        
+        if (privacy === 'global') {
+            try {
+                await addDoc(collection(db, "global_files"), {
+                    name: fullName,
+                    content: content,
+                    creator: user.nick,
+                    createdAt: Date.now()
+                });
+                alert("Kod/Metin belgesi ortak havuzda küresel olarak yayınlandı! 🌍");
+            } catch(e) { alert("Paylaşım hatası: " + e.message); }
+        } else {
+            try {
+                const snap = await getDoc(userDocRef);
+                if(snap.exists()) {
+                    let files = snap.data().files || [];
+                    files.push({ name: fullName, content: content, createdAt: Date.now() });
+                    await updateDoc(userDocRef, { files: files });
+                    alert("Dosya şifreli özel sürücünüze kaydedildi! 🔒");
+                }
+            } catch(e) { alert("Dosya oluşturma hatası: " + e.message); }
+        }
+        document.getElementById('newFileName').value = '';
+        document.getElementById('newFileContent').value = '';
+    };
+
+    // 🚀 ANLIK DOSYA PAYLAŞMA SİHRİ: Özel sürücüdeki dosyayı küresel havuza kopyalar
+    window.sharePrivateFile = async function(index) {
+        try {
+            const snap = await getDoc(userDocRef);
+            if(snap.exists()) {
+                const files = snap.data().files || [];
+                const targetFile = files[index];
+                if(targetFile) {
+                    await addDoc(collection(db, "global_files"), {
+                        name: targetFile.name,
+                        content: targetFile.content,
+                        creator: user.nick,
+                        createdAt: Date.now()
+                    });
+                    alert(`"${targetFile.name}" başarıyla küresel havuzda paylaşıldı! 🚀`);
+                }
+            }
+        } catch(e) { alert("Dosya paylaşım hatası: " + e.message); }
+    };
+
+    // 💾 GERÇEK DOSYA İNDİRME ENGINE (TXT VE TÜM KOD UZANTILARINI DESTEKLER)
+    window.downloadFile = function(name, content) {
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
     window.createNewFolder = async function() {
         const name = document.getElementById('newFolderNameInput').value.trim();
         if(!name) return alert("Lütfen klasör adını boş bırakmayın.");
-        
         const typeSelect = document.getElementById('folderTypeSelect');
         const isGlobal = typeSelect ? typeSelect.value === 'global' : false;
 
@@ -119,24 +216,6 @@ export function initDashboard(db, user, fsTools) {
         }
     };
 
-    window.createNewTextFile = async function() {
-        const name = document.getElementById('newFileName').value.trim();
-        const content = document.getElementById('newFileContent').value.trim();
-        if(!name || !content) return alert("Lütfen dosya adı ve içeriği girin.");
-        
-        try {
-            const snap = await getDoc(userDocRef);
-            if(snap.exists()) {
-                let files = snap.data().files || [];
-                files.push({ name: name.endsWith('.txt') ? name : name + '.txt', content: content, type: 'text' });
-                await updateDoc(userDocRef, { files: files });
-                document.getElementById('newFileName').value = '';
-                document.getElementById('newFileContent').value = '';
-                alert("Metin belgesi sürücünüze güvenle kaydedildi.");
-            }
-        } catch(e) { alert("Dosya oluşturma hatası: " + e.message); }
-    };
-
     function refreshFolderSelect() {
         const select = document.getElementById('folderSelect');
         if(!select) return;
@@ -182,15 +261,15 @@ export function initDashboard(db, user, fsTools) {
         });
     }
 
-    // 🛡️ AKTİF EDİLMİŞ DOSYA ÖNİZLEME MOTORU
+    // 🛡️ DOKÜMAN VE KOD ÖNİZLEME MOTORU
     window.viewFileContent = function(name, content) {
         const modal = document.getElementById('fileViewerModal');
         const title = document.getElementById('viewerTitle');
         const body = document.getElementById('viewerBody');
         if(!modal || !title || !body) return;
 
-        title.innerText = "📄 " + name;
-        body.innerHTML = `<textarea class="viewer-text" readonly style="width:100%; height:350px; background:#0f172a; color:#a7f3d0; border:none; font-family:monospace; padding:15px; box-sizing:border-box; border-radius:8px;">${content}</textarea>`;
+        title.innerText = "📄 Dosya Önizleme: " + name;
+        body.innerHTML = `<textarea class="viewer-text" readonly style="width:100%; height:380px; background:#0f172a; color:#38bdf8; border:1px solid rgba(255,255,255,0.1); font-family:monospace; padding:15px; box-sizing:border-box; border-radius:8px; font-size:13px; line-height:1.5; outline:none; resize:none;">${content}</textarea>`;
         modal.classList.remove('hidden');
     };
 
@@ -203,7 +282,8 @@ export function initDashboard(db, user, fsTools) {
         const wrapper = document.getElementById('fileStorageWrapper');
         if(!wrapper) return;
         wrapper.innerHTML = '';
-        files.forEach((f) => {
+        
+        files.forEach((f, index) => {
             const div = document.createElement('div');
             div.className = 'file-item';
             
@@ -212,7 +292,11 @@ export function initDashboard(db, user, fsTools) {
 
             div.innerHTML = `
                 <div style="font-weight:600; color:var(--accent-color);">📄 ${f.name}</div>
-                <button onclick="window.viewFileContent('${safeName}', '${safeContent}')" style="padding:6px; font-size:12px;">Görüntüle</button>
+                <div style="display:flex; gap:4px; margin-top:4px; flex-wrap:wrap;">
+                    <button onclick="window.viewFileContent('${safeName}', '${safeContent}')" style="padding:4px 6px; font-size:11px; flex:1;">Önizle</button>
+                    <button onclick="window.downloadFile('${safeName}', '${safeContent}')" style="padding:4px 6px; font-size:11px; background:var(--success-color); color:#064e3b; flex:1;">İndir</button>
+                    <button onclick="window.sharePrivateFile(${index})" style="padding:4px 6px; font-size:11px; background:var(--gold-color); color:#1e293b; flex:1;">Paylaş</button>
+                </div>
             `;
             wrapper.appendChild(div);
         });
