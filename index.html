@@ -141,7 +141,7 @@
                 
                 <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; margin-top: 10px;">
                     <h3 id="loginHeader" style="margin-top:0;">Hesabınıza Giriş Yapın / Üye Olun</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Kalıcı bir hesap oluşturarak sistemdeki rütbe ve puanlama avantajlarını hemen aktif hale getirebilirsiniz.</p>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Kalıcı bir hesap oluşturarak sistemdeki rütbe and puanlama avantajlarını hemen aktif hale getirebilirsiniz.</p>
                     <input type="email" id="authEmail" placeholder="E-posta Adresi">
                     <input type="password" id="authPassword" placeholder="Şifre">
                     <span id="forgotText" onclick="window.handleForgotPassword()" style="color: var(--accent-color); cursor: pointer; font-size: 12px; text-decoration: underline; display: block; margin-bottom: 15px;">Şifremi Unuttum</span>
@@ -258,7 +258,7 @@
             <h3 id="helpPanelTitle">🙋 Topluluğa Sor / Yardım Konusu Aç</h3>
             <div style="display:flex; gap:10px;">
                 <input type="text" id="helpTitleInput" placeholder="Karşılaştığınız teknik problem nedir?" style="margin:0;">
-                <button id="btnPublishHelp" onclick="createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
+                <button id="btnPublishHelp" onclick="window.createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
             </div>
         </div>
         <div id="helpTopicsWrapper"></div>
@@ -465,48 +465,67 @@
     };
 
     function setupSession(user) {
-        window.activeUser = user; 
-        window.isCurrentUserGuest = !!user.isGuest;
-        document.getElementById('settingsModal').classList.remove('hidden');
-        
-        document.getElementById('settingsNick').innerText = user.nick;
-        let displayRole = "Kullanıcı (Standart) 👤";
-        if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') displayRole = "Kurucu Masası 👑";
-        else if (user.role === 'mod') displayRole = "Moderatör 🛠️";
-        else if (user.role === 'maker') displayRole = "Üretici (Maker) ⚙️";
-        else if (user.role === 'vip') displayRole = "VIP Üye ⭐";
-        document.getElementById('settingsRole').innerText = displayRole;
+        // 🛡️ GÜVENLİK KALKANI: Arayüz patlamasını önleyen Try-Catch koruması
+        try {
+            window.activeUser = user; 
+            window.isCurrentUserGuest = !!user.isGuest;
+            
+            const settingsModal = document.getElementById('settingsModal');
+            if (settingsModal) settingsModal.classList.remove('hidden');
+            
+            const settingsNick = document.getElementById('settingsNick');
+            if (settingsNick) settingsNick.innerText = user.nick;
+            
+            let displayRole = "Kullanıcı (Standart) 👤";
+            if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') displayRole = "Kurucu Masası 👑";
+            else if (user.role === 'mod') displayRole = "Moderatör 🛠️";
+            else if (user.role === 'maker') displayRole = "Üretici (Maker) ⚙️";
+            else if (user.role === 'vip') displayRole = "VIP Üye ⭐";
+            
+            const settingsRole = document.getElementById('settingsRole');
+            if (settingsRole) {
+                settingsRole.innerText = displayRole;
+                if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') {
+                    settingsRole.style.color = '#ef4444';
+                } else if (user.role === 'maker') {
+                    settingsRole.style.color = 'var(--gold-color)';
+                } else {
+                    settingsRole.style.color = 'var(--text-color)';
+                }
+            }
 
-        if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') {
-            document.getElementById('settingsRole').style.color = '#ef4444';
-        } else if (user.role === 'maker') {
-            document.getElementById('settingsRole').style.color = 'var(--gold-color)';
-        } else {
-            document.getElementById('settingsRole').style.color = 'var(--text-color)';
+            const userInfoEl = document.getElementById('userInfo');
+            if(window.calculateRank) {
+                let rankBadge = window.calculateRank(user.points || 0, user.email, user.role);
+                if(userInfoEl) userInfoEl.innerHTML = `👤 ${user.nick} <span class="badge ${rankBadge.class}">${rankBadge.name}</span>`;
+                const settingsRank = document.getElementById('settingsRank');
+                if (settingsRank) settingsRank.innerHTML = `<span class="badge ${rankBadge.class}">${rankBadge.name}</span> (Puan: ${user.points || 0})`;
+            }
+            
+            const tabAuth = document.getElementById('tabAuth');
+            if (tabAuth) {
+                if(user.isGuest) tabAuth.classList.remove('hidden'); 
+                else tabAuth.classList.add('hidden'); 
+            }
+
+            const tabAdmin = document.getElementById('tabAdmin');
+            if (tabAdmin) {
+                if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') tabAdmin.classList.remove('hidden');
+                else tabAdmin.classList.add('hidden');
+            }
+
+            if (window.handleRoute) {
+                window.handleRoute();
+            }
+        } catch (uiErr) {
+            console.error("CoreBase Arayüz Kritik Hata Filtrelendi: ", uiErr);
         }
 
-        const userInfoEl = document.getElementById('userInfo');
-        if(window.calculateRank) {
-            let rankBadge = window.calculateRank(user.points || 0, user.email, user.role);
-            if(userInfoEl) userInfoEl.innerHTML = `👤 ${user.nick} <span class="badge ${rankBadge.class}">${rankBadge.name}</span>`;
-            document.getElementById('settingsRank').innerHTML = `<span class="badge ${rankBadge.class}">${rankBadge.name}</span> (Puan: ${user.points || 0})`;
-        }
-        
-        if(user.isGuest) document.getElementById('tabAuth').classList.remove('hidden'); 
-        else document.getElementById('tabAuth').classList.add('hidden'); 
-
-        if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') document.getElementById('tabAdmin').classList.remove('hidden');
-        else document.getElementById('tabAdmin').classList.add('hidden');
-
-        // 🔒 ARTIK WINDOW ÜZERİNDEN KESİN OLARAK ÇAĞRILIYOR, HATA VERİP KİLİTLENMEZ!
-        if (window.handleRoute) {
-            window.handleRoute();
-        }
-        
-        initDashboard(db, user, fsTools);
-        initChatModule(db, user, fsTools);
-        initHelpForum(db, user, fsTools);
-        initBlogModule(db, user, fsTools);
+        // 🧱 MODÜLER İZOLASYON: Bir modül çökerse diğerleri ve giriş durumu kesinlikle etkilenmez
+        try { initDashboard(db, user, fsTools); } catch(e) { console.error("Sürücü Modülü başlatılamadı:", e); }
+        try { initChatModule(db, user, fsTools); } catch(e) { console.error("Sohbet Modülü başlatılamadı:", e); }
+        try { initHelpForum(db, user, fsTools); } catch(e) { console.error("Forum Modülü başlatılamadı:", e); }
+        try { initBlogModule(db, user, fsTools); } catch(e) { console.error("Blog Modülü başlatılamadı:", e); }
     }
 
     auth.onAuthStateChanged(async (user) => {
