@@ -72,6 +72,7 @@
         .viewer-content { background: #1e293b; border: 1px solid rgba(255,255,255,0.15); width: 80%; max-width: 800px; max-height: 85vh; border-radius: 16px; display:flex; flex-direction:column; }
         .viewer-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .viewer-body { padding: 20px; overflow-y: auto; flex:1; background: #0f172a; border-radius: 0 0 16px 16px; }
+        .viewer-text { width:100%; height: 380px; background:#0f172a; color:#38bdf8; border:1px solid rgba(255,255,255,0.1); font-family:monospace; padding:15px; box-sizing:border-box; border-radius:8px; font-size:13px; line-height:1.5; outline:none; resize:none; }
         .credit-card-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 400px; margin: 20px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
         
         .lang-container { display: flex; gap: 8px; background: rgba(15, 23, 42, 0.5); padding: 4px; border-radius: 10px; border: var(--glass-border); }
@@ -153,9 +154,9 @@
                     <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Kalıcı bir hesap oluşturarak sistemdeki rütbe ve puanlama avantajlarını hemen aktif hale getirebilirsiniz.</p>
                     <input type="email" id="authEmail" placeholder="E-posta Adresi">
                     <input type="password" id="authPassword" placeholder="Şifre">
-                    <span id="forgotText" onclick="handleForgotPassword()" style="color: var(--accent-color); cursor: pointer; font-size: 12px; text-decoration: underline; display: block; margin-bottom: 15px;">Şifremi Unuttum</span>
-                    <button id="btnLogin" onclick="handleLogin()" style="width:100%; margin-bottom:8px;">Giriş Yap</button>
-                    <button id="btnRegister" onclick="handleRegister()" style="width:100%; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color);">Kayıt Ol</button>
+                    <span id="forgotText" onclick="window.handleForgotPassword()" style="color: var(--accent-color); cursor: pointer; font-size: 12px; text-decoration: underline; display: block; margin-bottom: 15px;">Şifremi Unuttum</span>
+                    <button id="btnLogin" onclick="window.handleLogin()" style="width:100%; margin-bottom:8px;">Giriş Yap</button>
+                    <button id="btnRegister" onclick="window.handleRegister()" style="width:100%; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color);">Kayıt Ol</button>
                 </div>
             </div>
         </div>
@@ -168,7 +169,7 @@
                 <h4 id="createFolderTitle" style="margin-top:0; color: var(--accent-color);">📂 Yeni Klasör Oluştur</h4>
                 <div style="display:flex; gap:10px;">
                     <input type="text" id="newFolderNameInput" placeholder="Klasör Adı" style="margin:0;">
-                    <button id="btnCreateFolder" onclick="createNewFolder()" style="margin:0; white-space:nowrap;">Oluştur</button>
+                    <button id="btnCreateFolder" onclick="window.createNewFolder()" style="margin:0; white-space:nowrap;">Oluştur</button>
                 </div>
             </div>
             <div class="modal" style="margin-bottom:0;">
@@ -179,7 +180,7 @@
                 </div>
                 <div style="display:flex; gap:10px; margin-top:10px;">
                     <input type="text" id="siteUrlInput" placeholder="URL Adresi" style="margin:0;">
-                    <button id="btnAddLink" onclick="addNewLinkToFolder()" style="margin:0; background:var(--success-color); color:#064e3b; white-space:nowrap;">Ekle</button>
+                    <button id="btnAddLink" onclick="window.addNewLinkToFolder()" style="margin:0; background:var(--success-color); color:#064e3b; white-space:nowrap;">Ekle</button>
                 </div>
             </div>
         </div>
@@ -209,7 +210,7 @@
                 <div>
                     <h4 style="margin:0; color: var(--success-color);">Cihazdan Yerel Dosya Yükle</h4>
                     <input type="file" id="localFileUploader" style="padding: 5px;">
-                    <button id="btnUploadFile" onclick="uploadLocalFile()" style="width: 100%; background: var(--success-color); color: #064e3b;">Yükle</button>
+                    <button id="btnUploadFile" onclick="window.uploadLocalFile()" style="width: 100%; background: var(--success-color); color: #064e3b;">Yükle</button>
                 </div>
             </div>
             <hr style="border:0; border-top: 1px solid rgba(255,255,255,0.05); margin:20px 0;">
@@ -227,12 +228,12 @@
         <div id="foldersWrapper"></div>
     </div>
 
-    <!-- 📰 BLOG SECTION (Multimedya Destekli Gelişmiş Tasarıma Alındı) -->
+    <!-- 📰 BLOG SECTION -->
     <div id="blogSection" class="hidden">
         <div class="modal hidden" id="blogWritePanel">
             <h3 style="color: var(--accent-color); margin-top:0;">✍️ Gelişmiş Multimedya & İçerik Yayınlama Paneli</h3>
             <input type="text" id="blogTitleInput" placeholder="Makalenin Çarpıcı Başlığı...">
-            <textarea id="blogContentInput" placeholder="Teknoloji gündemine dair makalenizi buraya yazın... Kalın ara başlık oluşturmak için **başlık** formatını kullanabilirsiniz." rows="6"></textarea>
+            <textarea id="blogContentInput" placeholder="Teknoloji gündemine dair makalenizi buraya yazın..." rows="6"></textarea>
             <div class="responsive-grid-2" style="gap: 10px; margin-bottom: 10px;">
                 <input type="text" id="blogImgInput" placeholder="Kapak veya İçerik Görsel URL Adresi (Opsiyonel)" style="margin:0;">
                 <input type="text" id="blogVideoInput" placeholder="YouTube Video / Embed URL Adresi (Opsiyonel)" style="margin:0;">
@@ -271,7 +272,7 @@
             <h3 id="helpPanelTitle">🙋 Topluluğa Sor / Yardım Konusu Aç</h3>
             <div style="display:flex; gap:10px;">
                 <input type="text" id="helpTitleInput" placeholder="Karşılaştığınız teknik problem nedir?" style="margin:0;">
-                <button id="btnPublishHelp" onclick="createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
+                <button id="btnPublishHelp" onclick="window.createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
             </div>
         </div>
         <div id="helpTopicsWrapper"></div>
@@ -290,18 +291,14 @@
     <!-- VIP SECTION -->
     <div id="vipSection" class="hidden">
         <div class="modal" style="border: 2px solid var(--gold-color); text-align: center;">
-            <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 24px;">💎 Ücretsiz VIP Altyapı kazanım Alanı</h3>
+            <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 24px;">💎 Ücretsiz VIP Altyapı Kazanım Alanı</h3>
             <p id="vipActivationDesc" style="color: var(--text-muted); font-size: 14px; max-width: 600px; margin: 0 auto 20px auto;">Sistemimizde eksik olan kritik bir özelliği (gerekli), harika bir geliştirme önerisini veya sisteme has bir yazılımsal hatayı (bug) bulup kurucuya bildiren tüm kullanıcılara VIP rütbesi tamamen ücretsiz tanımlanacaktır!</p>
             
             <div class="credit-card-box">
-                <div style="text-align: left; font-size: 11px; color: var(--accent-color); font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;">💳 ÖDEME ALTYAPISI (OPSİYONEL GÖSTERİM)</div>
-                <input type="text" id="cardHolderName" placeholder="Kart Sahibinin Adı Soyadı" readonly value="Gerekli Bildirimle Ücretsiz">
-                <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" readonly>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <input type="text" id="cardExpiry" placeholder="AA/YY" maxlength="5" readonly>
-                    <input type="password" id="cardCvc" placeholder="CVC" maxlength="3" readonly>
-                </div>
-                <button id="btnPayVip" style="width: 100%; background: var(--gold-color); color: #1e293b; margin-top: 15px; font-size: 15px; font-weight: 700; cursor:default; box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);">
+                <div style="text-align: left; font-size: 11px; color: var(--accent-color); font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;">💳 SİSTEM GERİ BİLDİRİM ALANI</div>
+                <input type="text" id="cardHolderName" placeholder="Öneri / Hata / Bug Başlığı" style="background:rgba(15,23,42,0.95);">
+                <textarea id="vipSuggestionContent" placeholder="VIP rütbenizin onaylanması için bulduğunuz bug veya gerekli öneriyi detaylıca yazın..." rows="3" style="margin-top:8px;"></textarea>
+                <button id="btnPayVip" onclick="window.handleCardPayment()" style="width: 100%; background: var(--gold-color); color: #1e293b; margin-top: 15px; font-size: 15px; font-weight: 700; box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);">
                     BİLDİRİM YAP VE KAZAN
                 </button>
             </div>
@@ -325,7 +322,7 @@
         </div>
     </div>
 
-    <!-- ⚙️ YENİLENMİŞ PROFiL VE DETAYLI AYARLAR MODALİ -->
+    <!-- ⚙️ PROFiL VE DETAYLI AYARLAR MODALİ -->
     <div class="modal hidden" id="settingsModal" style="margin-top:30px;">
         <h3 id="settingsTitle">⚙️ Profil & Hesap Ayarları</h3>
         <div style="background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 12px; border: var(--glass-border); margin-bottom: 15px; font-size: 14px; line-height: 1.8;">
@@ -333,7 +330,7 @@
             <div>🛡️ <b>Hesap Tipi:</b> <span id="settingsRole" style="font-weight:600;">-</span></div>
             <div>🏅 <b>Mevcut Rütbe:</b> <span id="settingsRank">-</span></div>
         </div>
-        <button id="btnLogout" onclick="handleLogout()" style="background: var(--danger-color); color: #fff; width: 100%;">Sistemden Güvenli Çıkış Yap</button>
+        <button id="btnLogout" onclick="window.handleLogout()" style="background: var(--danger-color); color: #fff; width: 100%;">Sistemden Güvenli Çıkış Yap</button>
     </div>
 </div>
 
@@ -347,43 +344,49 @@
     </div>
 </div>
 
-<footer style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; text-align: center; font-size: 13px;">
-    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-        <a href="#dashboard" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">🗂️ Küresel Bulut Sürücüsü</a>
-        <span style="color: rgba(255,255,255,0.2);">|</span>
-        <a href="#blog" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">📰 Güncel İçerik Blogu</a>
-        <span style="color: rgba(255,255,255,0.2);">|</span>
-        <a href="#help" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">🙋 Canlı Yardım Forumu</a>
-    </div>
-</footer>
-
-<!-- ⚙️ ZIRHLI GLOBAL RANK HESAPLAYICI ENGINE (KURUCU HATASI KESiN OLARAK FİXLENDİ!) -->
 <script>
-    window.calculateRank = function(points, email, role) {
-        // Zırhlı Öncelik Kontrolü: Eğer kurucuysa puanına bakılmaksızın direkt Kurucu rozeti basılır.
-        if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu 👑", class: "badge-kurucu" };
-        if(role === 'mod') return { name: "Moderatör 🛠️", class: "badge-mod" };
-        if(role === 'maker') return { name: "Üretici ⚙️", class: "badge-vip" };
-        if(role === 'vip') return { name: "VIP ⭐", class: "badge-vip" };
+    // ⚡ RESPONSIVE DİNAMIK ÇİFT HASH ROUTER MOTORU (SABİT KÜRESEL)
+    function handleRoute() {
+        let fullHash = window.location.hash.replace('#', '') || 'dashboard';
+        let hashParts = fullHash.split('#');
+        let mainHash = hashParts[0];
+        let subHash = hashParts[1] || null;
+
+        window.currentBlogSubHash = subHash; 
+
+        const titleEl = document.getElementById('siteMainTitle');
+        if (titleEl) {
+            titleEl.innerText = `CoreBase - ${mainHash.toUpperCase()}`;
+        }
+
+        if (window.translateUI) window.translateUI('tr');
+
+        const links = ['tabDashboard', 'tabBlog', 'tabChat', 'tabHelp', 'tabVip', 'tabAdmin', 'tabPrivacy', 'tabAuth'];
+        links.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.classList.toggle('tab-active', id.toLowerCase() === 'tab' + mainHash);
+        });
         
-        if (points >= 300) return { name: "Zirvelatıcı", class: "badge-user" };
-        if (points >= 250) return { name: "Efsanelatıcı", class: "badge-user" };
-        if (points >= 200) return { name: "Üstatlatıcı", class: "badge-user" };
-        if (points >= 165) return { name: "Uzmanlatıcı", class: "badge-user" };
-        if (points >= 135) return { name: "Ustalatıcı", class: "badge-user" };
-        if (points >= 110) return { name: "Sağlamlatıcı", class: "badge-user" };
-        if (points >= 95) return { name: "Canlatıcı", class: "badge-user" };
-        if (points >= 75) return { name: "Odaklatıcı", class: "badge-user" };
-        if (points >= 60) return { name: "Işılatıcı", class: "badge-user" };
-        if (points >= 45) return { name: "Hızlatıcı", class: "badge-user" };
-        if (points >= 30) return { name: "Katlatıcı", class: "badge-user" };
-        if (points >= 20) return { name: "Tırmalatıcı", class: "badge-user" };
-        if (points >= 10) return { name: "Adımlatıcı", class: "badge-user" };
-        if (points >= 5) return { name: "Başlatıcı", class: "badge-user" };
-        return { name: "Çaylaklatıcı", class: "badge-user" };
+        const sections = ['dashboardSection', 'blogSection', 'chatSection', 'helpSection', 'vipSection', 'adminSection', 'privacySection', 'authSection'];
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.classList.toggle('hidden', el.id.toLowerCase() !== mainHash + 'section');
+        });
+
+        if (mainHash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI('tr');
+        if (mainHash === 'blog' && window.refreshBlogRender) window.refreshBlogRender();
     }
+
+    function switchLanguage(targetLang) {
+        const currentHash = window.location.hash || '#dashboard';
+        window.location.href = window.location.origin + window.location.pathname + '?lang=' + targetLang + currentHash;
+    }
+
+    window.addEventListener('hashchange', handleRoute);
+    window.addEventListener('load', handleRoute);
 </script>
 
+<!-- ⚡ FIREBASE CORE VE MODÜL GÜVENLİK KAFESİ -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -394,6 +397,13 @@
     import { initHelpForum } from "./help.js";
     import { initBlogModule } from "./blog.js";
     import { privacyData } from "./privacy.js";
+
+    window.updatePrivacyUI = function(lang) {
+        const data = privacyData[lang] || privacyData['tr'];
+        document.getElementById('privacyTitle').innerText = data.title;
+        document.getElementById('privacyDate').innerText = data.date;
+        document.getElementById('privacyBody').innerHTML = data.content;
+    };
 
     const firebaseConfig = {
         apiKey: "AIzaSyA5tgORprtf_TIddYlEO12druYVvgQWaSI",
@@ -409,6 +419,7 @@
     const db = getFirestore(app);
     const fsTools = { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc, limit };
 
+    // 👑 TAMİR EDİLMİŞ BÜTÜNSEL EVENT INTERFACE BAĞLANTILARI
     window.executeAdminRoleAssign = async () => {
         const targetEmail = document.getElementById('targetAdminEmail').value.trim();
         const selectedRole = document.getElementById('targetRoleSelect').value;
@@ -448,7 +459,6 @@
         window.isCurrentUserGuest = !!user.isGuest;
         document.getElementById('settingsModal').classList.remove('hidden');
         
-        // ⚙️ AYARLAR VE PROFİL PANELİNİN DİNAMİK OLARAK DOLDURULMASI
         document.getElementById('settingsNick').innerText = user.nick;
         let displayRole = "Kullanıcı (Standart) 👤";
         if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') displayRole = "Kurucu Masası 👑";
@@ -478,7 +488,7 @@
         if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') document.getElementById('tabAdmin').classList.remove('hidden');
         else document.getElementById('tabAdmin').classList.add('hidden');
 
-        if(window.handleRoute) window.handleRoute();
+        handleRoute();
         initDashboard(db, user, fsTools);
         initChatModule(db, user, fsTools);
         initHelpForum(db, user, fsTools);
