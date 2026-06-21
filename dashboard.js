@@ -6,7 +6,6 @@ export function initDashboard(db, user, fsTools) {
     let localPrivateFolders = {};
     let localGlobalFolders = [];
 
-    // ⚡ ARAYÜZ HİLESİ: index.html'i bozmamak için klasör türü seçiciyi kodla enjekte et
     const inputEl = document.getElementById('newFolderNameInput');
     if (inputEl && !document.getElementById('folderTypeSelect')) {
         const select = document.createElement('select');
@@ -24,7 +23,6 @@ export function initDashboard(db, user, fsTools) {
         inputEl.parentNode.insertBefore(select, inputEl);
     }
 
-    // 🔒 1. DİNLEYİCİ: Kullanıcının Kendine Özel Sürücüsünü Dinle
     onSnapshot(userDocRef, (docSnap) => {
         if(docSnap.exists()) {
             const data = docSnap.data();
@@ -44,7 +42,6 @@ export function initDashboard(db, user, fsTools) {
         }
     });
 
-    // 🌍 2. DİNLEYİCİ: Küresel Paylaşılan Klasör Havuzunu Dinle
     const qGlobalFolders = query(collection(db, "global_folders"), orderBy("createdAt", "desc"));
     onSnapshot(qGlobalFolders, (snapshot) => {
         localGlobalFolders = [];
@@ -55,16 +52,14 @@ export function initDashboard(db, user, fsTools) {
         refreshFolderSelect();
     });
 
-    // 📂 YENİ KLASÖR YARATMA MOTORU (Özel veya Global Süzgeci)
     window.createNewFolder = async function() {
         const name = document.getElementById('newFolderNameInput').value.trim();
-        if(!name) return alert("Klasör ismi boş olamaz!");
+        if(!name) return alert("Lütfen klasör adını boş bırakmayın.");
         
         const typeSelect = document.getElementById('folderTypeSelect');
         const isGlobal = typeSelect ? typeSelect.value === 'global' : false;
 
         if (isGlobal) {
-            // Herkesin görebileceği global koleksiyona yaz
             try {
                 await addDoc(collection(db, "global_folders"), {
                     name: name,
@@ -73,26 +68,24 @@ export function initDashboard(db, user, fsTools) {
                     creator: user.nick
                 });
                 document.getElementById('newFolderNameInput').value = '';
-                alert("Mavi varlık, global paylaşılan klasör havuzda aktif! 🌍");
-            } catch(e) { alert("Global klasör oluşturulamadı: " + e.message); }
+                alert("Küresel paylaşılan klasör başarıyla oluşturuldu.");
+            } catch(e) { alert("Klasör oluşturulamadı: " + e.message); }
         } else {
-            // Sadece kişisel dökümana yaz
             const id = 'folder_' + Date.now();
             try {
                 await updateDoc(userDocRef, { [`folders.${id}`]: { name: name, links: [] } });
                 document.getElementById('newFolderNameInput').value = '';
-                alert("Özel klasör sürücüne eklendi! 🔒");
-            } catch(e) { alert("Özel klasör hatası: " + e.message); }
+                alert("Özel klasör sürücünüze başarıyla eklendi.");
+            } catch(e) { alert("Klasör hatası: " + e.message); }
         }
     };
 
-    // 📌 LİNK EKLEME MOTORU (Özel veya Global Akıllı Yönlendirici)
     window.addNewLinkToFolder = async function() {
         const fullId = document.getElementById('folderSelect').value;
         const sName = document.getElementById('siteNameInput').value.trim();
         let sUrl = document.getElementById('siteUrlInput').value.trim();
         
-        if(!fullId || !sName || !sUrl) return alert("Lütfen tüm alanları doldurun!");
+        if(!fullId || !sName || !sUrl) return alert("Lütfen tüm alanları doldurun.");
         if(!sUrl.startsWith('http')) sUrl = 'https://' + sUrl;
 
         const isTargetGlobal = fullId.startsWith('global_');
@@ -108,9 +101,9 @@ export function initDashboard(db, user, fsTools) {
                     await updateDoc(folderRef, { links: currentLinks });
                     document.getElementById('siteNameInput').value = '';
                     document.getElementById('siteUrlInput').value = '';
-                    alert("Link başarıyla küresel paylaşılan klasöre gömüldü! 🌍");
+                    alert("Bağlantı başarıyla küresel paylaşılan klasöre eklendi.");
                 }
-            } catch(e) { alert("Global link ekleme hatası: " + e.message); }
+            } catch(e) { alert("Bağlantı ekleme hatası: " + e.message); }
         } else {
             try {
                 const snap = await getDoc(userDocRef);
@@ -120,17 +113,16 @@ export function initDashboard(db, user, fsTools) {
                     await updateDoc(userDocRef, { [`folders.${targetId}.links`]: currentLinks });
                     document.getElementById('siteNameInput').value = '';
                     document.getElementById('siteUrlInput').value = '';
-                    alert("Link özel klasörüne eklendi! 🔒");
+                    alert("Bağlantı özel klasörünüze eklendi.");
                 }
-            } catch(e) { alert("Özel link hatası: " + e.message); }
+            } catch(e) { alert("Bağlantı hatası: " + e.message); }
         }
     };
 
-    // 📄 KİŞİSEL METİN DOSYASI OLUŞTURMA
     window.createNewTextFile = async function() {
         const name = document.getElementById('newFileName').value.trim();
         const content = document.getElementById('newFileContent').value.trim();
-        if(!name || !content) return alert("İsim ve içerik girin!");
+        if(!name || !content) return alert("Lütfen dosya adı ve içeriği girin.");
         
         try {
             const snap = await getDoc(userDocRef);
@@ -140,28 +132,24 @@ export function initDashboard(db, user, fsTools) {
                 await updateDoc(userDocRef, { files: files });
                 document.getElementById('newFileName').value = '';
                 document.getElementById('newFileContent').value = '';
-                alert("Metin belgesi sürücüne kaydedildi! 📄");
+                alert("Metin belgesi sürücünüze güvenle kaydedildi.");
             }
         } catch(e) { alert("Dosya oluşturma hatası: " + e.message); }
     };
 
-    // 🎨 SEÇİM KUTUSUNU BİRLEŞTİREREK YENİLE (Özel ve Global Ayrımı)
     function refreshFolderSelect() {
         const select = document.getElementById('folderSelect');
         if(!select) return;
-        select.innerHTML = '<option value="">-- Klasör Seç --</option>';
+        select.innerHTML = '<option value="">-- Klasör Seçin --</option>';
         
-        // Kişisel klasörleri ata
         for (const [id, f] of Object.entries(localPrivateFolders)) {
             select.innerHTML += `<option value="private_${id}">🔒 [Özel] ${f.name}</option>`;
         }
-        // Küresel klasörleri ata
         localGlobalFolders.forEach(f => {
             select.innerHTML += `<option value="global_${f.id}">🌍 [Paylaşılan] ${f.name}</option>`;
         });
     }
 
-    // 🎨 ÖZEL SÜRÜCÜYÜ EKRANA ÇİZ
     function renderPrivateFolders(folders) {
         const wrapper = document.getElementById('foldersWrapper');
         if(!wrapper) return;
@@ -176,7 +164,6 @@ export function initDashboard(db, user, fsTools) {
         }
     }
 
-    // 🎨 KÜRESEL PAYLAŞILAN SÜRÜCÜYÜ EKRANA ÇİZ (VİTRİN KİLİDİ KIRILDI!)
     function renderGlobalFolders(folders) {
         const wrapper = document.getElementById('sharedFoldersWrapper');
         if(!wrapper) return;
@@ -195,6 +182,23 @@ export function initDashboard(db, user, fsTools) {
         });
     }
 
+    // 🛡️ AKTİF EDİLMİŞ DOSYA ÖNİZLEME MOTORU
+    window.viewFileContent = function(name, content) {
+        const modal = document.getElementById('fileViewerModal');
+        const title = document.getElementById('viewerTitle');
+        const body = document.getElementById('viewerBody');
+        if(!modal || !title || !body) return;
+
+        title.innerText = "📄 " + name;
+        body.innerHTML = `<textarea class="viewer-text" readonly style="width:100%; height:350px; background:#0f172a; color:#a7f3d0; border:none; font-family:monospace; padding:15px; box-sizing:border-box; border-radius:8px;">${content}</textarea>`;
+        modal.classList.remove('hidden');
+    };
+
+    window.closeFileViewer = function() {
+        const modal = document.getElementById('fileViewerModal');
+        if(modal) modal.classList.add('hidden');
+    };
+
     function renderPrivateFiles(files) {
         const wrapper = document.getElementById('fileStorageWrapper');
         if(!wrapper) return;
@@ -202,7 +206,14 @@ export function initDashboard(db, user, fsTools) {
         files.forEach((f) => {
             const div = document.createElement('div');
             div.className = 'file-item';
-            div.innerHTML = `<div style="font-weight:600; color:var(--accent-color);">📄 ${f.name}</div><button onclick="alert('Bulut şifreli dosya önizleme motoru yakında aktif!')" style="padding:6px; font-size:12px;">Görüntüle</button>`;
+            
+            let safeName = f.name.replace(/'/g, "\\'");
+            let safeContent = f.content.replace(/'/g, "\\'").replace(/\n/g, "\\n");
+
+            div.innerHTML = `
+                <div style="font-weight:600; color:var(--accent-color);">📄 ${f.name}</div>
+                <button onclick="window.viewFileContent('${safeName}', '${safeContent}')" style="padding:6px; font-size:12px;">Görüntüle</button>
+            `;
             wrapper.appendChild(div);
         });
     }
