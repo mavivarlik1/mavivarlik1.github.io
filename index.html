@@ -148,7 +148,7 @@
                     <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
                     <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
                     <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
-                        CoreBase, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir. Amacımız, web standartlarını sonuna kadar esneterek kullanıcılara reklamsız, hızlı und akıcı bir topluluk deneyimi sunmaktır.
+                        CoreBase, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir. Amacımız, web standartlarını sonuna kadar esneterek kullanıcılara reklamsız, hızlı ve akıcı bir topluluk deneyimi sunmaktır.
                     </p>
                     <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
                 </div>
@@ -401,14 +401,14 @@
 </script>
 
 <script>
-    // ⚡ DİNAMİK ÇİFT HASH ROUTER MOTORU (#blog#12Hane Desteği)
+    // ⚡ RESPONSIVE DİNAMIK ÇİFT HASH ROUTER MOTORU
     function handleRoute() {
         let fullHash = window.location.hash.replace('#', '') || 'dashboard';
         let hashParts = fullHash.split('#');
         let mainHash = hashParts[0];
         let subHash = hashParts[1] || null;
 
-        window.currentBlogSubHash = subHash; // Alt kimliği blog.js için global yap
+        window.currentBlogSubHash = subHash; 
 
         const titleEl = document.getElementById('siteMainTitle');
         if (titleEl) {
@@ -431,7 +431,6 @@
 
         if (mainHash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI('tr');
         
-        // Router tetiklendiğinde eğer blog sekmesindeysek görünümü anlık yenile
         if (mainHash === 'blog' && window.refreshBlogRender) {
             window.refreshBlogRender();
         }
@@ -446,7 +445,6 @@
     window.addEventListener('load', handleRoute);
 </script>
 
-<!-- ⚡ FIREBASE EKOSİSTEM ENTEGRASYONU -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -554,7 +552,10 @@
             
             setupSession({ uid: guestUid, email: "guest", isGuest: true, nick: guestNick, points: 0, role: "user" });
             
-            if (window.location.hash !== '#help' && window.location.hash !== '#auth' && window.location.hash !== '#chat' && window.location.hash !== '#privacy' && window.location.hash !== '#blog') {
+            // 🛡️ ZIRHLI URL KALKANI FİX: Sayılı linklerin #dashboard'a yönlendirilerek ezilmesini kesin engeller
+            let currentMainHash = window.location.hash.split('#')[1] || 'dashboard';
+            const allowedHashes = ['dashboard', 'blog', 'chat', 'help', 'privacy', 'auth', 'vip', 'admin'];
+            if (!allowedHashes.includes(currentMainHash)) {
                 window.location.hash = '#dashboard';
             }
         }
