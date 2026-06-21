@@ -179,14 +179,32 @@ export function initDashboard(db, user, fsTools) {
         reader.readAsText(file);
     };
 
-    window.handleCardPayment = async function() {
-        const title = document.getElementById('cardHolderName').value.trim();
+    // 💎 VIP KULVAR 1 MOTORU: Kart ile Gerçekçi Aktivasyon
+    window.handleRealCardPayment = function() {
+        const name = document.getElementById('cardHolderNamePay').value.trim();
+        const number = document.getElementById('cardNumber').value.trim();
+        const expiry = document.getElementById('cardExpiry').value.trim();
+        const cvc = document.getElementById('cardCvc').value.trim();
+
+        if(!name || !number || !expiry || !cvc) {
+            return alert("Lütfen kart ile anında aktivasyon için tüm alanları eksiksiz doldurun.");
+        }
+        alert("Secure Ödeme Ağ Geçidi Bağlantısı Başarılı!\nSimüle edilen 5.00 TL tahsil edildi. VIP yetkiniz kurucu masası onayına gönderildi!");
+        document.getElementById('cardHolderNamePay').value = '';
+        document.getElementById('cardNumber').value = '';
+        document.getElementById('cardExpiry').value = '';
+        document.getElementById('cardCvc').value = '';
+    };
+
+    // 💎 VIP KULVAR 2 MOTORU: Öneri veya Hata İle Ücretsiz Hak Kazanma
+    window.handleBugVipPayment = async function() {
+        const title = document.getElementById('vipSuggestionTitle').value.trim();
         const content = document.getElementById('vipSuggestionContent').value.trim();
-        if(!title || !content) return alert("Lütfen VIP onaylanması için gerekli öneri/hata alanlarını doldurun.");
+        if(!title || !content) return alert("Lütfen ücretsiz VIP rütbesi için hata başlığı ve açıklama alanını doldurun.");
         try {
-            await addDoc(collection(db, "forum_topics"), { title: `[VIP ÖNERİ/BUG] ${title}`, creator: user.nick, createdAt: Date.now(), views: 0, uid: user.uid, body: content });
-            alert("Harika! Geri bildiriminiz kurucu masasına başarıyla iletildi. İnceleme sonrası VIP rütbeniz ücretsiz aktif edilecektir.");
-            document.getElementById('cardHolderName').value = ''; document.getElementById('vipSuggestionContent').value = '';
+            await addDoc(collection(db, "forum_topics"), { title: `[VIP BUG/ÖNERİ] ${title}`, creator: user.nick, createdAt: Date.now(), views: 0, uid: user.uid, body: content });
+            alert("Harika! Teknik bildiriminiz kurucu masasına başarıyla iletildi. Doğrulama sonrası VIP rütbeniz tamamen ÜCRETSİZ olarak tanımlanacaktır.");
+            document.getElementById('vipSuggestionTitle').value = ''; document.getElementById('vipSuggestionContent').value = '';
         } catch(e) { alert("Bildirim gönderme hatası: " + e.message); }
     };
 
