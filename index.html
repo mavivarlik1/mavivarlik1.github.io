@@ -75,12 +75,6 @@
         .lang-container { display: flex; gap: 8px; background: rgba(15, 23, 42, 0.5); padding: 4px; border-radius: 10px; border: var(--glass-border); }
         .lang-ui-btn { background: transparent; color: var(--text-muted); padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; border:none; cursor: pointer; transition: all 0.2s; }
         .lang-ui-btn.active { background: var(--accent-color); color: #0f172a; box-shadow: var(--accent-glow); }
-
-        /* Blog Tasarım CSS */
-        .blog-card { background: var(--glass-bg); border: var(--glass-border); padding: 20px; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: transform 0.2s; }
-        .blog-card:hover { transform: scale(1.005); border-color: rgba(56, 189, 248, 0.3); }
-        .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-bottom: 10px; align-items: center; }
-        .blog-content { font-size: 14px; line-height: 1.6; color: rgba(248, 250, 252, 0.9); text-align: justify; white-space: pre-line; }
     </style>
 </head>
 <body>
@@ -138,7 +132,7 @@
                     <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
                     <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
                     <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
-                        CoreBase, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir. Amacımız, web standartlarını sonuna kadar esneterek kullanıcılara reklamsız, hızlı ve akıcı bir topluluk deneyimi sunmaktır.
+                        CoreBase, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler và tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir. Amacımız, web standartlarını sonuna kadar esneterek kullanıcılara reklamsız, hızlı ve akıcı bir topluluk deneyimi sunmaktır.
                     </p>
                     <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
                 </div>
@@ -259,7 +253,7 @@
     <div id="vipSection" class="hidden">
         <div class="modal" style="border: 2px solid var(--gold-color); text-align: center;">
             <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 24px;">💎 VIP Üyelik Aktivasyon Alanı (5 TL)</h3>
-            <p id="vipActivationDesc" style="color: var(--text-muted); font-size: 14px; max-width: 600px; margin: 0 auto 20px auto;">VIP rütbesini kaparak sohbette altın isme ve sınırsız önceliğe kavuş! Bilgileri doldurup ödeme emrini tetikleyebilirsin.</p>
+            <p id="vipActivationDesc" style="color: var(--text-muted); font-size: 14px; max-width: 600px; margin: 0 auto 20px auto;">VIP rütbesini kaparak sohbette altın isme và sınırsız önceliğe kavuş! Bilgileri doldurup ödeme emrini tetikleyebilirsin.</p>
             
             <div class="credit-card-box">
                 <div style="text-align: left; font-size: 11px; color: var(--accent-color); font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;">💳 SECURE PLAY CHECKOUT</div>
@@ -316,6 +310,30 @@
     </div>
 </footer>
 
+<script>
+    window.calculateRank = function(points, email, role) {
+        if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu 👑", class: "badge-kurucu" };
+        if(role === 'mod') return { name: "Moderatör 🛠️", class: "badge-mod" };
+        if(role === 'vip') return { name: "VIP ⭐", class: "badge-vip" };
+        
+        if (points >= 300) return { name: "Zirvelatıcı", class: "badge-user" };
+        if (points >= 250) return { name: "Efsanelatıcı", class: "badge-user" };
+        if (points >= 200) return { name: "Üstatlatıcı", class: "badge-user" };
+        if (points >= 165) return { name: "Uzmanlatıcı", class: "badge-user" };
+        if (points >= 135) return { name: "Ustalatıcı", class: "badge-user" };
+        if (points >= 110) return { name: "Sağlamlatıcı", class: "badge-user" };
+        if (points >= 95) return { name: "Canlatıcı", class: "badge-user" };
+        if (points >= 75) return { name: "Odaklatıcı", class: "badge-user" };
+        if (points >= 60) return { name: "Işılatıcı", class: "badge-user" };
+        if (points >= 45) return { name: "Hızlatıcı", class: "badge-user" };
+        if (points >= 30) return { name: "Katlatıcı", class: "badge-user" };
+        if (points >= 20) return { name: "Tırmalatıcı", class: "badge-user" };
+        if (points >= 10) return { name: "Adımlatıcı", class: "badge-user" };
+        if (points >= 5) return { name: "Başlatıcı", class: "badge-user" };
+        return { name: "Çaylaklatıcı", class: "badge-user" };
+    }
+</script>
+
 <script type="module">
     import { uiTranslations } from "./lang.js";
 
@@ -346,8 +364,7 @@
             if(el) el.innerHTML = t[textElements[id]] || el.innerHTML;
         });
 
-        // Üst kullanıcı adını elmas rütbe motoruyla eşleştir
-        if (window.activeUser) {
+        if (window.activeUser && window.calculateRank) {
             let rankBadge = window.calculateRank(window.activeUser.points || 0, window.activeUser.email, window.activeUser.role);
             const userInfoEl = document.getElementById('userInfo');
             if (userInfoEl) {
@@ -402,8 +419,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"; // Firestore modülleri import alanından senkronize
-    import { getFirestore as initDB } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; // DOĞRU İMPORT BURASI!
     
     import { initDashboard } from "./dashboard.js";
     import { initChatModule } from "./chat.js";
@@ -429,30 +445,8 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = initDB(app);
+    const db = getFirestore(app);
     const fsTools = { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc };
-
-    window.calculateRank = function(points, email, role) {
-        if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu 👑", class: "badge-kurucu" };
-        if(role === 'mod') return { name: "Moderatör 🛠️", class: "badge-mod" };
-        if(role === 'vip') return { name: "VIP ⭐", class: "badge-vip" };
-        
-        if (points >= 300) return { name: "Zirvelatıcı", class: "badge-user" };
-        if (points >= 250) return { name: "Efsanelatıcı", class: "badge-user" };
-        if (points >= 200) return { name: "Üstatlatıcı", class: "badge-user" };
-        if (points >= 165) return { name: "Uzmanlatıcı", class: "badge-user" };
-        if (points >= 135) return { name: "Ustalatıcı", class: "badge-user" };
-        if (points >= 110) return { name: "Sağlamlatıcı", class: "badge-user" };
-        if (points >= 95) return { name: "Canlatıcı", class: "badge-user" };
-        if (points >= 75) return { name: "Odaklatıcı", class: "badge-user" };
-        if (points >= 60) return { name: "Işılatıcı", class: "badge-user" };
-        if (points >= 45) return { name: "Hızlatıcı", class: "badge-user" };
-        if (points >= 30) return { name: "Katlatıcı", class: "badge-user" };
-        if (points >= 20) return { name: "Tırmalatıcı", class: "badge-user" };
-        if (points >= 10) return { name: "Adımlatıcı", class: "badge-user" };
-        if (points >= 5) return { name: "Başlatıcı", class: "badge-user" };
-        return { name: "Çaylaklatıcı", class: "badge-user" };
-    }
 
     window.handleLogin = async () => {
         const e = document.getElementById('authEmail').value, p = document.getElementById('authPassword').value;
@@ -477,6 +471,12 @@
         window.activeUser = user; 
         window.isCurrentUserGuest = !!user.isGuest;
         document.getElementById('settingsModal').classList.remove('hidden');
+        
+        const userInfoEl = document.getElementById('userInfo');
+        if(userInfoEl && window.calculateRank) {
+            let rankBadge = window.calculateRank(user.points || 0, user.email, user.role);
+            userInfoEl.innerHTML = `👤 ${user.nick} <span class="badge ${rankBadge.class}">${rankBadge.name}</span> (Puan: ${user.points || 0})`;
+        }
         
         if(user.isGuest) {
             document.getElementById('tabAuth').classList.remove('hidden'); 
@@ -512,7 +512,6 @@
         } catch(e) { alert(e.message); }
     };
 
-    // ⚡ DUVARSIZ ARKA PLAN OTOMATİK OTURUM TETİKLEYİCİSİ
     auth.onAuthStateChanged(async (user) => {
         if (user) {
             let role = user.email === 'supralanderxbox@gmail.com' ? "kurucu" : "user";
