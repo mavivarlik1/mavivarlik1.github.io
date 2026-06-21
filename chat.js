@@ -6,7 +6,7 @@ export function initChatModule(db, user, fsTools) {
     const urlChatMsgs = document.getElementById('urlChatMsgs');
     if (!globalChatMsgs) return;
 
-    // 🌎 GENEL CHAT AKIŞI VE RENK MOTORU
+    // 🌎 GENEL CHAT AKIŞI
     const globalQ = query(collection(db, "global_chat"), orderBy("createdAt", "desc"), limit(50));
     onSnapshot(globalQ, (snapshot) => {
         globalChatMsgs.innerHTML = '';
@@ -14,23 +14,31 @@ export function initChatModule(db, user, fsTools) {
         snapshot.forEach(docSnap => msgs.push(docSnap.data()));
         
         msgs.reverse().forEach(msg => {
+            let msgRole = msg.role || 'user';
+            let msgEmail = msg.email || '';
+            
+            // 🛡️ GERİYE DÖNÜK UYUMLULUK KORUMASI: Kurucu rütbe kontrol kilidi
+            if (msg.author === 'supralanderxbox' || msgEmail === 'supralanderxbox@gmail.com' || msgRole === 'kurucu') {
+                msgRole = 'kurucu';
+                msgEmail = 'supralanderxbox@gmail.com';
+            }
+
             let rank = { name: "Çaylaklatıcı", class: "badge-user" };
             if (window.calculateRank) {
-                rank = window.calculateRank(msg.points || 0, msg.email || '', msg.role || 'user');
+                rank = window.calculateRank(msg.points || 0, msgEmail, msgRole);
             }
             
-            // 🎨 Rütbeye Göre İsim Renklendirme Filtresi
             let nameStyle = "color: var(--accent-color); font-weight:600; cursor:default;";
-            if (msg.role === 'kurucu' || msg.email === 'supralanderxbox@gmail.com') {
+            if (msgRole === 'kurucu') {
                 nameStyle = "color: #ef4444; font-weight:700; text-shadow: 0 0 8px rgba(239,68,68,0.4);";
-            } else if (msg.role === 'mod') {
+            } else if (msgRole === 'mod') {
                 nameStyle = "color: #10b981; font-weight:600;";
-            } else if (msg.role === 'vip') {
+            } else if (msgRole === 'vip') {
                 nameStyle = "color: var(--gold-color); font-weight:700; text-shadow: 0 0 8px rgba(251,191,36,0.4);";
             }
 
             globalChatMsgs.innerHTML += `
-                <div class="msg" style="border-left: 3px solid ${msg.role === 'kurucu' ? '#ef4444' : (msg.role === 'vip' ? 'var(--gold-color)' : 'var(--accent-color)')}">
+                <div class="msg" style="border-left: 3px solid ${msgRole === 'kurucu' ? '#ef4444' : (msgRole === 'vip' ? 'var(--gold-color)' : 'var(--accent-color)')}">
                     <span style="${nameStyle}">${msg.author}</span>
                     <span class="badge ${rank.class}">${rank.name}</span>
                     <span style="color: var(--text-color); font-size:13px; margin-left:4px;">: ${msg.text}</span>
@@ -98,15 +106,23 @@ export function initChatModule(db, user, fsTools) {
             snapshot.forEach(docSnap => msgs.push(docSnap.data()));
             
             msgs.reverse().forEach(msg => {
+                let msgRole = msg.role || 'user';
+                let msgEmail = msg.email || '';
+                
+                if (msg.author === 'supralanderxbox' || msgEmail === 'supralanderxbox@gmail.com' || msgRole === 'kurucu') {
+                    msgRole = 'kurucu';
+                    msgEmail = 'supralanderxbox@gmail.com';
+                }
+
                 let rank = { name: "Çaylaklatıcı", class: "badge-user" };
                 if (window.calculateRank) {
-                    rank = window.calculateRank(msg.points || 0, msg.email || '', msg.role || 'user');
+                    rank = window.calculateRank(msg.points || 0, msgEmail, msgRole);
                 }
                 
                 let nameStyle = "color: var(--accent-color); font-weight:600;";
-                if (msg.role === 'kurucu' || msg.email === 'supralanderxbox@gmail.com') nameStyle = "color: #ef4444; font-weight:700;";
-                else if (msg.role === 'mod') nameStyle = "color: #10b981; font-weight:600;";
-                else if (msg.role === 'vip') nameStyle = "color: var(--gold-color); font-weight:700;";
+                if (msgRole === 'kurucu') nameStyle = "color: #ef4444; font-weight:700;";
+                else if (msgRole === 'mod') nameStyle = "color: #10b981; font-weight:600;";
+                else if (msgRole === 'vip') nameStyle = "color: var(--gold-color); font-weight:700;";
 
                 urlChatMsgs.innerHTML += `
                     <div class="msg">
