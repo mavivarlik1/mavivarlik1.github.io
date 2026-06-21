@@ -75,7 +75,6 @@
         .viewer-text { width:100%; height: 380px; background:#0f172a; color:#38bdf8; border:1px solid rgba(255,255,255,0.1); font-family:monospace; padding:15px; box-sizing:border-box; border-radius:8px; font-size:13px; line-height:1.5; outline:none; resize:none; }
         .credit-card-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.4); box-sizing: border-box; }
         
-        /* 📰 POLATTIĞIMIZ DERİN BREATHING (NEFES ALMA) MARGİN SİSTEMİ CSS */
         .blog-card { background: var(--glass-bg); border: var(--glass-border); padding: 25px; border-radius: 16px; margin-bottom: 52px; box-shadow: 0 6px 20px rgba(0,0,0,0.2); transition: transform 0.2s; max-width: 100%; box-sizing: border-box; }
         .blog-card:hover { transform: scale(1.002); border-color: rgba(56, 189, 248, 0.25); }
         .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-top: 5px; margin-bottom: 18px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 10px; }
@@ -111,7 +110,7 @@
                 <button class="lang-ui-btn" id="langBtnTr" onclick="window.switchLanguage('tr')">TR</button>
                 <button class="lang-ui-btn" id="langBtnEn" onclick="window.switchLanguage('en')">EN</button>
             </div>
-            <div id="userInfo" style="font-weight: 500; color: var(--text-muted);">Bağlanıyor...</div>
+            <div id="userInfo" style="font-weight: 500; color: var(--text-muted);">-</div>
         </div>
     </header>
 
@@ -230,10 +229,6 @@
             <h3 style="color: var(--accent-color); margin-top:0;">✍️ Gelişmiş Multimedya & İçerik Yayınlama Paneli</h3>
             <input type="text" id="blogTitleInput" placeholder="Makalenin Çarpıcı Başlığı...">
             <textarea id="blogContentInput" placeholder="Teknoloji gündemine dair makalenizi buraya yazın..." rows="6"></textarea>
-            <div class="responsive-grid-2" style="gap: 10px; margin-bottom: 10px;">
-                <input type="text" id="blogImgInput" placeholder="Kapak veya İçerik Görsel URL Adresi (Opsiyonel)" style="margin:0;">
-                <input type="text" id="blogVideoInput" placeholder="YouTube Video / Embed URL Adresi (Opsiyonel)" style="margin:0;">
-            </div>
             <button id="btnPublishBlog" onclick="window.createNewBlogPost()" style="width:100%; background: var(--success-color); color: #064e3b; font-weight:700;">Yayınla ve Listeye Gönder</button>
         </div>
         <div id="blogPostsWrapper"></div>
@@ -365,11 +360,7 @@
         window.currentBlogSubHash = subHash; 
 
         const titleEl = document.getElementById('siteMainTitle');
-        if (titleEl) {
-            titleEl.innerText = `CoreBase - ${mainHash.toUpperCase()}`;
-        }
-
-        if (window.translateUI) window.translateUI('tr');
+        if (titleEl) titleEl.innerText = `CoreBase - ${mainHash.toUpperCase()}`;
 
         const links = ['tabDashboard', 'tabBlog', 'tabChat', 'tabHelp', 'tabVip', 'tabAdmin', 'tabPrivacy', 'tabAuth'];
         links.forEach(id => {
@@ -463,6 +454,7 @@
     };
 
     function setupSession(user) {
+        // Mutlak Arayüz Yerleştirme Kalkanı
         try {
             window.activeUser = user; 
             window.isCurrentUserGuest = !!user.isGuest;
@@ -482,13 +474,9 @@
             const settingsRole = document.getElementById('settingsRole');
             if (settingsRole) {
                 settingsRole.innerText = displayRole;
-                if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') {
-                    settingsRole.style.color = '#ef4444';
-                } else if (user.role === 'maker') {
-                    settingsRole.style.color = 'var(--gold-color)';
-                } else {
-                    settingsRole.style.color = 'var(--text-color)';
-                }
+                if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') settingsRole.style.color = '#ef4444';
+                else if (user.role === 'maker') settingsRole.style.color = 'var(--gold-color)';
+                else settingsRole.style.color = 'var(--text-color)';
             }
 
             const userInfoEl = document.getElementById('userInfo');
@@ -500,42 +488,38 @@
             }
             
             const tabAuth = document.getElementById('tabAuth');
-            if (tabAuth) {
-                if(user.isGuest) tabAuth.classList.remove('hidden'); 
-                else tabAuth.classList.add('hidden'); 
-            }
+            if (tabAuth) { if(user.isGuest) tabAuth.classList.remove('hidden'); else tabAuth.classList.add('hidden'); }
 
             const tabAdmin = document.getElementById('tabAdmin');
-            if (tabAdmin) {
-                if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') tabAdmin.classList.remove('hidden');
-                else tabAdmin.classList.add('hidden');
-            }
+            if (tabAdmin) { if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') tabAdmin.classList.remove('hidden'); else tabAdmin.classList.add('hidden'); }
 
-            if (window.handleRoute) {
-                window.handleRoute();
-            }
-        } catch (uiErr) {
-            console.error("CoreBase Arayüz Kritik Hata Filtrelendi: ", uiErr);
-        }
+            if (window.handleRoute) window.handleRoute();
+        } catch (uiErr) { console.error("Arayüz hatası susturuldu: ", uiErr); }
 
-        try { initDashboard(db, user, fsTools); } catch(e) { console.error("Sürücü Modülü başlatılamadı:", e); }
-        try { initChatModule(db, user, fsTools); } catch(e) { console.error("Sohbet Modülü başlatılamadı:", e); }
-        try { initHelpForum(db, user, fsTools); } catch(e) { console.error("Forum Modülü başlatılamadı:", e); }
-        try { initBlogModule(db, user, fsTools); } catch(e) { console.error("Blog Modülü başlatılamadı:", e); }
+        // Modüller Arası Çökme Engelleyici İzolasyon Kafesi
+        try { initDashboard(db, user, fsTools); } catch(e) { console.error("Sürücü Modülü yüklenemedi:", e); }
+        try { initChatModule(db, user, fsTools); } catch(e) { console.error("Sohbet Modülü yüklenemedi:", e); }
+        try { initHelpForum(db, user, fsTools); } catch(e) { console.error("Forum Modülü yüklenemedi:", e); }
+        try { initBlogModule(db, user, fsTools); } catch(e) { console.error("Blog Modülü yüklenemedi:", e); }
     }
 
     auth.onAuthStateChanged(async (user) => {
         if (user) {
             let role = user.email === 'supralanderxbox@gmail.com' ? "kurucu" : "user";
-            const docSnap = await getDoc(doc(db, "users", user.uid));
             let points = 0, nick = user.email.split('@')[0];
-            if(docSnap.exists()) {
-                points = docSnap.data().points || 0;
-                if(docSnap.data().role) role = docSnap.data().role;
-                if(user.email === 'supralanderxbox@gmail.com') role = "kurucu";
-            } else {
-                await setDoc(doc(db, "users", user.uid), { email: user.email, points: 0, role: role, folders: {}, files: [] });
+            
+            // 🛡️ KRITIK TRY-CATCH KATMANI: Firebase kuralları kilitli olsa bile burası çökmez, oturumu içeri alır!
+            try {
+                const docSnap = await getDoc(doc(db, "users", user.uid));
+                if(docSnap.exists()) {
+                    points = docSnap.data().points || 0;
+                    if(docSnap.data().role) role = docSnap.data().role;
+                }
+            } catch (fsErr) {
+                console.warn("Veritabanı erişim izni kısıtlı, yerel maskeleme devrede.");
             }
+            
+            if(user.email === 'supralanderxbox@gmail.com') role = "kurucu";
             setupSession({ uid: user.uid, email: user.email, isGuest: false, nick: nick, points: points, role: role });
         } else {
             let guestUid = localStorage.getItem('corebase_guest_uid');
