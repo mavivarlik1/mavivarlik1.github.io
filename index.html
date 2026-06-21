@@ -15,143 +15,170 @@
     <link class="apple-touch-icon" href="icon-192x192.png">
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5865725607083870" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        :root { 
+        /* 🎨 DİNAMİK TEMA DEĞİŞKENLERİ MİMARİSİ */
+        body.theme-tech {
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             --glass-bg: rgba(30, 41, 59, 0.6);
             --glass-border: 1px solid rgba(255, 255, 255, 0.08);
             --text-color: #f8fafc; 
             --text-muted: #94a3b8;
             --accent-color: #38bdf8; 
-            --accent-glow: 0 0 15px rgba(56, 189, 248, 0.4);
+            --accent-glow: 0 0 15px rgba(56, 189, 248, 0.2);
             --danger-color: #fb7185;
             --success-color: #4ade80;
             --gold-color: #fbbf24;
-            --card-hover: rgba(255, 255, 255, 0.05);
+            --inner-bg: rgba(15, 23, 42, 0.5);
         }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg-gradient); color: var(--text-color); margin: 0; padding: 20px; min-height: 100vh; background-attachment: fixed; box-sizing: border-box; }
+
+        body.theme-simple {
+            --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --glass-bg: #ffffff;
+            --glass-border: 1px solid #cbd5e1;
+            --text-color: #0f172a; 
+            --text-muted: #64748b;
+            --accent-color: #2563eb; 
+            --accent-glow: 0 2px 8px rgba(37, 99, 235, 0.15);
+            --danger-color: #dc2626;
+            --success-color: #16a34a;
+            --gold-color: #d97706;
+            --inner-bg: #f8fafc;
+        }
+
+        body.theme-notepad {
+            --bg-gradient: linear-gradient(135deg, #fbf6ec 0%, #f4ebd0 100%);
+            --glass-bg: #fdfbf7;
+            --glass-border: 1px solid #c2b49a;
+            --text-color: #2b2b2b; 
+            --text-muted: #736855;
+            --accent-color: #8f5c23; 
+            --accent-glow: none;
+            --danger-color: #a62b2b;
+            --success-color: #2b7a4b;
+            --gold-color: #b58900;
+            --inner-bg: #f5eedc;
+            font-family: 'Courier New', Courier, monospace !important;
+        }
+
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-gradient); color: var(--text-color); margin: 0; padding: 20px; min-height: 100vh; background-attachment: fixed; box-sizing: border-box; transition: background 0.3s, color 0.3s; }
         .container { max-width: 1100px; margin: auto; padding-bottom: 80px; }
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: var(--glass-border); padding-bottom: 15px; margin-bottom: 25px; gap: 15px; }
-        header h1 { font-size: 26px; margin: 0; background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .modal { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 25px; border-radius: 16px; border: var(--glass-border); margin-bottom: 25px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
-        .modal h3 { margin-top: 0; color: var(--accent-color); font-weight: 600; }
         
-        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-left: 5px; display: inline-block;}
-        .badge-kurucu { background: #ef4444; color: white; box-shadow: 0 0 10px rgba(239, 68, 68, 0.6); }
-        .badge-mod { background: #10b981; color: white; }
-        .badge-vip { background: var(--gold-color); color: #1e293b; box-shadow: 0 0 10px rgba(251, 191, 36, 0.6); }
-        .badge-user { background: rgba(56, 189, 248, 0.2); color: var(--accent-color); }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: var(--glass-border); padding-bottom: 15px; margin-bottom: 25px; gap: 15px; }
+        header h1 { font-size: 24px; margin: 0; font-weight: 700; color: var(--text-color); }
+        
+        .modal { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 25px; border-radius: 12px; border: var(--glass-border); margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .modal h3 { margin-top: 0; color: var(--accent-color); font-weight: 600; font-size: 18px; }
+        
+        .badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; margin-left: 5px; display: inline-block;}
+        .badge-kurucu { background: var(--danger-color); color: #fff; }
+        .badge-mod { background: #4b5563; color: #fff; }
+        .badge-maker { background: var(--accent-color); color: #fff; }
+        .badge-vip { background: var(--gold-color); color: #fff; }
+        .badge-user { background: var(--inner-bg); border: 1px solid var(--glass-border); color: var(--text-muted); }
         
         .responsive-grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .file-grid, .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
-        .file-item, .folder-item { background: rgba(15, 23, 42, 0.7); border: var(--glass-border); padding: 15px; border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
-        .folder-section { background: var(--glass-bg); backdrop-filter: blur(10px); padding: 20px; border-radius: 16px; border: var(--glass-border); margin-top: 20px; }
-        .folder-title { font-weight: 600; font-size: 18px; color: var(--text-color); margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .file-item, .folder-item { background: var(--inner-bg); border: var(--glass-border); padding: 15px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+        
+        .folder-section { background: var(--glass-bg); padding: 20px; border-radius: 12px; border: var(--glass-border); margin-top: 20px; }
+        .folder-title { font-weight: 600; font-size: 16px; color: var(--text-color); margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
+        
         .links-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-        .link-card { background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s; cursor: pointer; }
-        .link-card:hover { transform: translateY(-3px); border-color: var(--accent-color); box-shadow: var(--accent-glow); }
-        input, select, textarea { background: rgba(15, 23, 42, 0.8); color: var(--text-color); border: 1px solid rgba(255,255,255,0.1); padding: 12px 16px; border-radius: 8px; margin: 8px 0; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; }
-        button { background: var(--accent-color); color: #0f172a; font-weight: 600; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s; font-size: 14px; }
-        button:hover { transform: translateY(-2px); box-shadow: var(--accent-glow); }
+        .link-card { background: var(--inner-bg); padding: 12px; border-radius: 8px; text-align: center; border: var(--glass-border); transition: all 0.2s; cursor: pointer; text-decoration: none; color: var(--text-color); font-size: 14px; }
+        .link-card:hover { border-color: var(--accent-color); box-shadow: var(--accent-glow); }
+        
+        input, select, textarea { background: var(--inner-bg); color: var(--text-color); border: var(--glass-border); padding: 10px 14px; border-radius: 6px; margin: 6px 0; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; outline: none; }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent-color); }
+        
+        button { background: var(--accent-color); color: #fff; font-weight: 500; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-size: 14px; }
+        button:hover { opacity: 0.9; box-shadow: var(--accent-glow); }
         .hidden { display: none !important; }
         
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .tab-btn { background: rgba(255,255,255,0.05); border: var(--glass-border); color: var(--text-muted); text-decoration: none; padding: 10px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .tab-active { background: var(--accent-color); color: #0f172a; box-shadow: var(--accent-glow); }
+        .tabs { display: flex; gap: 8px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab-btn { background: var(--glass-bg); border: var(--glass-border); color: var(--text-muted); text-decoration: none; padding: 8px 14px; border-radius: 6px; font-weight: 500; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+        .tab-active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
         
-        .chat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-        .chat-box { background: var(--glass-bg); backdrop-filter: blur(12px); border: var(--glass-border); padding: 20px; border-radius: 16px; height: 420px; display: flex; flex-direction: column; }
-        .chat-messages { flex: 1; overflow-y: auto; background: rgba(15, 23, 42, 0.5); padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { background: rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 12px; font-size: 14px; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-        .maskot-container { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 16px; border: var(--glass-border); margin-bottom: 25px; }
-        .maskot-img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; box-shadow: var(--accent-glow); }
-        .maskot-bubble { background: rgba(15, 23, 42, 0.8); padding: 10px 16px; border-radius: 12px 12px 12px 4px; font-size: 14px; font-weight: 500; border: 1px solid rgba(255,255,255,0.1); }
-        .viewer-modal-backdrop { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); display:flex; justify-content:center; align-items:center; z-index: 10000; }
-        .viewer-content { background: #1e293b; border: 1px solid rgba(255,255,255,0.15); width: 80%; max-width: 800px; max-height: 85vh; border-radius: 16px; display:flex; flex-direction:column; }
-        .viewer-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .viewer-body { padding: 20px; overflow-y: auto; flex:1; background: #0f172a; border-radius: 0 0 16px 16px; }
-        .viewer-text { width:100%; height: 380px; background:#0f172a; color:#38bdf8; border:1px solid rgba(255,255,255,0.1); font-family:monospace; padding:15px; box-sizing:border-box; border-radius:8px; font-size:13px; line-height:1.5; outline:none; resize:none; }
-        .credit-card-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.4); box-sizing: border-box; }
+        .chat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .chat-box { background: var(--glass-bg); border: var(--glass-border); padding: 20px; border-radius: 12px; height: 450px; display: flex; flex-direction: column; }
+        .chat-messages { flex: 1; overflow-y: auto; background: var(--inner-bg); padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 8px; }
         
-        .blog-card { background: var(--glass-bg); border: var(--glass-border); padding: 25px; border-radius: 16px; margin-bottom: 52px; box-shadow: 0 6px 20px rgba(0,0,0,0.2); transition: transform 0.2s; max-width: 100%; box-sizing: border-box; }
-        .blog-card:hover { transform: scale(1.002); border-color: rgba(56, 189, 248, 0.25); }
-        .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-top: 5px; margin-bottom: 18px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 10px; }
-        .blog-content { font-size: 15px; line-height: 1.8; color: rgba(248, 250, 252, 0.95); text-align: justify; white-space: pre-wrap; word-break: break-word; letter-spacing: 0.3px; }
+        /* 💬 KURUMSAL SADELEŞTİRİLMİŞ SOHBET TASARIMI */
+        .msg { background: var(--glass-bg); padding: 8px 12px; border-radius: 6px; font-size: 13px; border: var(--glass-border); line-height: 1.5; word-break: break-word; }
         
-        .blog-content strong { color: var(--accent-color); font-weight: 700; display: inline-block; margin-top: 10px; }
+        .maskot-container { display: flex; align-items: center; gap: 15px; background: var(--glass-bg); padding: 12px 20px; border-radius: 12px; border: var(--glass-border); margin-bottom: 25px; }
+        .maskot-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+        .maskot-bubble { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+        
+        .viewer-modal-backdrop { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display:flex; justify-content:center; align-items:center; z-index: 10000; }
+        .viewer-content { background: var(--glass-bg); border: var(--glass-border); width: 80%; max-width: 800px; max-height: 85vh; border-radius: 12px; display:flex; flex-direction:column; }
+        .viewer-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: var(--glass-border); }
+        .viewer-body { padding: 20px; overflow-y: auto; flex:1; background: var(--inner-bg); }
+        
+        .blog-card { background: var(--glass-bg); border: var(--glass-border); padding: 25px; border-radius: 12px; margin-bottom: 52px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); box-sizing: border-box; }
+        .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-top: 5px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; border-bottom: var(--glass-border); padding-bottom: 8px; }
+        .blog-content { font-size: 14px; line-height: 1.7; color: var(--text-color); text-align: justify; white-space: pre-wrap; word-break: break-word; }
+        
+        .lang-container { display: flex; gap: 5px; }
+        .lang-ui-btn { padding: 4px 8px; font-size: 11px; background: var(--inner-bg); border: var(--glass-border); color: var(--text-muted); border-radius: 4px; }
 
         @media (max-width: 768px) {
             body { padding: 10px; }
-            header { flex-direction: column; text-align: center; gap: 12px; }
+            header { flex-direction: column; text-align: center; gap: 10px; }
             .tabs { justify-content: center; }
-            .tab-btn { flex: 1 1 calc(50% - 10px); text-align: center; font-size: 12px; padding: 10px 8px; }
-            .modal { padding: 15px; }
+            .tab-btn { flex: 1 1 calc(50% - 10px); text-align: center; font-size: 12px; }
         }
     </style>
 </head>
-<body>
+<body class="theme-tech">
 
 <div class="container">
     <div class="maskot-container">
-        <img id="maskotFace" class="maskot-img" src="site_profile.png" alt="Maskot">
-        <div id="maskotSpeech" class="maskot-bubble">CoreBase bulut ağına hoş geldiniz! Tüm sistemimiz anlık ve senkronize olarak çalışmaktadır. 🚀</div>
+        <img id="maskotFace" class="maskot-img" src="site_profile.png" alt="Sistem">
+        <div id="maskotSpeech" class="maskot-bubble">CoreBase ekosistemine hoş geldiniz. Tüm servisler aktif ve senkronize durumdadır.</div>
     </div>
 
     <header>
         <div style="display: flex; align-items: center; gap: 15px;">
-            <img src="site_profile.png" alt="Site Logo" style="width: 55px; height: 55px; border-radius: 12px; border: var(--glass-border); box-shadow: var(--accent-glow);">
+            <img src="site_profile.png" alt="Logo" style="width: 45px; height: 45px; border-radius: 8px;">
             <h1 id="siteMainTitle">CoreBase</h1>
         </div>
         
         <div style="display: flex; align-items: center; gap: 15px;">
             <div class="lang-container">
-                <button class="lang-ui-btn" id="langBtnTr" onclick="window.switchLanguage('tr')">TR</button>
-                <button class="lang-ui-btn" id="langBtnEn" onclick="window.switchLanguage('en')">EN</button>
+                <button class="lang-ui-btn" onclick="window.switchLanguage('tr')">TR</button>
+                <button class="lang-ui-btn" onclick="window.switchLanguage('en')">EN</button>
             </div>
-            <div id="userInfo" style="font-weight: 500; color: var(--text-muted);">-</div>
+            <div id="userInfo" style="font-weight: 500; font-size: 13px; color: var(--text-muted);">-</div>
         </div>
     </header>
 
     <div class="tabs" id="mainTabs">
-        <a href="#dashboard" id="tabDashboard" class="tab-btn tab-active">🗂️ Sürücü & Paylaşım</a>
-        <a href="#blog" id="tabBlog" class="tab-btn">📰 CoreBase Blog</a>
-        <a href="#chat" id="tabChat" class="tab-btn">💬 /chat Odaları</a>
-        <a href="#help" id="tabHelp" class="tab-btn">🙋 /yardım Forumu</a>
-        <a href="#privacy" id="tabPrivacy" class="tab-btn">📜 Gizlilik Politikası</a>
-        <a href="#vip" id="tabVip" class="tab-btn" style="color: var(--gold-color);">⭐ VIP Ol</a>
-        <a href="#auth" id="tabAuth" class="tab-btn" style="color: var(--accent-color);">🔐 Giriş / Kayıt</a>
-        <a href="#admin" id="tabAdmin" class="tab-btn hidden" style="color: var(--danger-color);">👑 Yönetim</a>
+        <a href="#dashboard" id="tabDashboard" class="tab-btn tab-active">Sürücü & Paylaşım</a>
+        <a href="#blog" id="tabBlog" class="tab-btn">Geliştirici Blog</a>
+        <a href="#chat" id="tabChat" class="tab-btn">Sohbet Odaları</a>
+        <a href="#help" id="tabHelp" class="tab-btn">Yardım Forumu</a>
+        <a href="#privacy" id="tabPrivacy" class="tab-btn">Gizlilik Politikası</a>
+        <a href="#vip" id="tabVip" class="tab-btn" style="color: var(--gold-color);">VIP Üyelik</a>
+        <a href="#auth" id="tabAuth" class="tab-btn" style="color: var(--accent-color);">Giriş Yap</a>
+        <a href="#admin" id="tabAdmin" class="tab-btn hidden" style="color: var(--danger-color);">Yönetim</a>
     </div>
 
+    <!-- AUTH PANEL -->
     <div id="authSection" class="hidden">
         <div class="modal">
             <div class="responsive-grid-2">
                 <div>
-                    <h2 id="featureTitle" style="color: var(--accent-color); margin-top:0;">CoreBase Platform Özellikleri</h2>
-                    <p id="featureDesc" style="font-size: 14px; line-height: 1.6; color: var(--text-muted);">Sistemimize kayıt olmadan misafir oturumuyla bağlandığınızda paylaşılan tüm blog içeriklerini okuyabilir, topluluk chat odalarını ve teknik yardım forumunu anında kullanabilirsiniz.</p>
-                    
-                    <h4 id="matrixTitle" style="color: var(--success-color); margin-bottom: 5px;">🔄 Oturum Özellikleri Dağılımı:</h4>
-                    <ul style="font-size: 12px; color: var(--text-muted); padding-left: 20px; line-height: 1.8;">
-                        <li id="matrixCan"><b>Misafir Kullanıcı Hakları:</b> Paylaşılan güncel tüm teknoloji içeriklerini okuyabilir, anlık odalarda mesajlaşabilir ve geçici bulut sürücüsünde klasörler organize edebilirler.</li>
-                        <li id="matrixCannot"><b>Kayıtlı Kullanıcı Farkları:</b> Topluluk aktivitelerinden kalıcı rütbe puanları toplayabilir ve profillerini tamamen özelleştirebilirler.</li>
-                    </ul>
-
-                    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
-                    <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
-                    <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
-                        CoreBase, kullanıcıların dijital içeriklerini ve bulut verilerini en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir teknoloji ekosistemidir. Amacımız, web standartlarını modern arayüzlerle birleştirerek hızlı, reklamsız ve akıcı bir topluluk deneyimi sunmaktır.
-                    </p>
-                    <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
+                    <h2 id="featureTitle" style="color: var(--accent-color); margin-top:0; font-size: 20px;">Platform Kuralları ve Erişim</h2>
+                    <p id="featureDesc" style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">Sisteme kayıt olmadan misafir oturumuyla bağlandığınızda paylaşılan blog içeriklerini okuyabilir, chat odalarını ve teknik forum alanını anında kullanabilirsiniz.</p>
+                    <p id="contactText" style="font-size: 12px; color: var(--accent-color); margin-top: 8px;">İletişim: supralanderxbox@gmail.com</p>
                 </div>
-                
-                <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; margin-top: 10px;">
-                    <h3 id="loginHeader" style="margin-top:0;">Hesabınıza Giriş Yapın / Üye Olun</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Kalıcı bir hesap oluşturarak sistemdeki rütbe ve puanlama avantajlarını hemen aktif hale getirebilirsiniz.</p>
+                <div>
+                    <h3 id="loginHeader" style="margin-top:0;">Hesab Yönetimi</h3>
                     <input type="email" id="authEmail" placeholder="E-posta Adresi">
                     <input type="password" id="authPassword" placeholder="Şifre">
-                    <span id="forgotText" onclick="window.handleForgotPassword()" style="color: var(--accent-color); cursor: pointer; font-size: 12px; text-decoration: underline; display: block; margin-bottom: 15px;">Şifremi Unuttum</span>
+                    <span id="forgotText" onclick="window.handleForgotPassword()" style="color: var(--accent-color); cursor: pointer; font-size: 12px; text-decoration: underline; display: block; margin-bottom: 10px;">Şifremi Unuttum</span>
                     <button id="btnLogin" onclick="window.handleLogin()" style="width:100%; margin-bottom:8px;">Giriş Yap</button>
                     <button id="btnRegister" onclick="window.handleRegister()" style="width:100%; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color);">Kayıt Ol</button>
                 </div>
@@ -159,32 +186,33 @@
         </div>
     </div>
 
+    <!-- MAIN UNIFIED DASHBOARD -->
     <div id="dashboardSection" class="hidden">
         <div class="responsive-grid-2" style="margin-bottom: 25px;">
             <div class="modal" style="margin-bottom:0;">
-                <h4 id="createFolderTitle" style="margin-top:0; color: var(--accent-color);">📂 Yeni Klasör Oluştur</h4>
+                <h4 id="createFolderTitle" style="margin-top:0; color: var(--accent-color);">Yeni Klasör Oluştur</h4>
                 <div style="display:flex; gap:10px;">
                     <input type="text" id="newFolderNameInput" placeholder="Klasör Adı" style="margin:0;">
                     <button id="btnCreateFolder" onclick="window.createNewFolder()" style="margin:0; white-space:nowrap;">Oluştur</button>
                 </div>
             </div>
             <div class="modal" style="margin-bottom:0;">
-                <h4 id="addLinkTitle" style="margin-top:0; color: var(--success-color);">📌 Klasöre Bağlantı Ekle</h4>
+                <h4 id="addLinkTitle" style="margin-top:0; color: var(--success-color);">Klasöre Bağlantı Ekle</h4>
                 <div class="responsive-grid-2" style="gap: 10px;">
                     <select id="folderSelect" style="margin:0;"><option value="" id="optSelectFolder">-- Klasör Seçin --</option></select>
                     <input type="text" id="siteNameInput" placeholder="Bağlantı Başlığı" style="margin:0;">
                 </div>
                 <div style="display:flex; gap:10px; margin-top:10px;">
                     <input type="text" id="siteUrlInput" placeholder="URL Adresi" style="margin:0;">
-                    <button id="btnAddLink" onclick="window.addNewLinkToFolder()" style="margin:0; background:var(--success-color); color:#064e3b; white-space:nowrap;">Ekle</button>
+                    <button id="btnAddLink" onclick="window.addNewLinkToFolder()" style="margin:0; background:var(--success-color); color:#fff; white-space:nowrap;">Ekle</button>
                 </div>
             </div>
         </div>
         <div class="modal">
-            <h3 id="cloudStorageTitle">🚀 Bulut Depolama & Geliştirici Sürücüsü</h3>
+            <h3 id="cloudStorageTitle">Bulut Depolama Modülü</h3>
             <div class="responsive-grid-2">
                 <div>
-                    <h4 style="margin:0; color: var(--accent-color);">Metin / Kod Dosyası Oluştur</h4>
+                    <h4 style="margin:0; color: var(--accent-color); font-size:14px;">Metin / Kod Dosyası Oluştur</h4>
                     <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin: 6px 0;">
                         <input type="text" id="newFileName" placeholder="dosya_adi" style="margin:0;">
                         <select id="newFileExtension" style="margin:0;">
@@ -197,144 +225,166 @@
                         </select>
                     </div>
                     <select id="newFilePrivacy" style="margin-bottom:8px;">
-                        <option value="private">🔒 Özel Sürücüme Kaydet</option>
-                        <option value="global">🌍 Küresel Havuzda Paylaş</option>
+                        <option value="private">Özel Sürücüme Kaydet</option>
+                        <option value="global">Küresel Havuzda Paylaş</option>
                     </select>
-                    <textarea id="newFileContent" placeholder="Kodlarınızı veya metin içeriğini buraya girin..." rows="4"></textarea>
+                    <textarea id="newFileContent" placeholder="İçeriği buraya girin..." rows="4"></textarea>
                     <button id="btnSaveFile" onclick="window.createNewTextFile()" style="width: 100%;">Dosyayı Sürücüye İşle</button>
                 </div>
                 <div>
-                    <h4 style="margin:0; color: var(--success-color);">Cihazdan Yerel Dosya Yükle</h4>
+                    <h4 style="margin:0; color: var(--success-color); font-size:14px;">Cihazdan Yerel Dosya Yükle</h4>
                     <input type="file" id="localFileUploader" style="padding: 5px;">
-                    <button id="btnUploadFile" onclick="window.uploadLocalFile()" style="width: 100%; background: var(--success-color); color: #064e3b;">Yükle</button>
+                    <button id="btnUploadFile" onclick="window.uploadLocalFile()" style="width: 100%; background: var(--success-color); color: white;">Yükle</button>
                 </div>
             </div>
-            <hr style="border:0; border-top: 1px solid rgba(255,255,255,0.05); margin:20px 0;">
-            <h4 id="savedFilesTitle">🔒 Şifreli Özel Dosyalarınız</h4>
+            <hr style="border:0; border-top: 1px solid var(--glass-border); margin:20px 0;">
+            <h4 id="savedFilesTitle">Özel Sürücü Alanı</h4>
             <div id="fileStorageWrapper" class="file-grid"></div>
             
-            <h4 id="globalFilesTitle" style="color: var(--success-color); margin-top:25px;">🌍 Ortak Paylaşılan Küresel Kodlar & Belgeler</h4>
+            <h4 id="globalFilesTitle" style="color: var(--success-color); margin-top:25px;">Ortak Paylaşılan Küresel Dosyalar</h4>
             <div id="globalFileStorageWrapper" class="file-grid"></div>
         </div>
-        <div class="modal" style="border: 1px solid rgba(56,189,248,0.2);">
-            <h3 id="globalSharedTitle">🌍 Ortak Paylaşılan Küresel Klasörler</h3>
+        
+        <!-- 🌍 GERİ EKLENEN KÜRESEL KLASÖR PAYLAŞIM ALANI -->
+        <div class="modal">
+            <h3 id="globalSharedTitle">Ortak Paylaşılan Küresel Klasörler</h3>
             <div id="sharedFoldersWrapper" class="folder-grid"></div>
         </div>
-        <h3 id="myDriverTitle" style="color: var(--accent-color);">🗂️ CoreBase Sürücüm</h3>
+        
+        <h3 id="myDriverTitle" style="color: var(--accent-color); font-size: 16px;">CoreBase Sürücüm</h3>
         <div id="foldersWrapper"></div>
     </div>
 
+    <!-- BLOG SECTION -->
     <div id="blogSection" class="hidden">
         <div class="modal hidden" id="blogWritePanel">
-            <h3 style="color: var(--accent-color); margin-top:0;">✍️ Gelişmiş Multimedya & İçerik Yayınlama Paneli</h3>
-            <input type="text" id="blogTitleInput" placeholder="Makalenin Çarpıcı Başlığı...">
-            <textarea id="blogContentInput" placeholder="Teknoloji gündemine dair makalenizi buraya yazın..." rows="6"></textarea>
-            <button id="btnPublishBlog" onclick="window.createNewBlogPost()" style="width:100%; background: var(--success-color); color: #064e3b; font-weight:700;">Yayınla ve Listeye Gönder</button>
+            <h3 style="color: var(--accent-color); margin-top:0;">İçerik Yayınlama Paneli</h3>
+            <input type="text" id="blogTitleInput" placeholder="Makale Başlığı...">
+            <textarea id="blogContentInput" placeholder="Makale içeriğini yazın. Desteklenen resim veya youtube linkleri otomatik dönüştürülür..." rows="6"></textarea>
+            <button id="btnPublishBlog" onclick="window.createNewBlogPost()" style="width:100%; background: var(--success-color); color: #fff; font-weight:600;">Yayınla</button>
         </div>
         <div id="blogPostsWrapper"></div>
     </div>
 
+    <!-- CHAT SECTION -->
     <div id="chatSection" class="hidden">
         <div class="chat-grid">
             <div class="chat-box">
-                <h3 id="globalChatTitle">🌍 Genel Chat</h3>
+                <h3 id="globalChatTitle" style="font-size:15px; margin-bottom:10px;">Genel Sohbet Kanalı</h3>
                 <div id="globalChatMsgs" class="chat-messages"></div>
                 <div style="display:flex; gap:10px;">
-                    <input type="text" id="globalMsgInput" placeholder="Mesajınız...">
-                    <button id="btnSendGlobal" onclick="window.sendChatMessage('global')">Gönder</button>
+                    <input type="text" id="globalMsgInput" placeholder="Mesajınız..." style="margin:0;">
+                    <button id="btnSendGlobal" onclick="window.sendChatMessage('global')" style="margin:0;">Gönder</button>
                 </div>
             </div>
             <div class="chat-box">
-                <h3 id="urlChatTitle">🔗 URL Tartışma Odası</h3>
-                <input type="text" id="urlChatTarget" placeholder="Tartışılacak web adresini (URL) girin" oninput="window.loadUrlChat()" style="margin-bottom:15px;">
+                <h3 id="urlChatTitle" style="font-size:15px; margin-bottom:10px;">URL Tartışma Odası</h3>
+                <input type="text" id="urlChatTarget" placeholder="Web adresi (URL) girin..." oninput="window.loadUrlChat()">
                 <div id="urlChatMsgs" class="chat-messages"></div>
                 <div style="display:flex; gap:10px;">
-                    <input type="text" id="urlMsgInput" placeholder="Mesajınız...">
-                    <button id="btnSendUrl" onclick="window.sendChatMessage('url')">Gönder</button>
+                    <input type="text" id="urlMsgInput" placeholder="Mesajınız..." style="margin:0;">
+                    <button id="btnSendUrl" onclick="window.sendChatMessage('url')" style="margin:0;">Gönder</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- HELP SECTION -->
     <div id="helpSection" class="hidden">
         <div class="modal" id="helpWritePanel">
-            <h3 id="helpPanelTitle">🙋 Topluluğa Sor / Yardım Konusu Aç</h3>
+            <h3 id="helpPanelTitle">Topluluğa Teknik Soru Sor</h3>
             <div style="display:flex; gap:10px;">
                 <input type="text" id="helpTitleInput" placeholder="Karşılaştığınız teknik problem nedir?" style="margin:0;">
-                <button id="btnPublishHelp" onclick="createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
+                <button id="btnPublishHelp" onclick="window.createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
             </div>
         </div>
         <div id="helpTopicsWrapper"></div>
     </div>
 
+    <!-- PRIVACY SECTION -->
     <div id="privacySection" class="hidden">
         <div class="modal">
-            <h3 id="privacyTitle">📜 Gizlilik Politikası</h3>
+            <h3 id="privacyTitle">Gizlilik Politikası</h3>
             <p id="privacyDate" style="font-size: 12px; color: var(--text-muted); font-style: italic;"></p>
-            <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
+            <hr style="border:0; border-top:1px solid var(--glass-border); margin:15px 0;">
             <div id="privacyBody" style="font-size:14px; color: var(--text-muted); line-height:1.7; text-align:justify;"></div>
         </div>
     </div>
 
+    <!-- VIP SECTION -->
     <div id="vipSection" class="hidden">
-        <div class="modal" style="border: 2px solid var(--gold-color); text-align: center;">
-            <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 24px;">💎 VIP Üyelik Aktivasyon Merkezi</h3>
-            <p id="vipActivationDesc" style="color: var(--text-muted); font-size: 14px; max-width: 800px; margin: 0 auto 25px auto;">
-                Sohbette rütbe unvanına, altın renkli isme ve özel sınırsız dosya depolama önceliklerine kavuşmak için ister <b>5.00 TL</b> ödeme yapabilir, ister sistemde kritik bir hata (bug) veya gerekli bir geliştirme önerisi bularak <b>tamamen ücretsiz</b> VIP rütbesi kazanabilirsiniz!
+        <div class="modal" style="text-align: center;">
+            <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 20px;">VIP Aktivasyon Modülü</h3>
+            <p id="vipActivationDesc" style="color: var(--text-muted); font-size: 13px; max-width: 800px; margin: 0 auto 25px auto;">
+                Sistem mimarisindeki rütbe önceliklerine kavuşmak için geliştirme önerisi sunabilir veya hata bildiriminde bulunarak ücretsiz VIP statüsü talep edebilirsiniz.
             </p>
-            
             <div class="responsive-grid-2" style="gap:20px; text-align:left;">
                 <div class="credit-card-box" style="margin:0;">
-                    <div style="text-align: left; font-size: 11px; color: var(--accent-color); font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;">💳 ANINDA KART İLE AKTİVASYON (5.00 TL)</div>
-                    <input type="text" id="cardHolderNamePay" placeholder="Kart Sahibinin Adı Soyadı">
+                    <input type="text" id="cardHolderNamePay" placeholder="Kart Sahibi">
                     <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <input type="text" id="cardExpiry" placeholder="AA/YY" maxlength="5">
                         <input type="password" id="cardCvc" placeholder="CVC" maxlength="3">
                     </div>
-                    <button id="btnPayVipCard" onclick="window.handleRealCardPayment()" style="width: 100%; background: var(--gold-color); color: #1e293b; margin-top: 15px; font-size: 15px; font-weight: 700; box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);">
-                        5.00 TL GÜVENLİ ÖDE
-                    </button>
+                    <button id="btnPayVipCard" onclick="window.handleRealCardPayment()" style="width: 100%; background: var(--gold-color); margin-top: 15px;">Aktivasyonu Tamamla</button>
                 </div>
-                
-                <div style="background: rgba(15, 23, 42, 0.6); padding: 20px; border-radius: 12px; border: var(--glass-border); display:flex; flex-direction:column; justify-content:space-between;">
+                <div style="background: var(--inner-bg); padding: 20px; border-radius: 8px; border: var(--glass-border); display:flex; flex-direction:column; justify-content:space-between;">
                     <div>
-                        <div style="font-size: 11px; color: var(--success-color); font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;">🎁 ÖNERİ / BUG BİLDİR (ÜCRETSİZ VIP KAP)</div>
-                        <input type="text" id="vipSuggestionTitle" placeholder="Hata Başlığı veya Eksik Özellik Adı">
-                        <textarea id="vipSuggestionContent" placeholder="VIP rütbenizin ücretsiz onaylanması için bulduğunuz bug veya gerekli öneriyi detaylıca buraya dökün..." rows="4" style="margin-top:8px;"></textarea>
+                        <input type="text" id="vipSuggestionTitle" placeholder="Hata / Öneri Başlığı">
+                        <textarea id="vipSuggestionContent" placeholder="Geliştirme detaylarını açıklayın..." rows="4" style="margin-top:8px;"></textarea>
                     </div>
-                    <button id="btnPayVipBug" onclick="window.handleBugVipPayment()" style="width: 100%; background: var(--success-color); color: #064e3b; margin-top: 15px; font-size: 15px; font-weight: 700;">
-                        BİLDİRİMİ GÖNDER VE VIP TALEP ET
-                    </button>
+                    <button id="btnPayVipBug" onclick="window.handleBugVipPayment()" style="width: 100%; background: var(--success-color); margin-top: 15px;">Bildirimi İlet</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ADMIN SECTION -->
     <div id="adminSection" class="hidden">
-        <div class="modal" style="border: 2px solid var(--danger-color);">
-            <h3 id="adminPanelTitle" style="color: var(--danger-color);">👑 Rütbe Yönetim Merkezi</h3>
+        <div class="modal">
+            <h3 id="adminPanelTitle" style="color: var(--danger-color);">Rütbe Yönetim Merkezi</h3>
             <div class="responsive-grid-2" style="gap: 15px;">
                 <input type="email" id="targetAdminEmail" placeholder="Kullanıcı E-postası">
                 <select id="targetRoleSelect">
-                    <option value="user">👤 Kullanıcı Rütbesine Çek</option>
-                    <option value="maker">⚙️ Üretici (Maker) Yetkisi Ver</option>
-                    <option value="mod">🛠️ Moderatör Yetkisi Ver</option>
-                    <option value="vip">⭐ VIP Yetkisi Ver</option>
+                    <option value="user">Kullanıcı (Standart)</option>
+                    <option value="maker">Üretici (Maker)</option>
+                    <option value="mod">Moderatör</option>
+                    <option value="vip">VIP</option>
                 </select>
             </div>
-            <button id="btnUpdateRank" onclick="window.executeAdminRoleAssign()" style="background: var(--danger-color); color: white; width: 100%; margin-top: 10px;">Rütbeyi Güncelle</button>
+            <button id="btnUpdateRank" onclick="window.executeAdminRoleAssign()" style="background: var(--danger-color); color: white; width: 100%; margin-top: 10px;">Güncelle</button>
         </div>
     </div>
 
+    <!-- PROFiL VE DETAYLI AYARLAR MODALİ -->
     <div class="modal hidden" id="settingsModal" style="margin-top:30px;">
-        <h3 id="settingsTitle">⚙️ Profil & Hesap Ayarları</h3>
-        <div style="background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 12px; border: var(--glass-border); margin-bottom: 15px; font-size: 14px; line-height: 1.8;">
-            <div>👤 <b>Kullanıcı Adı:</b> <span id="settingsNick" style="color: var(--accent-color); font-weight:600;">-</span></div>
-            <div>🛡️ <b>Hesap Tipi:</b> <span id="settingsRole" style="font-weight:600;">-</span></div>
-            <div>🏅 <b>Mevcut Rütbe:</b> <span id="settingsRank">-</span></div>
+        <h3 id="settingsTitle">Profil & Hesap Ayarları</h3>
+        
+        <!-- ⚙️ 3 FARKLI ARKA PLAN STİLİ SEÇİCİSİ -->
+        <div style="margin-bottom: 20px;">
+            <label style="font-size: 13px; font-weight: 500; display: block; margin-bottom: 5px;">Görünüm Teması:</label>
+            <select id="themeSelect" onchange="window.changeTheme(this.value)">
+                <option value="tech">Teknoloji & Cam Efekti (Varsayılan)</option>
+                <option value="simple">Sade & Minimalist (Açık Renk)</option>
+                <option value="notepad">Not Defteri Tasarımı (Klasik)</option>
+            </select>
         </div>
-        <button id="btnLogout" onclick="window.handleLogout()" style="background: var(--danger-color); color: #fff; width: 100%;">Sistemden Güvenli Çıkış Yap</button>
+
+        <!-- ⚙️ KULLANICI İSMİ DEĞİŞTİRME ALANI -->
+        <div style="margin-bottom: 20px;">
+            <label style="font-size: 13px; font-weight: 500; display: block; margin-bottom: 5px;">Kullanıcı Adını Değiştir:</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="changeNickInput" placeholder="Yeni kullanıcı adı..." style="margin:0;">
+                <button onclick="window.updateUserNickname()" style="margin:0; white-space:nowrap;">İsmi Güncelle</button>
+            </div>
+        </div>
+
+        <div style="background: var(--inner-bg); padding: 15px; border-radius: 8px; border: var(--glass-border); margin-bottom: 15px; font-size: 13px; line-height: 1.8;">
+            <div>Kullanıcı Adı: <span id="settingsNick" style="color: var(--accent-color); font-weight:600;">-</span></div>
+            <div>Hesap Tipi: <span id="settingsRole" style="font-weight:600;">-</span></div>
+            <div>Mevcut Rütbe: <span id="settingsRank">-</span></div>
+        </div>
+        <button id="btnLogout" onclick="window.handleLogout()" style="background: var(--danger-color); color: #fff; width: 100%;">Sistemden Çıkış Yap</button>
     </div>
 </div>
 
@@ -342,8 +392,8 @@
     <div class="container visual-model" style="max-width:800px; padding:0;">
         <div class="viewer-content">
             <div class="viewer-header">
-                <h3 id="viewerTitle" style="margin:0; color:var(--accent-color); font-size:16px;">📄 Dosya Önizleme</h3>
-                <button onclick="window.closeFileViewer()" style="margin:0; background:rgba(255,255,255,0.1); color:white; padding:5px 12px; border-radius:6px; cursor:pointer;">✕ Kapat</button>
+                <h3 id="viewerTitle" style="margin:0; color:var(--accent-color); font-size:15px;">Dosya Önizleme</h3>
+                <button onclick="window.closeFileViewer()" style="margin:0; background:var(--inner-bg); color:var(--text-color); padding:5px 12px; border-radius:4px; cursor:pointer;">✕ Kapat</button>
             </div>
             <div id="viewerBody" class="viewer-body"></div>
         </div>
@@ -351,6 +401,38 @@
 </div>
 
 <script>
+    // 🎨 TEMA DEĞİŞTİRME MOTORU
+    window.changeTheme = function(themeName) {
+        document.body.className = '';
+        document.body.classList.add('theme-' + themeName);
+        localStorage.setItem('corebase_theme', themeName);
+        const select = document.getElementById('themeSelect');
+        if(select) select.value = themeName;
+    };
+
+    // Sayfa yüklenirken temayı geri yükle
+    const savedTheme = localStorage.getItem('corebase_theme') || 'tech';
+    window.changeTheme(savedTheme);
+
+    // 🏅 RÜTBE HESAPLAMA MOTORU (Eksik alan tamamlandı)
+    window.calculateRank = function(points, email, role) {
+        if (email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu", class: "badge-kurucu" };
+        if (role === 'mod') return { name: "Moderatör", class: "badge-mod" };
+        if (role === 'maker') return { name: "Maker", class: "badge-maker" };
+        if (role === 'vip') return { name: "VIP", class: "badge-vip" };
+        
+        if (points >= 500) return { name: "Zirvedatör", class: "badge-user" };
+        if (points >= 200) return { name: "Usta", class: "badge-user" };
+        return { name: "Üye", class: "badge-user" };
+    };
+
+    // 🌐 DİL GEÇİŞ MOTORU (Mobil ve hash uyumlu hale getirildi)
+    window.switchLanguage = function(targetLang) {
+        localStorage.setItem('corebase_lang', targetLang);
+        if (window.translateUI) window.translateUI(targetLang);
+        if (window.updatePrivacyUI) window.updatePrivacyUI(targetLang);
+    };
+
     window.handleRoute = function() {
         let fullHash = window.location.hash.replace('#', '') || 'dashboard';
         let hashParts = fullHash.split('#');
@@ -361,6 +443,9 @@
 
         const titleEl = document.getElementById('siteMainTitle');
         if (titleEl) titleEl.innerText = `CoreBase - ${mainHash.toUpperCase()}`;
+
+        const activeLang = localStorage.getItem('corebase_lang') || 'tr';
+        if (window.translateUI) window.translateUI(activeLang);
 
         const links = ['tabDashboard', 'tabBlog', 'tabChat', 'tabHelp', 'tabVip', 'tabAdmin', 'tabPrivacy', 'tabAuth'];
         links.forEach(id => {
@@ -374,13 +459,8 @@
             if(el) el.classList.toggle('hidden', el.id.toLowerCase() !== mainHash + 'section');
         });
 
-        if (mainHash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI('tr');
+        if (mainHash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI(activeLang);
         if (mainHash === 'blog' && window.refreshBlogRender) window.refreshBlogRender();
-    };
-
-    window.switchLanguage = function(targetLang) {
-        const currentHash = window.location.hash || '#dashboard';
-        window.location.href = window.location.origin + window.location.pathname + '?lang=' + targetLang + currentHash;
     };
 
     window.addEventListener('hashchange', window.handleRoute);
@@ -398,13 +478,6 @@
     import { initBlogModule } from "./blog.js";
     import { privacyData } from "./privacy.js";
 
-    window.updatePrivacyUI = function(lang) {
-        const data = privacyData[lang] || privacyData['tr'];
-        document.getElementById('privacyTitle').innerText = data.title;
-        document.getElementById('privacyDate').innerText = data.date;
-        document.getElementById('privacyBody').innerHTML = data.content;
-    };
-
     const firebaseConfig = {
         apiKey: "AIzaSyA5tgORprtf_TIddYlEO12druYVvgQWaSI",
         authDomain: "site-store-9116e.firebaseapp.com",
@@ -419,18 +492,38 @@
     const db = getFirestore(app);
     const fsTools = { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc, limit };
 
+    // ⚙️ KULLANICI NICKNAME GÜNCELLEME MOTORU
+    window.updateUserNickname = async () => {
+        const changeInput = document.getElementById('changeNickInput');
+        if (!changeInput) return;
+        const newNick = changeInput.value.trim();
+        if(!newNick) return alert("Lütfen geçerli bir takma ad girin.");
+        
+        if(window.isCurrentUserGuest) {
+            localStorage.setItem('corebase_guest_nick', newNick);
+            alert("Misafir kullanıcı adınız güncellendi.");
+            window.location.reload();
+        } else {
+            try {
+                await updateDoc(doc(db, "users", auth.currentUser.uid), { nick: newNick });
+                alert("Kullanıcı adınız başarıyla güncellendi.");
+                window.location.reload();
+            } catch(e) { alert("Hata: " + e.message); }
+        }
+    };
+
     window.executeAdminRoleAssign = async () => {
         const targetEmail = document.getElementById('targetAdminEmail').value.trim();
         const selectedRole = document.getElementById('targetRoleSelect').value;
-        if(!targetEmail) return alert("Lütfen rütbe atanacak kullanıcının e-posta adresini girin.");
+        if(!targetEmail) return alert("Lütfen e-posta adresini girin.");
         try {
             const snapshot = await getDocs(query(collection(db, "users")));
             let foundUid = null;
             snapshot.forEach(d => { if(d.data().email === targetEmail) foundUid = d.id; });
             if(foundUid) {
                 await updateDoc(doc(db, "users", foundUid), { role: selectedRole });
-                alert("Kullanıcı hesap tipi başarıyla güncellendi.");
-            } else { alert("Girilen e-posta adresine ait bir kullanıcı bulunamadı."); }
+                alert("Kullanıcı yetkisi güncellendi.");
+            } else { alert("Kullanıcı bulunamadı."); }
         } catch(e) { alert("Yetkilendirme hatası: " + e.message); }
     };
 
@@ -454,7 +547,6 @@
     };
 
     function setupSession(user) {
-        // Mutlak Arayüz Yerleştirme Kalkanı
         try {
             window.activeUser = user; 
             window.isCurrentUserGuest = !!user.isGuest;
@@ -465,16 +557,16 @@
             const settingsNick = document.getElementById('settingsNick');
             if (settingsNick) settingsNick.innerText = user.nick;
             
-            let displayRole = "Kullanıcı (Standart) 👤";
-            if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') displayRole = "Kurucu Masası 👑";
-            else if (user.role === 'mod') displayRole = "Moderatör 🛠️";
-            else if (user.role === 'maker') displayRole = "Üretici (Maker) ⚙️";
-            else if (user.role === 'vip') displayRole = "VIP Üye ⭐";
+            let displayRole = "Kullanıcı (Standart)";
+            if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') displayRole = "Kurucu";
+            else if (user.role === 'mod') displayRole = "Moderatör";
+            else if (user.role === 'maker') displayRole = "Üretici (Maker)";
+            else if (user.role === 'vip') displayRole = "VIP Üye";
             
             const settingsRole = document.getElementById('settingsRole');
             if (settingsRole) {
                 settingsRole.innerText = displayRole;
-                if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') settingsRole.style.color = '#ef4444';
+                if (user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') settingsRole.style.color = 'var(--danger-color)';
                 else if (user.role === 'maker') settingsRole.style.color = 'var(--gold-color)';
                 else settingsRole.style.color = 'var(--text-color)';
             }
@@ -494,13 +586,12 @@
             if (tabAdmin) { if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') tabAdmin.classList.remove('hidden'); else tabAdmin.classList.add('hidden'); }
 
             if (window.handleRoute) window.handleRoute();
-        } catch (uiErr) { console.error("Arayüz hatası susturuldu: ", uiErr); }
+        } catch (uiErr) { console.error("Arayüz eşitleme hatası:", uiErr); }
 
-        // Modüller Arası Çökme Engelleyici İzolasyon Kafesi
-        try { initDashboard(db, user, fsTools); } catch(e) { console.error("Sürücü Modülü yüklenemedi:", e); }
-        try { initChatModule(db, user, fsTools); } catch(e) { console.error("Sohbet Modülü yüklenemedi:", e); }
-        try { initHelpForum(db, user, fsTools); } catch(e) { console.error("Forum Modülü yüklenemedi:", e); }
-        try { initBlogModule(db, user, fsTools); } catch(e) { console.error("Blog Modülü yüklenemedi:", e); }
+        try { initDashboard(db, user, fsTools); } catch(e) { console.error("Sürücü yüklenemedi:", e); }
+        try { initChatModule(db, user, fsTools); } catch(e) { console.error("Sohbet yüklenemedi:", e); }
+        try { initHelpForum(db, user, fsTools); } catch(e) { console.error("Forum yüklenemedi:", e); }
+        try { initBlogModule(db, user, fsTools); } catch(e) { console.error("Blog yüklenemedi:", e); }
     }
 
     auth.onAuthStateChanged(async (user) => {
@@ -508,15 +599,15 @@
             let role = user.email === 'supralanderxbox@gmail.com' ? "kurucu" : "user";
             let points = 0, nick = user.email.split('@')[0];
             
-            // 🛡️ KRITIK TRY-CATCH KATMANI: Firebase kuralları kilitli olsa bile burası çökmez, oturumu içeri alır!
             try {
                 const docSnap = await getDoc(doc(db, "users", user.uid));
                 if(docSnap.exists()) {
                     points = docSnap.data().points || 0;
                     if(docSnap.data().role) role = docSnap.data().role;
+                    if(docSnap.data().nick) nick = docSnap.data().nick;
                 }
             } catch (fsErr) {
-                console.warn("Veritabanı erişim izni kısıtlı, yerel maskeleme devrede.");
+                console.warn("Veritabanı erişim sınırları maskelendi.");
             }
             
             if(user.email === 'supralanderxbox@gmail.com') role = "kurucu";
