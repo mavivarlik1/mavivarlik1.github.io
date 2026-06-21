@@ -121,46 +121,41 @@
         .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-top: 5px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; border-bottom: var(--glass-border); padding-bottom: 8px; }
         .blog-content { font-size: 14px; line-height: 1.7; color: var(--text-color); text-align: justify; white-space: pre-wrap; word-break: break-word; }
         
-        /* 🌐 ULTRA MODERN VE DİNAMİK GOOGLE TRANSLATE MASKESİ */
-        #corebase_translator {
-            display: inline-block;
-            vertical-align: middle;
+        /* 🛠️ YENİLİKÇİ ÖZEL HTML DİL BUTONLARI CSS ALANI */
+        .custom-lang-container {
+            display: flex;
+            gap: 4px;
+            background: var(--inner-bg);
+            border: var(--glass-border);
+            padding: 4px;
+            border-radius: 8px;
         }
-        .goog-te-gadget-simple {
-            background-color: var(--inner-bg) !important;
-            border: var(--glass-border) !important;
-            border-radius: 6px !important;
-            padding: 6px 14px !important;
-            font-family: var(--site-font) !important;
-            font-size: 13px !important;
-            font-weight: 500 !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            transition: all 0.2s ease !important;
-            cursor: pointer !important;
-        }
-        .goog-te-gadget-simple:hover {
-            border-color: var(--accent-color) !important;
-            box-shadow: var(--accent-glow) !important;
-        }
-        .goog-te-gadget-icon {
-            display: none !important;
-        }
-        .goog-te-gadget-simple span, .goog-te-menu-value span {
-            color: var(--text-color) !important;
-            background: none !important;
-            border: none !important;
+        .custom-lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
             font-family: var(--site-font) !important;
         }
-        .goog-te-banner-frame, .goog-te-banner, .skiptranslate, .goog-te-gadget-simple img {
+        .custom-lang-btn:hover {
+            color: var(--text-color);
+        }
+        .custom-lang-btn.lang-active-node {
+            background: var(--accent-color) !important;
+            color: #fff !important;
+            box-shadow: var(--accent-glow);
+        }
+
+        /* Google'ın o Windows 96 tarzı çirkin widget'ını ve üst barını tamamen dünyadan siliyoruz */
+        #corebase_translator, .goog-te-banner-frame, .goog-te-banner, .skiptranslate {
             display: none !important;
         }
         body { top: 0px !important; }
-        .goog-te-menu-frame {
-            box-shadow: 0 4px 25px rgba(0,0,0,0.1) !important;
-            border: var(--glass-border) !important;
-            border-radius: 8px !important;
-        }
 
         @media (max-width: 768px) {
             body { padding: 10px; }
@@ -171,6 +166,8 @@
     </style>
 </head>
 <body class="theme-simple">
+
+<div id="corebase_translator"></div>
 
 <div class="container">
     <div class="maskot-container">
@@ -185,7 +182,10 @@
         </div>
         
         <div style="display: flex; align-items: center; gap: 15px;">
-            <div id="corebase_translator"></div>
+            <div class="custom-lang-container">
+                <button class="custom-lang-btn lang-active-node" id="langNodeTr" onclick="window.executeSecretTranslation('tr')">TR</button>
+                <button class="custom-lang-btn" id="langNodeEn" onclick="window.executeSecretTranslation('en')">EN</button>
+            </div>
             <div id="userInfo" style="font-weight: 500; font-size: 13px; color: var(--text-muted);">-</div>
         </div>
     </header>
@@ -428,8 +428,7 @@
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
             pageLanguage: 'tr',
-            includedLanguages: 'en,tr,de,fr,es,it',
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            includedLanguages: 'en,tr',
             autoDisplay: false
         }, 'corebase_translator');
     }
@@ -437,6 +436,23 @@
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <script>
+    // 🎛️ GEZGIN GİZLİ TETİKLEME VE BUTON MOTORU
+    window.executeSecretTranslation = function(langCode) {
+        // 1. Sayfadaki gizli Google select box'ını bulup tetikliyoruz
+        const googleSelect = document.querySelector('.goog-te-combo');
+        if (googleSelect) {
+            googleSelect.value = langCode;
+            googleSelect.dispatchEvent(new Event('change'));
+        }
+        
+        // 2. Butonların aktiflik durumunu görsel olarak güncelliyoruz
+        document.getElementById('langNodeTr').classList.toggle('lang-active-node', langCode === 'tr');
+        document.getElementById('langNodeEn').classList.toggle('lang-active-node', langCode === 'en');
+        
+        // 3. Tercihi hafızaya yazıyoruz
+        localStorage.setItem('corebase_lang', langCode);
+    };
+
     window.changeTheme = function(themeName) {
         document.body.className = '';
         document.body.classList.add('theme-' + themeName);
@@ -448,7 +464,14 @@
     const savedTheme = localStorage.getItem('corebase_theme') || 'simple';
     window.changeTheme(savedTheme);
 
-    // 🏅 SIKLAŞTIRILMIŞ DENGELİ RÜTBE MOTORU
+    // Sayfa ilk yüklendiğinde hafızadaki dili otomatik tetikle (Google'ın yüklenmesini hafifçe bekler)
+    window.addEventListener('load', () => {
+        const savedLang = localStorage.getItem('corebase_lang') || 'tr';
+        setTimeout(() => {
+            window.executeSecretTranslation(savedLang);
+        }, 1200);
+    });
+
     window.calculateRank = function(points, email, role) {
         if (email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu", class: "badge-kurucu" };
         if (role === 'mod') return { name: "Moderatör", class: "badge-mod" };
