@@ -75,6 +75,14 @@
         .viewer-text { width:100%; height: 380px; background:#0f172a; color:#38bdf8; border:1px solid rgba(255,255,255,0.1); font-family:monospace; padding:15px; box-sizing:border-box; border-radius:8px; font-size:13px; line-height:1.5; outline:none; resize:none; }
         .credit-card-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.4); box-sizing: border-box; }
         
+        /* 📰 POLATTIĞIMIZ DERİN BREATHING (NEFES ALMA) MARGİN SİSTEMİ CSS */
+        .blog-card { background: var(--glass-bg); border: var(--glass-border); padding: 25px; border-radius: 16px; margin-bottom: 52px; box-shadow: 0 6px 20px rgba(0,0,0,0.2); transition: transform 0.2s; max-width: 100%; box-sizing: border-box; }
+        .blog-card:hover { transform: scale(1.002); border-color: rgba(56, 189, 248, 0.25); }
+        .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-top: 5px; margin-bottom: 18px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 10px; }
+        .blog-content { font-size: 15px; line-height: 1.8; color: rgba(248, 250, 252, 0.95); text-align: justify; white-space: pre-wrap; word-break: break-word; letter-spacing: 0.3px; }
+        
+        .blog-content strong { color: var(--accent-color); font-weight: 700; display: inline-block; margin-top: 10px; }
+
         @media (max-width: 768px) {
             body { padding: 10px; }
             header { flex-direction: column; text-align: center; gap: 12px; }
@@ -141,7 +149,7 @@
                 
                 <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; margin-top: 10px;">
                     <h3 id="loginHeader" style="margin-top:0;">Hesabınıza Giriş Yapın / Üye Olun</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Kalıcı bir hesap oluşturarak sistemdeki rütbe and puanlama avantajlarını hemen aktif hale getirebilirsiniz.</p>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Kalıcı bir hesap oluşturarak sistemdeki rütbe ve puanlama avantajlarını hemen aktif hale getirebilirsiniz.</p>
                     <input type="email" id="authEmail" placeholder="E-posta Adresi">
                     <input type="password" id="authPassword" placeholder="Şifre">
                     <span id="forgotText" onclick="window.handleForgotPassword()" style="color: var(--accent-color); cursor: pointer; font-size: 12px; text-decoration: underline; display: block; margin-bottom: 15px;">Şifremi Unuttum</span>
@@ -258,7 +266,7 @@
             <h3 id="helpPanelTitle">🙋 Topluluğa Sor / Yardım Konusu Aç</h3>
             <div style="display:flex; gap:10px;">
                 <input type="text" id="helpTitleInput" placeholder="Karşılaştığınız teknik problem nedir?" style="margin:0;">
-                <button id="btnPublishHelp" onclick="window.createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
+                <button id="btnPublishHelp" onclick="createNewHelpTopic()" style="margin:0; white-space: nowrap;">Yayınla</button>
             </div>
         </div>
         <div id="helpTopicsWrapper"></div>
@@ -346,16 +354,6 @@
         </div>
     </div>
 </div>
-
-<footer style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; text-align: center; font-size: 13px;">
-    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-        <a href="#dashboard" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">🗂️ Küresel Bulut Sürücüsü</a>
-        <span style="color: rgba(255,255,255,0.2);">|</span>
-        <a href="#blog" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">📰 Güncel İçerik Blogu</a>
-        <span style="color: rgba(255,255,255,0.2);">|</span>
-        <a href="#help" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">🙋 Canlı Yardım Forumu</a>
-    </div>
-</footer>
 
 <script>
     window.handleRoute = function() {
@@ -465,7 +463,6 @@
     };
 
     function setupSession(user) {
-        // 🛡️ GÜVENLİK KALKANI: Arayüz patlamasını önleyen Try-Catch koruması
         try {
             window.activeUser = user; 
             window.isCurrentUserGuest = !!user.isGuest;
@@ -521,7 +518,6 @@
             console.error("CoreBase Arayüz Kritik Hata Filtrelendi: ", uiErr);
         }
 
-        // 🧱 MODÜLER İZOLASYON: Bir modül çökerse diğerleri ve giriş durumu kesinlikle etkilenmez
         try { initDashboard(db, user, fsTools); } catch(e) { console.error("Sürücü Modülü başlatılamadı:", e); }
         try { initChatModule(db, user, fsTools); } catch(e) { console.error("Sohbet Modülü başlatılamadı:", e); }
         try { initHelpForum(db, user, fsTools); } catch(e) { console.error("Forum Modülü başlatılamadı:", e); }
