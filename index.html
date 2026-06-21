@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" href="site_profile.png">
     
     <meta name="description" content="CoreBase; gelişmiş bulut dosya depolama çözümleri, anlık interaktif sohbet odaları, teknik yardım forumları ve dinamik klasör paylaşım ağı sunan yeni nesil bir web uygulaması ekosistemidir.">
-    <meta name="keywords" content="bulut depolama, dosya paylaşımı, canlı chat, forum, web uygulaması, pwa, teknoloji rehberi">
+    <meta name="keywords" content="bulut depolama, dosya paylaşımı, canlı chat, forum, web uygulaması, pwa, teknoloji rehberi, blog">
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
@@ -75,39 +75,20 @@
         .lang-container { display: flex; gap: 8px; background: rgba(15, 23, 42, 0.5); padding: 4px; border-radius: 10px; border: var(--glass-border); }
         .lang-ui-btn { background: transparent; color: var(--text-muted); padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; border:none; cursor: pointer; transition: all 0.2s; }
         .lang-ui-btn.active { background: var(--accent-color); color: #0f172a; box-shadow: var(--accent-glow); }
+
+        /* Blog Tasarım CSS */
+        .blog-card { background: var(--glass-bg); border: var(--glass-border); padding: 20px; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: transform 0.2s; }
+        .blog-card:hover { transform: scale(1.005); border-color: rgba(56, 189, 248, 0.3); }
+        .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-bottom: 10px; align-items: center; }
+        .blog-content { font-size: 14px; line-height: 1.6; color: rgba(248, 250, 252, 0.9); text-align: justify; white-space: pre-line; }
     </style>
-    
-    <script src="./guestdashboard.js"></script>
 </head>
 <body>
 
-<div id="geminiAiTrigger" onclick="toggleAiChat()" style="position: fixed; top: 20px; right: 20px; z-index: 999999; cursor: pointer; transition: transform 0.3s;">
-    <img src="site_profile.png" alt="AI Asistan" style="width: 52px; height: 52px; border-radius: 12px; border: var(--glass-border); box-shadow: var(--accent-glow); background: #0f172a;">
-</div>
-
-<div id="geminiAiChatBox" class="hidden" style="position: fixed; top: 90px; right: 20px; width: 360px; height: 480px; background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: var(--glass-border); border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); z-index: 999999; display: flex; flex-direction: column; overflow: hidden; font-family: inherit;">
-    <div style="padding: 15px; border-bottom: var(--glass-border); display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.6);">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 16px;">🤖</span>
-            <span style="font-weight: 600; color: var(--accent-color); font-size: 13px; letter-spacing: 0.5px;">CoreBase AI Asistan</span>
-        </div>
-        <button onclick="toggleAiChat()" style="background: transparent; color: var(--text-muted); border: none; padding: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">✕</button>
-    </div>
-    <div id="aiChatMessages" style="flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; background: rgba(15, 23, 42, 0.4); font-size: 13px; line-height: 1.5;">
-        <div style="background: rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 12px 12px 12px 4px; border-left: 3px solid var(--accent-color); align-self: flex-start; max-width: 85%; color: var(--text-color);">
-            Merhaba! Ben CoreBase ekosisteminin resmi yapay zeka asistanıyım. Bulut depolama, chat odaları, gizlilik politikamız veya rütbeler hakkında merak ettiğin her şeyi bana sorabilirsin! 🚀
-        </div>
-    </div>
-    <div style="padding: 12px; border-top: var(--glass-border); background: rgba(15, 23, 42, 0.6); display: flex; gap: 8px; align-items: center;">
-        <input type="text" id="aiMsgInput" placeholder="Asistana bir soru sor..." style="margin: 0; padding: 10px 14px; font-size: 13px; flex: 1; background: rgba(15, 23, 42, 0.8);" onkeydown="if(event.key==='Enter') sendAiMessage()">
-        <button onclick="sendAiMessage()" style="padding: 10px 16px; font-size: 13px; margin: 0; background: var(--accent-color); color: #0f172a; white-space: nowrap;">Gönder</button>
-    </div>
-</div>
-
 <div class="container">
     <div class="maskot-container">
-        <img id="maskotFace" class="maskot-img" src="pusheen-cat-png-7-2329363506 (1).png" alt="Maskot">
-        <div id="maskotSpeech" class="maskot-bubble">Sistem aktif! Klasör paylaşım hatası giderildi ve vitrin güncellendi.</div>
+        <img id="maskotFace" class="maskot-img" src="site_profile.png" alt="Maskot">
+        <div id="maskotSpeech" class="maskot-bubble">Sistem tamamen duvarsız ve tek parça! Herkes aynı sürücü ekosistemini kullanıyor. 🚀</div>
     </div>
 
     <header>
@@ -121,17 +102,18 @@
                 <button class="lang-ui-btn" id="langBtnTr" onclick="switchLanguage('tr')">TR</button>
                 <button class="lang-ui-btn" id="langBtnEn" onclick="switchLanguage('en')">EN</button>
             </div>
-            <div id="userInfo" style="font-weight: 500; color: var(--text-muted);">Giriş Bekleniyor...</div>
+            <div id="userInfo" style="font-weight: 500; color: var(--text-muted);">Bağlanıyor...</div>
         </div>
     </header>
 
-    <div class="tabs hidden" id="mainTabs">
+    <div class="tabs" id="mainTabs">
         <a href="#dashboard" id="tabDashboard" class="tab-btn tab-active">🗂️ Sürücü & Paylaşım</a>
-        <a href="#guestdashboard" id="tabGuestdashboard" class="tab-btn hidden">🗂️ Misafir Sürücüsü</a>
+        <a href="#blog" id="tabBlog" class="tab-btn">📰 CoreBase Blog</a>
         <a href="#chat" id="tabChat" class="tab-btn">💬 /chat Odaları</a>
         <a href="#help" id="tabHelp" class="tab-btn">🙋 /yardım Forumu</a>
         <a href="#privacy" id="tabPrivacy" class="tab-btn">📜 Gizlilik Politikası</a>
         <a href="#vip" id="tabVip" class="tab-btn" style="color: var(--gold-color);">⭐ VIP Ol</a>
+        <a href="#auth" id="tabAuth" class="tab-btn" style="color: var(--accent-color);">🔐 Giriş / Kayıt</a>
         <a href="#admin" id="tabAdmin" class="tab-btn hidden" style="color: var(--danger-color);">👑 Yönetim</a>
     </div>
 
@@ -140,35 +122,36 @@
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <div id="authPanel" class="modal">
-        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px;">
-            <div>
-                <h2 id="featureTitle" style="color: var(--accent-color); margin-top:0;">CoreBase Sistem Özellikleri (Vitrin)</h2>
-                <p id="featureDesc" style="font-size: 14px; line-height: 1.6; color: var(--text-muted);">Sistemimize kayıt olmadan misafir olarak bağlandığınızda genel chat odalarını, yardım forumunu yardımlaşma konularını inceleyebilirsiniz.</p>
-                
-                <h4 id="matrixTitle" style="color: var(--success-color); margin-bottom: 5px;">🔄 Misafir Modu Özellik Matrisi (Güncellendi):</h4>
-                <ul style="font-size: 12px; color: var(--text-muted); padding-left: 20px; line-height: 1.8;">
-                    <li id="matrixCan"><b>Misafirlerin Yapabilecekleri:</b> Tarayıcı hafızasında (LocalStorage) bağımsız yerel klasörler oluşturabilir, dosyalar yükleyebilir...</li>
-                    <li id="matrixCannot"><b>Misafirlerin Yapamayacakları (Kısıtlamalar):</b> Yerel klasörleri küresel ortak havuzda yayınlayamaz...</li>
-                </ul>
+    <div id="authSection" class="hidden">
+        <div class="modal">
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px;">
+                <div>
+                    <h2 id="featureTitle" style="color: var(--accent-color); margin-top:0;">CoreBase Sistem Özellikleri (Vitrin)</h2>
+                    <p id="featureDesc" style="font-size: 14px; line-height: 1.6; color: var(--text-muted);">Sistemimize kayıt olmadan anonim oturumla bağlandığınızda genel blogları okuyabilir, chat odalarını ve teknik yardım forumunu anında kullanabilirsiniz.</p>
+                    
+                    <h4 id="matrixTitle" style="color: var(--success-color); margin-bottom: 5px;">🔄 Otomatik Oturum Özellik Matrisi (Güncellendi):</h4>
+                    <ul style="font-size: 12px; color: var(--text-muted); padding-left: 20px; line-height: 1.8;">
+                        <li id="matrixCan"><b>Kayıtsız Kullanıcıların Yapabilecekleri:</b> Paylaşılan tüm blog gönderilerini okuyabilir, anlık chat yapabilir ve bulut sürücüsünde klasörler üretebilirler.</li>
+                        <li id="matrixCannot"><b>Kayıtsız Kullanıcıların Yapamayacakları:</b> Rütbe puanı toplayamazlar ve isimleri kalıcı olarak 'User???' formatında kilitli kalır.</li>
+                    </ul>
 
-                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
-                <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
-                <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
-                    CoreBase, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir...
-                </p>
-                <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
-            </div>
-            
-            <div style="border-left: 1px solid rgba(255,255,255,0.05); padding-left: 20px;">
-                <h3 id="loginHeader">Sisteme Bağlan</h3>
-                <input type="email" id="authEmail" placeholder="E-posta Adresi">
-                <input type="password" id="authPassword" placeholder="Şifre">
-                <span id="forgotText" onclick="handleForgotPassword()" style="color: var(--accent-color); cursor: pointer; font-size: 12px; text-decoration: underline;">Şifremi Unuttum?</span>
-                <button id="btnLogin" onclick="handleLogin()" style="width:100%; margin-top:10px;">Giriş Yap</button>
-                <button id="btnRegister" onclick="handleRegister()" style="width:100%; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color);">Kayıt Ol</button>
-                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.05); margin:15px 0;">
-                <button id="btnGuest" onclick="handleGuestLogin()" style="width:100%; background: #475569; color: white;">⚡ Misafir Olarak Devam Et</button>
+                    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.06); margin:15px 0;">
+                    <h4 id="aboutTitle" style="color: var(--accent-color); margin-top: 0; margin-bottom:5px;">ℹ️ Hakkımızda & Vizyonumuz</h4>
+                    <p id="aboutDesc" style="font-size: 12px; line-height: 1.6; color: var(--text-muted); text-align: justify; margin: 0;">
+                        CoreBase, kullanıcıların dijital varlıklarını en yüksek verimlilikle organize etmesini sağlayan modern, modüler ve tek sayfa mimarili (SPA) bir bulut ve yerel depolama ekosistemidir. Amacımız, web standartlarını sonuna kadar esneterek kullanıcılara reklamsız, hızlı ve akıcı bir topluluk deneyimi sunmaktır.
+                    </p>
+                    <p id="contactText" style="font-size: 11px; color: var(--accent-color); margin-top: 8px; margin-bottom:0;">📩 <b>Resmi İletişim:</b> supralanderxbox@gmail.com</p>
+                </div>
+                
+                <div style="border-left: 1px solid rgba(255,255,255,0.05); padding-left: 20px;">
+                    <h3 id="loginHeader" style="margin-top:0;">Hesabına Giriş Yap / Üye Ol</h3>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Gerçek bir hesap açarak rütbe sistemini aktif edebilir ve ismini `User???` formundan kurtarabilirsin.</p>
+                    <input type="email" id="authEmail" placeholder="E-posta Adresi">
+                    <input type="password" id="authPassword" placeholder="Şifre">
+                    <span id="forgotText" onclick="handleForgotPassword()" style="color: var(--accent-color); cursor: pointer; font-size: 12px; text-decoration: underline; display: block; margin-bottom: 15px;">Şifremi Unuttum?</span>
+                    <button id="btnLogin" onclick="handleLogin()" style="width:100%; margin-bottom:8px;">Giriş Yap</button>
+                    <button id="btnRegister" onclick="handleRegister()" style="width:100%; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color);">Kayıt Ol</button>
+                </div>
             </div>
         </div>
     </div>
@@ -221,52 +204,14 @@
         <div id="foldersWrapper"></div>
     </div>
 
-    <div id="guestDashboardSection" class="hidden">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
-            <div class="modal" style="margin-bottom:0;">
-                <h4 id="guestCreateFolderTitle" style="margin-top:0; color: var(--accent-color);">📂 Yeni Yerel Klasör Yarat (LocalStorage)</h4>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="guestNewFolderNameInput" placeholder="Klasör İsmi" style="margin:0;">
-                    <button id="btnGuestCreate" onclick="createGuestFolder()" style="margin:0; white-space:nowrap;">Yarat</button>
-                </div>
-            </div>
-            <div class="modal" style="margin-bottom:0;">
-                <h4 id="guestAddLinkTitle" style="margin-top:0; color: var(--success-color);">📌 Yerel Klasöre Link Ekle</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <select id="guestFolderSelect" style="margin:0;"><option value="" id="optGuestSelectFolder">-- Klasör Seç --</option></select>
-                    <input type="text" id="guestSiteNameInput" placeholder="Başlık" style="margin:0;">
-                </div>
-                <div style="display:flex; gap:10px; margin-top:10px;">
-                    <input type="text" id="guestSiteUrlInput" placeholder="URL adresi" style="margin:0;">
-                    <button id="btnGuestAddLink" onclick="addGuestLinkToFolder()" style="margin:0; background:var(--success-color); color:#064e3b; white-space:nowrap;">Ekle</button>
-                </div>
-            </div>
+    <div id="blogSection" class="hidden">
+        <div class="modal" id="blogWritePanel">
+            <h3 style="color: var(--accent-color); margin-top:0;">✍️ Yeni Blog Yazısı Yayınla</h3>
+            <input type="text" id="blogTitleInput" placeholder="Yazının Çarpıcı Başlığı...">
+            <textarea id="blogContentInput" placeholder="Blog içeriğini buraya dök, AdSense botları okuyacak..." rows="6"></textarea>
+            <button id="btnPublishBlog" onclick="window.createNewBlogPost()" style="width:100%; background: var(--success-color); color: #064e3b; font-weight:700;">Yayınla ve Havuza Gönder</button>
         </div>
-        <div class="modal">
-            <h3 id="guestStorageTitle">🚀 Yerel Dosya Depolama (Hafıza Güvenli)</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div>
-                    <h4 style="margin:0; color: var(--accent-color);">Metin Dosyası Oluştur</h4>
-                    <input type="text" id="guestNewFileName" placeholder="notlar.txt">
-                    <textarea id="guestNewFileContent" placeholder="İçerik..." rows="3"></textarea>
-                    <button id="btnGuestSave" onclick="createGuestTextFile()" style="width: 100%;">Yerel Kaydet</button>
-                </div>
-                <div>
-                    <h4 style="margin:0; color: var(--success-color);">Cihazdan Yükle</h4>
-                    <input type="file" id="guestLocalFileUploader" style="padding: 5px;">
-                    <button id="btnGuestUpload" onclick="uploadGuestLocalFile()" style="width: 100%; background: var(--success-color); color: #064e3b;">Yükle</button>
-                </div>
-            </div>
-            <hr style="border:0; border-top: 1px solid rgba(255,255,255,0.05); margin:20px 0;">
-            <h4 id="guestSavedFilesTitle">📂 Tarayıcı Belleğindeki Dosyalar</h4>
-            <div id="guestFileStorageWrapper" class="file-grid"></div>
-        </div>
-        <div class="modal" style="border: 1px solid rgba(56,189,248,0.2);">
-            <h3 id="guestGlobalSharedTitle">🌍 Ortak Paylaşılan Global Klasörler (Vitrin Verisi)</h3>
-            <div id="guestSharedFoldersWrapper" class="folder-grid"></div>
-        </div>
-        <h3 id="guestDriverTitle" style="color: var(--accent-color);">🗂️ Yerel Sürücü Görünümü</h3>
-        <div id="guestFoldersWrapper"></div>
+        <div id="blogPostsWrapper"></div>
     </div>
 
     <div id="chatSection" class="hidden">
@@ -363,92 +308,13 @@
 
 <footer style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; text-align: center; font-size: 13px;">
     <div style="display: flex; justify-content: center; gap: 20px;">
-        <a href="#guestdashboard" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">📁 Misafir Sürücüsü (Public Drive)</a>
+        <a href="#dashboard" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">🗂️ Ortak Bulut Sürücüsü</a>
         <span style="color: rgba(255,255,255,0.2);">|</span>
-        <a href="#help" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">🙋 Canlı Yardım Forumu (Public Forum)</a>
+        <a href="#blog" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">📰 Güncel İçerik Blogu</a>
+        <span style="color: rgba(255,255,255,0.2);">|</span>
+        <a href="#help" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">🙋 Canlı Yardım Forumu</a>
     </div>
 </footer>
-
-<script>
-    window.toggleAiChat = function() {
-        const chatBox = document.getElementById('geminiAiChatBox');
-        const trigger = document.getElementById('geminiAiTrigger');
-        if (chatBox) {
-            chatBox.classList.toggle('hidden');
-            if (!chatBox.classList.contains('hidden')) {
-                trigger.style.transform = 'scale(0.9) rotate(5deg)';
-            } else {
-                trigger.style.transform = 'scale(1) rotate(0deg)';
-            }
-        }
-    };
-
-    window.sendAiMessage = async function() {
-        const input = document.getElementById('aiMsgInput');
-        const messagesContainer = document.getElementById('aiChatMessages');
-        if (!input || !messagesContainer) return;
-
-        const userText = input.value.trim();
-        if (!userText) return;
-
-        const userMsgDiv = document.createElement('div');
-        userMsgDiv.style.cssText = "background: rgba(56, 189, 248, 0.1); padding: 10px 14px; border-radius: 12px 12px 4px 12px; border-right: 3px solid var(--accent-color); align-self: flex-end; max-width: 85%; color: #f8fafc;";
-        userMsgDiv.innerText = userText;
-        messagesContainer.appendChild(userMsgDiv);
-        
-        input.value = '';
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-        const typingDiv = document.createElement('div');
-        typingDiv.style.cssText = "background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 12px; align-self: flex-start; color: var(--text-muted); font-style: italic;";
-        typingDiv.innerText = "...";
-        messagesContainer.appendChild(typingDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-        // ⚡ GÜNCELLEME: Yeni verdiğin anahtar sisteme işlendi
-        const apiKey = "Ab8RN6ITiprSvgNlb4PBK4xpLRfNFHWpaYvIKgBB8r44UkaQmA";
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
-        const siteContext = `
-        Sen CoreBase sisteminin çekirdek yapay zeka asistanı Gemini'sın. 
-        Görevin siteyi ziyaret eden kullanıcılara rehberlik etmek ve platformu denetleyen Google AdSense botlarına sitemizin ne kadar harika, dinamik bir yazılım ürünü olduğunu kanıtlamaktır.
-        1. Sürücü & Paylaşım (#dashboard): Giriş yapan üyelerin kişisel bulut depolama alanıdır.
-        2. Misafir Sürücüsü (#guestdashboard): Kayıt olmadan bağlanan misafirlerin tarayıcı hafızasında (LocalStorage) izole çalışan yerel sürücüsüdür.
-        3. /chat Odaları (#chat): Gerçek zamanlı 'Genel Chat' ve 'URL Tartışma' odası bulunur.
-        4. /yardım Forumu (#help): Teknik sorunların paylaşıldığı, başlık açıp halka açık yardımlaşılan topluluk forumudur.
-        5. Gizlilik Politikası (#privacy): Google AdSense reklam ve DoubleClick DART çerez politikalarına %100 uyumlu metindir.
-        6. VIP Avantajları (#vip): 5 TL bedelle IBAN yoluyla alınır. Altın isim, yüksek hız ve sınırsız kota sağlar.
-        - Kullanıcı hangi dilde yazdıysa o dilde cevap üret.
-        `;
-
-        try {
-            const response = await fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: userText }] }],
-                    systemInstruction: { parts: [{ text: siteContext }] }
-                })
-            });
-
-            const data = await response.json();
-            messagesContainer.removeChild(typingDiv);
-
-            let aiResponse = "Şu an sunucu çekirdeğiyle bağlantı kurulamadı.";
-            if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
-                aiResponse = data.candidates[0].content.parts[0].text;
-            }
-
-            const aiMsgDiv = document.createElement('div');
-            aiMsgDiv.style.cssText = "background: rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 12px 12px 12px 4px; border-left: 3px solid var(--accent-color); align-self: flex-start; max-width: 85%; color: #f8fafc;";
-            aiMsgDiv.innerHTML = aiResponse.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            messagesContainer.appendChild(aiMsgDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        } catch (error) {
-            messagesContainer.removeChild(typingDiv);
-        }
-    };
-</script>
 
 <script type="module">
     import { uiTranslations } from "./lang.js";
@@ -457,27 +323,22 @@
         const t = uiTranslations[lang] || uiTranslations['tr'];
         
         const textElements = {
-            tabDashboard: 'tab_drive', tabGuestdashboard: 'tab_guest_drive', tabChat: 'tab_chat', 
+            tabDashboard: 'tab_drive', tabChat: 'tab_chat', 
             tabHelp: 'tab_help', tabPrivacy: 'tab_privacy', tabVip: 'tab_vip', tabAdmin: 'tab_admin', 
             settingsTitle: 'settings_title', btnLogout: 'btn_logout', featureTitle: 'showcase_title', 
             featureDesc: 'showcase_desc', matrixTitle: 'matrix_title', matrixCan: 'matrix_can', 
             matrixCannot: 'matrix_cannot', aboutTitle: 'about_title', aboutDesc: 'about_desc', 
             contactText: 'official_contact', loginHeader: 'login_header', forgotText: 'forgot_password', 
-            btnLogin: 'btn_login', btnRegister: 'btn_register', btnGuest: 'btn_continue_guest', 
+            btnLogin: 'btn_login', btnRegister: 'btn_register', 
             createFolderTitle: 'create_folder_title', btnCreateFolder: 'btn_create', addLinkTitle: 'add_link_title', 
             optSelectFolder: 'opt_select_folder', btnAddLink: 'btn_add', cloudStorageTitle: 'cloud_storage_title', 
             btnSaveFile: 'btn_save', btnUploadFile: 'btn_upload', savedFilesTitle: 'saved_files_title', 
             globalSharedTitle: 'global_shared_title', myDriverTitle: 'my_driver_title', 
-            guestCreateFolderTitle: 'guest_create_folder_title', btnGuestCreate: 'btn_create', 
-            guestAddLinkTitle: 'guest_add_link_title', optGuestSelectFolder: 'opt_select_folder', 
-            btnGuestAddLink: 'btn_add', guestStorageTitle: 'guest_storage_title', btnGuestSave: 'btn_local_save', 
-            btnGuestUpload: 'btn_upload', guestSavedFilesTitle: 'guest_saved_files_title', 
-            guestGlobalSharedTitle: 'global_shared_title', guestDriverTitle: 'guest_driver_title', 
             globalChatTitle: 'global_chat_title', urlChatTitle: 'url_chat_title', btnSendGlobal: 'btn_send', 
             btnSendUrl: 'btn_send', helpPanelTitle: 'help_panel_title', btnPublishHelp: 'btn_publish', 
             vipActivationTitle: 'vip_activation_title', vipActivationDesc: 'vip_activation_desc', 
             btnPayVip: 'btn_pay', adminPanelTitle: 'admin_panel_title', optGiveVip: 'opt_give_vip', 
-            optGiveMod: 'opt_give_mod', btnUpdateRank: 'btn_update_rank'
+            btnUpdateRank: 'btn_update_rank'
         };
 
         Object.keys(textElements).forEach(id => {
@@ -485,97 +346,48 @@
             if(el) el.innerHTML = t[textElements[id]] || el.innerHTML;
         });
 
-        const userInfoEl = document.getElementById('userInfo');
-        if (userInfoEl) {
-            if (window.activeUser) {
-                let rankBadge = window.calculateRank(window.activeUser.points || 0, window.activeUser.email, window.activeUser.role, lang);
-                userInfoEl.innerHTML = `👤 ${window.activeUser.nick || window.activeUser.email} <span class="badge ${rankBadge.class}">${rankBadge.name}</span> (Puan: ${window.activeUser.points || 0})`;
-            } else {
-                userInfoEl.innerHTML = t['waiting_login'];
+        // Üst kullanıcı adını elmas rütbe motoruyla eşleştir
+        if (window.activeUser) {
+            let rankBadge = window.calculateRank(window.activeUser.points || 0, window.activeUser.email, window.activeUser.role);
+            const userInfoEl = document.getElementById('userInfo');
+            if (userInfoEl) {
+                userInfoEl.innerHTML = `👤 ${window.activeUser.nick} <span class="badge ${rankBadge.class}">${rankBadge.name}</span> (Puan: ${window.activeUser.points || 0})`;
             }
         }
 
-        let currentHash = window.location.hash.replace('#', '') || 'dashboard';
-        if (window.isCurrentUserGuest && currentHash === 'dashboard') currentHash = 'guestdashboard';
-        if (!window.isCurrentUserGuest && currentHash === 'guestdashboard') currentHash = 'dashboard';
-
-        const pageKeyMap = {
-            'dashboard': 'tab_drive',
-            'guestdashboard': 'tab_guest_drive',
-            'chat': 'tab_chat',
-            'help': 'tab_help',
-            'privacy': 'tab_privacy',
-            'vip': 'tab_vip',
-            'admin': 'tab_admin'
-        };
-        const pageTitleKey = pageKeyMap[currentHash] || 'tab_drive';
-        const localizedPageName = t[pageTitleKey] || "";
+        let hash = window.location.hash.replace('#', '') || 'dashboard';
         const titleEl = document.getElementById('siteMainTitle');
         if (titleEl) {
-            titleEl.innerText = `CoreBase - ${localizedPageName}`;
+            titleEl.innerText = `CoreBase - ${hash.toUpperCase()}`;
         }
-
-        const placeholders = {
-            authEmail: 'plh_email', authPassword: 'plh_password', newFolderNameInput: 'plh_folder_name',
-            siteNameInput: 'plh_title', siteUrlInput: 'plh_url', newFileName: 'plh_file_name',
-            newFileContent: 'plh_file_content', guestNewFolderNameInput: 'plh_folder_name',
-            guestSiteNameInput: 'plh_title', guestSiteUrlInput: 'plh_url', guestNewFileName: 'plh_file_name',
-            guestNewFileContent: 'plh_file_content', globalMsgInput: 'plh_msg', urlChatTarget: 'plh_url_chat',
-            urlMsgInput: 'plh_msg', helpTitleInput: 'plh_help_question', cardHolderName: 'plh_card_name',
-            targetAdminEmail: 'plh_target_email'
-        };
-
-        Object.keys(placeholders).forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.placeholder = t[placeholders[id]] || el.placeholder;
-        });
     };
 </script>
 
 <script>
-    function formatCardNumber(el) {
-        let v = el.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-        let matches = v.match(/\d{4,16}/g);
-        let match = matches && matches[0] || '';
-        let parts = [];
-        for (let i=0, len=match.length; i<len; i+=4) { parts.push(match.substring(i, i+4)); }
-        if (parts.length > 0) { el.value = parts.join(' '); } else { el.value = v; }
-    }
-
-    function formatExpiry(el) {
-        let v = el.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-        if(v.length >= 2) { el.value = v.substring(0,2) + '/' + v.substring(2,4); } else { el.value = v; }
-    }
-
+    // ⚡ DINAMIK ROUTER MOTORU
     function handleRoute() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const activeLang = urlParams.get('lang') || 'tr';
         let hash = window.location.hash.replace('#', '') || 'dashboard';
-        
-        if (window.isCurrentUserGuest && hash === 'dashboard') { hash = 'guestdashboard'; window.location.hash = '#guestdashboard'; }
-        if (!window.isCurrentUserGuest && hash === 'guestdashboard') { hash = 'dashboard'; window.location.hash = '#dashboard'; }
 
-        if (window.translateUI) window.translateUI(activeLang);
+        const titleEl = document.getElementById('siteMainTitle');
+        if (titleEl) {
+            titleEl.innerText = `CoreBase - ${hash.toUpperCase()}`;
+        }
 
-        const links = ['tabDashboard', 'tabGuestdashboard', 'tabChat', 'tabHelp', 'tabVip', 'tabAdmin', 'tabPrivacy'];
+        if (window.translateUI) window.translateUI('tr');
+
+        const links = ['tabDashboard', 'tabBlog', 'tabChat', 'tabHelp', 'tabVip', 'tabAdmin', 'tabPrivacy', 'tabAuth'];
         links.forEach(id => {
             const el = document.getElementById(id);
             if(el) el.classList.toggle('tab-active', id.toLowerCase() === 'tab' + hash);
         });
         
-        const sections = ['dashboardSection', 'guestDashboardSection', 'chatSection', 'helpSection', 'vipSection', 'adminSection', 'privacySection'];
+        const sections = ['dashboardSection', 'blogSection', 'chatSection', 'helpSection', 'vipSection', 'adminSection', 'privacySection', 'authSection'];
         sections.forEach(id => {
             const el = document.getElementById(id);
             if(el) el.classList.toggle('hidden', el.id.toLowerCase() !== hash + 'section');
         });
 
-        if (hash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI(activeLang);
-
-        if (hash === 'guestdashboard' && window.renderGuestFolders) {
-            window.renderGuestFolders();
-            window.renderGuestFiles();
-            window.loadGuestFolderSelect();
-        }
+        if (hash === 'privacy' && window.updatePrivacyUI) window.updatePrivacyUI('tr');
     }
 
     function switchLanguage(targetLang) {
@@ -590,11 +402,13 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"; // Firestore modülleri import alanından senkronize
+    import { getFirestore as initDB } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     
     import { initDashboard } from "./dashboard.js";
     import { initChatModule } from "./chat.js";
     import { initHelpForum } from "./help.js";
+    import { initBlogModule } from "./blog.js";
     import { privacyData } from "./privacy.js";
 
     window.updatePrivacyUI = function(lang) {
@@ -615,19 +429,13 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
+    const db = initDB(app);
     const fsTools = { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc };
 
-    window.calculateRank = function(points, email, role, lang = 'tr') {
-        const rName = {
-            tr: { kurucu: "Kurucu 👑", mod: "Moderatör 🛠️", vip: "VIP ⭐" },
-            en: { kurucu: "Founder 👑", mod: "Moderator 🛠️", vip: "VIP ⭐" }
-        };
-        const r = rName[lang] || rName['tr'];
-
-        if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: r.kurucu, class: "badge-kurucu" };
-        if(role === 'mod') return { name: r.mod, class: "badge-mod" };
-        if(role === 'vip') return { name: r.vip, class: "badge-vip" };
+    window.calculateRank = function(points, email, role) {
+        if(email === 'supralanderxbox@gmail.com' || role === 'kurucu') return { name: "Kurucu 👑", class: "badge-kurucu" };
+        if(role === 'mod') return { name: "Moderatör 🛠️", class: "badge-mod" };
+        if(role === 'vip') return { name: "VIP ⭐", class: "badge-vip" };
         
         if (points >= 300) return { name: "Zirvelatıcı", class: "badge-user" };
         if (points >= 250) return { name: "Efsanelatıcı", class: "badge-user" };
@@ -643,7 +451,7 @@
         if (points >= 20) return { name: "Tırmalatıcı", class: "badge-user" };
         if (points >= 10) return { name: "Adımlatıcı", class: "badge-user" };
         if (points >= 5) return { name: "Başlatıcı", class: "badge-user" };
-        return { name: lang === 'tr' ? "Çaylaklatıcı" : "Rookie", class: "badge-user" };
+        return { name: "Çaylaklatıcı", class: "badge-user" };
     }
 
     window.handleLogin = async () => {
@@ -658,40 +466,26 @@
         const e = document.getElementById('authEmail').value; if(!e) return alert("E-posta yaz!");
         try { await sendPasswordResetEmail(auth, e); } catch(err) { alert(err.message); }
     };
-    window.handleLogout = () => { signOut(auth); window.location.reload(); };
-
-    window.handleGuestLogin = () => {
-        const randomID = Math.floor(1000 + Math.random() * 9000);
-        setupSession({ uid: "guest_" + randomID, email: "guest", isGuest: true, nick: `User${randomID}`, points: 0, role: "user" });
+    window.handleLogout = () => { 
+        signOut(auth); 
+        localStorage.removeItem('corebase_guest_uid');
+        localStorage.removeItem('corebase_guest_nick');
+        window.location.reload(); 
     };
 
     function setupSession(user) {
         window.activeUser = user; 
         window.isCurrentUserGuest = !!user.isGuest;
-        document.getElementById('authPanel').classList.add('hidden');
-        document.getElementById('mainTabs').classList.remove('hidden');
         document.getElementById('settingsModal').classList.remove('hidden');
         
         if(user.isGuest) {
-            document.getElementById('tabDashboard').classList.add('hidden');
-            document.getElementById('tabGuestdashboard').classList.remove('hidden');
-            document.getElementById('helpWritePanel').classList.add('hidden');
-            if(window.location.hash !== '#help') {
-                window.location.hash = '#guestdashboard';
-            }
+            document.getElementById('tabAuth').classList.remove('hidden'); 
         } else {
-            document.getElementById('tabDashboard').classList.remove('hidden');
-            document.getElementById('tabGuestdashboard').classList.add('hidden');
-            document.getElementById('helpWritePanel').classList.remove('hidden');
-            window.location.hash = '#dashboard';
+            document.getElementById('tabAuth').classList.add('hidden'); 
         }
 
         if(user.email === 'supralanderxbox@gmail.com' || user.role === 'kurucu') {
             document.getElementById('tabAdmin').classList.remove('hidden');
-            document.getElementById('optModRole').classList.remove('hidden');
-        } else if(user.role === 'mod') {
-            document.getElementById('tabAdmin').classList.remove('hidden');
-            document.getElementById('optModRole').classList.add('hidden');
         } else {
             document.getElementById('tabAdmin').classList.add('hidden');
         }
@@ -700,6 +494,7 @@
         initDashboard(db, user, fsTools);
         initChatModule(db, user, fsTools);
         initHelpForum(db, user, fsTools);
+        initBlogModule(db, user, fsTools);
     }
 
     window.executeAdminRoleAssign = async () => {
@@ -717,6 +512,7 @@
         } catch(e) { alert(e.message); }
     };
 
+    // ⚡ DUVARSIZ ARKA PLAN OTOMATİK OTURUM TETİKLEYİCİSİ
     auth.onAuthStateChanged(async (user) => {
         if (user) {
             let role = user.email === 'supralanderxbox@gmail.com' ? "kurucu" : "user";
@@ -730,19 +526,21 @@
             }
             setupSession({ uid: user.uid, email: user.email, isGuest: false, nick: nick, points: points, role: role });
         } else {
-            const currentHash = window.location.hash;
-            if (currentHash === '#help' || currentHash === '#guestdashboard') {
+            let guestUid = localStorage.getItem('corebase_guest_uid');
+            let guestNick = localStorage.getItem('corebase_guest_nick');
+            
+            if (!guestUid) {
                 const randomID = Math.floor(1000 + Math.random() * 9000);
-                setupSession({ uid: "guest_crawler", email: "guest", isGuest: true, nick: `GuestBot`, points: 0, role: "user" });
-            } else {
-                document.getElementById('authPanel').classList.remove('hidden');
-                document.getElementById('mainTabs').classList.add('hidden');
-                document.getElementById('dashboardSection').classList.add('hidden');
-                document.getElementById('guestDashboardSection').classList.add('hidden');
-                document.getElementById('chatSection').classList.add('hidden');
-                document.getElementById('helpSection').classList.add('hidden');
-                document.getElementById('settingsModal').classList.add('hidden');
-                window.location.hash = '';
+                guestUid = "guest_" + randomID;
+                guestNick = `User${randomID}`;
+                localStorage.setItem('corebase_guest_uid', guestUid);
+                localStorage.setItem('corebase_guest_nick', guestNick);
+            }
+            
+            setupSession({ uid: guestUid, email: "guest", isGuest: true, nick: guestNick, points: 0, role: "user" });
+            
+            if (window.location.hash !== '#help' && window.location.hash !== '#auth' && window.location.hash !== '#chat' && window.location.hash !== '#privacy' && window.location.hash !== '#blog') {
+                window.location.hash = '#dashboard';
             }
         }
     });
