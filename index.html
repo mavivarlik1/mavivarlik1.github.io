@@ -187,7 +187,7 @@
         </div>
         
         <div style="display: flex; align-items: center; gap: 20px;">
-            <div class="custom-lang-container">
+            <div class="custom-lang-container notranslate">
                 <button class="custom-lang-btn lang-active-node" id="langNodeTr" onclick="window.executeSecretTranslation('tr')">TR</button>
                 <button class="custom-lang-btn" id="langNodeEn" onclick="window.executeSecretTranslation('en')">EN</button>
             </div>
@@ -264,13 +264,11 @@
                     <div class="modal" style="margin-bottom:0;">
                         <h4 id="createFolderTitle" style="margin-top:0; color: var(--accent-color);">Yeni Klasör Oluştur</h4>
                         <div style="display:flex; flex-direction:column; gap:6px;">
-                            <select id="newFolderIconSelect" style="margin:0;">
-                                <option value="site_profile.png">CoreBase İkonu</option>
-                                <option value="https://img.icons8.com/fluent/48/000000/folder-invoices.png">Klasik Mavi</option>
-                                <option value="https://img.icons8.com/fluent/48/000000/code.png">Kod Klasörü</option>
-                                <option value="https://img.icons8.com/fluent/48/000000/star.png">Özel Alan</option>
-                            </select>
-                            <div style="display:flex; gap:10px;">
+                            <div style="margin: 2px 0;">
+                                <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px;">Klasör Görseli Seçin:</label>
+                                <input type="file" id="newFolderIconInput" accept="image/*" style="margin:0; padding:5px;">
+                            </div>
+                            <div style="display:flex; gap:10px; margin-top:4px;">
                                 <input type="text" id="newFolderNameInput" placeholder="Klasör Adı" style="margin:0;">
                                 <button id="btnCreateFolder" onclick="window.createNewFolder()" style="margin:0; white-space:nowrap;">Oluştur</button>
                             </div>
@@ -506,6 +504,7 @@
         document.getElementById('langNodeTr').classList.toggle('lang-active-node', langCode === 'tr');
         document.getElementById('langNodeEn').classList.toggle('lang-active-node', langCode === 'en');
         localStorage.setItem('corebase_lang', langCode);
+        if(window.translateUI) window.translateUI(langCode);
     };
 
     window.changeTheme = function(themeName) {
@@ -598,7 +597,6 @@
     const db = getFirestore(app);
     const fsTools = { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, getDocs, updateDoc, limit };
 
-    // DİNAMİK DUYURU EKLEME MOTORU
     window.postNewAnnouncement = async () => {
         const input = document.getElementById('newAnnouncementInput');
         if(!input) return;
@@ -614,7 +612,6 @@
         } catch(e) { alert("Duyuru hatası: " + e.message); }
     };
 
-    // ANLIK DUYURU DİNLEYİCİSİ
     const annQ = query(collection(db, "announcements"), orderBy("createdAt", "desc"), limit(5));
     onSnapshot(annQ, (snapshot) => {
         const list = document.getElementById('announcements-list');
@@ -708,7 +705,6 @@
                 else settingsRole.style.color = 'var(--text-color)';
             }
 
-            // Kurucu Duyuru Giriş Alanı Filtresi
             const adminAnnArea = document.getElementById('adminAnnouncementInputArea');
             if(adminAnnArea) {
                 if(user.role === 'kurucu' || user.email === 'supralanderxbox@gmail.com') {
