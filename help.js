@@ -28,7 +28,7 @@ export function initHelpForum(db, user, fsTools) {
                 const detailCard = document.createElement('div');
                 detailCard.className = 'modal';
                 
-                // Yetki Kontrolü: Sadece kurucu veya konuyu açan kişi silebilir
+                // Yetki Kontrolü Filtresi: Sadece kurucu veya konuyu açan kişi silebilir (Yetki yoksa buton basılmaz/gizlenir)
                 const canDeleteTopic = user.role === 'kurucu' || topic.uid === user.uid;
                 const deleteBtnHtml = canDeleteTopic ? `<button onclick="window.deleteHelpTopic('${topic.id}')" style="background:var(--danger-color); padding:4px 10px; font-size:12px; margin-left:10px;">Konuyu Sil</button>` : '';
 
@@ -46,7 +46,6 @@ export function initHelpForum(db, user, fsTools) {
                         <span style="font-size:12px; color:var(--text-muted); font-style:italic;">Cevaplar yükleniyor...</span>
                     </div>
                     
-                    <!-- 🛠️ CEVAP YAZMA PANELİ -->
                     <div style="display:flex; gap:8px; flex-direction:column; background:var(--inner-bg); padding:12px; border-radius:6px; border:var(--glass-border);">
                         <textarea id="reply-input-${topic.id}" placeholder="Çözüm önerinizi veya cevabınızı yazın..." rows="3" style="margin:0; font-size:13px;"></textarea>
                         <button onclick="window.addHelpReply('${topic.id}')" style="align-self:flex-end; padding:8px 16px; font-size:13px; margin:0;">Cevap Gönder</button>
@@ -86,7 +85,7 @@ export function initHelpForum(db, user, fsTools) {
                         listEl.appendChild(replyItem);
                     });
                     listEl.scrollTop = listEl.scrollHeight;
-                });
+                }, (error) => { console.warn("Cevap okuma yetki sınırlandırması maskelendi."); });
                 window.activeHelpUnsubs.push(unsubReplies);
             } else {
                 helpTopicsWrapper.innerHTML = `<div class="modal" style="text-align:center; color:var(--text-muted);">⚠️ Konu bulunamadı veya silinmiş.</div>`;
@@ -110,6 +109,7 @@ export function initHelpForum(db, user, fsTools) {
                         window.location.hash = `#help#${topic.id}`;
                     }
                 };
+                item.itemHTML = ``;
                 item.innerHTML = `
                     <h4 style="margin:0 0 5px 0; color:var(--accent-color); font-size:15px; line-height:1.4;">${topic.title}</h4>
                     <div style="font-size:12px; color:var(--text-muted);">👤 Açan: <b>${topic.author}</b> | 📅 ${topic.formattedDate} <span style="color:var(--accent-color); margin-left:10px; font-weight:600;">Görüntüle & Cevapla →</span></div>
@@ -202,7 +202,7 @@ export function initHelpForum(db, user, fsTools) {
         if (window.location.hash.startsWith('#help')) {
             window.refreshHelpRender();
         }
-    });
+    }, (err) => { console.warn("Veritabanı forum akış kısıtlaması maskelendi."); });
 
     const originalHandleRoute = window.handleRoute;
     window.handleRoute = function() {
