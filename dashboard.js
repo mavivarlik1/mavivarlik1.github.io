@@ -64,7 +64,6 @@ export function initDashboard(db, user, fsTools) {
         });
     });
 
-    // Cihazdan resim okuma ve Firebase kayıt mekanizması
     window.createNewFolder = async function() {
         const name = document.getElementById('newFolderNameInput').value.trim();
         if(!name) return alert("Lütfen klasör adını boş bırakmayın.");
@@ -72,7 +71,7 @@ export function initDashboard(db, user, fsTools) {
         const isGlobal = typeSelect ? typeSelect.value === 'global' : false;
         
         const iconInput = document.getElementById('newFolderIconInput');
-        let iconUrl = 'site_profile.png';
+        let iconUrl = ''; // Varsayılan olarak logo boş bırakıldı
 
         if (iconInput && iconInput.files && iconInput.files[0]) {
             const file = iconInput.files[0];
@@ -99,6 +98,12 @@ export function initDashboard(db, user, fsTools) {
         } else {
             const id = 'folder_' + Date.now();
             try {
+                // Misafir dökümanı yoksa oluşturup hatayı engelleyen kontrol alanı
+                const snap = await getDoc(userDocRef);
+                if (!snap.exists()) {
+                    await setDoc(userDocRef, { folders: {}, files: [], nick: user.nick, role: user.role, points: user.points });
+                }
+                
                 await updateDoc(userDocRef, { [`folders.${id}`]: { name: name, icon: iconUrl, links: [] } });
                 document.getElementById('newFolderNameInput').value = '';
                 const iconInput = document.getElementById('newFolderIconInput');
@@ -148,7 +153,7 @@ export function initDashboard(db, user, fsTools) {
         const ext = document.getElementById('newFileExtension').value;
         const privacy = document.getElementById('newFilePrivacy').value;
         const content = document.getElementById('newFileContent').value.trim();
-        if(!nameInput || !content) return alert("Lütfen dosya adını ve içeriğini eksiksiz doldurun.");
+        if(!nameInput || !content) return alert("Lütfen dosya adını ve içeriğini eksikosiz doldurun.");
         const fullName = nameInput.endsWith(ext) ? nameInput : nameInput + ext;
         
         if (privacy === 'global') {
@@ -274,9 +279,12 @@ export function initDashboard(db, user, fsTools) {
                 f.links.forEach(l => { linksHtml += `<a href="${l.url}" target="_blank" class="folder-tree-link"> Klasör: ${l.name}</a>`; });
             } else { linksHtml = `<span style="font-size:11px; color:var(--text-muted); font-style:italic;">İçi boş</span>`; }
 
+            // Görsel yoksa img etiketi basılmıyor
+            let imgHtml = f.icon ? `<img src="${f.icon}" class="folder-tree-img">` : '';
+
             node.innerHTML = `
                 <div class="folder-tree-header" onclick="window.sidebarToggleNode(this)">
-                    <img src="${f.icon || 'site_profile.png'}" class="folder-tree-img">
+                    ${imgHtml}
                     <span class="folder-tree-title"> ${f.name}</span>
                     <span class="folder-tree-arrow">▶</span>
                 </div>
@@ -295,9 +303,11 @@ export function initDashboard(db, user, fsTools) {
                 f.links.forEach(l => { linksHtml += `<a href="${l.url}" target="_blank" class="folder-tree-link"> Klasör: ${l.name}</a>`; });
             } else { linksHtml = `<span style="font-size:11px; color:var(--text-muted); font-style:italic;">İçi boş</span>`; }
 
+            let imgHtml = f.icon ? `<img src="${f.icon}" class="folder-tree-img">` : '';
+
             node.innerHTML = `
                 <div class="folder-tree-header" onclick="window.sidebarToggleNode(this)">
-                    <img src="${f.icon || 'site_profile.png'}" class="folder-tree-img">
+                    ${imgHtml}
                     <span class="folder-tree-title"> ${f.name}</span>
                     <span class="folder-tree-arrow">▶</span>
                 </div>
@@ -331,7 +341,10 @@ export function initDashboard(db, user, fsTools) {
         for (const [id, f] of Object.entries(folders)) {
             const div = document.createElement('div'); div.className = 'folder-section'; let linksHtml = '';
             if(f.links) f.links.forEach(l => { linksHtml += `<div class="link-card" onclick="window.open('${l.url}', '_blank')">Link: ${l.name}</div>`; });
-            div.innerHTML = `<div class="folder-title"><div style="display:flex; align-items:center; gap:8px;"><img src="${f.icon || 'site_profile.png'}" style="width:22px; height:22px; object-fit:cover; border-radius:4px;"> ${f.name} (Kişisel)</div></div><div class="links-container">${linksHtml}</div>`;
+            
+            let imgHtml = f.icon ? `<img src="${f.icon}" style="width:22px; height:22px; object-fit:cover; border-radius:4px;">` : '';
+            
+            div.innerHTML = `<div class="folder-title"><div style="display:flex; align-items:center; gap:8px;">${imgHtml} ${f.name} (Kişisel)</div></div><div class="links-container">${linksHtml}</div>`;
             wrapper.appendChild(div);
         }
     }
@@ -341,7 +354,10 @@ export function initDashboard(db, user, fsTools) {
         folders.forEach(f => {
             const div = document.createElement('div'); div.className = 'folder-item'; let linksHtml = '';
             if(f.links) f.links.forEach(l => { linksHtml += `<div class="link-card" onclick="window.open('${l.url}', '_blank')">Link: ${l.name}</div>`; });
-            div.innerHTML = `<div class="folder-title" style="color:var(--success-color); font-size:15px;"><div style="display:flex; align-items:center; gap:8px;"><img src="${f.icon || 'site_profile.png'}" style="width:22px; height:22px; object-fit:cover; border-radius:4px;"> ${f.name}</div></div><div style="font-size:10px; color:var(--text-muted); margin-top:-10px; margin-bottom:5px;">Paylaşan: ${f.creator || 'Anonim'}</div><div class="links-container">${linksHtml}</div>`;
+            
+            let imgHtml = f.icon ? `<img src="${f.icon}" style="width:22px; height:22px; object-fit:cover; border-radius:4px;">` : '';
+            
+            div.innerHTML = `<div class="folder-title" style="color:var(--success-color); font-size:15px;"><div style="display:flex; align-items:center; gap:8px;">${imgHtml} ${f.name}</div></div><div style="font-size:10px; color:var(--text-muted); margin-top:-10px; margin-bottom:5px;">Paylaşan: ${f.creator || 'Anonim'}</div><div class="links-container">${linksHtml}</div>`;
             wrapper.appendChild(div);
         });
     }
