@@ -71,7 +71,7 @@ export function initDashboard(db, user, fsTools) {
         const isGlobal = typeSelect ? typeSelect.value === 'global' : false;
         
         const iconInput = document.getElementById('newFolderIconInput');
-        let iconUrl = ''; // Varsayılan olarak logo boş bırakıldı
+        let iconUrl = ''; 
 
         if (iconInput && iconInput.files && iconInput.files[0]) {
             const file = iconInput.files[0];
@@ -98,11 +98,8 @@ export function initDashboard(db, user, fsTools) {
         } else {
             const id = 'folder_' + Date.now();
             try {
-                // Misafir dökümanı yoksa oluşturup hatayı engelleyen kontrol alanı
-                const snap = await getDoc(userDocRef);
-                if (!snap.exists()) {
-                    await setDoc(userDocRef, { folders: {}, files: [], nick: user.nick, role: user.role, points: user.points });
-                }
+                // Emniyet Kilidi: Misafir kullanıcının dökümanı yoksa çökmesini engeller
+                await setDoc(userDocRef, {}, { merge: true });
                 
                 await updateDoc(userDocRef, { [`folders.${id}`]: { name: name, icon: iconUrl, links: [] } });
                 document.getElementById('newFolderNameInput').value = '';
@@ -136,6 +133,7 @@ export function initDashboard(db, user, fsTools) {
             } catch(e) { alert("Bağlantı ekleme hatası: " + e.message); }
         } else {
             try {
+                await setDoc(userDocRef, {}, { merge: true });
                 const snap = await getDoc(userDocRef);
                 if(snap.exists()) {
                     let currentLinks = snap.data().folders[targetId].links || [];
@@ -153,7 +151,7 @@ export function initDashboard(db, user, fsTools) {
         const ext = document.getElementById('newFileExtension').value;
         const privacy = document.getElementById('newFilePrivacy').value;
         const content = document.getElementById('newFileContent').value.trim();
-        if(!nameInput || !content) return alert("Lütfen dosya adını ve içeriğini eksikosiz doldurun.");
+        if(!nameInput || !content) return alert("Lütfen dosya adını ve içeriğini eksiksiz doldurun.");
         const fullName = nameInput.endsWith(ext) ? nameInput : nameInput + ext;
         
         if (privacy === 'global') {
@@ -163,6 +161,7 @@ export function initDashboard(db, user, fsTools) {
             } catch(e) { alert("Paylaşım hatası: " + e.message); }
         } else {
             try {
+                await setDoc(userDocRef, {}, { merge: true });
                 const snap = await getDoc(userDocRef);
                 if(snap.exists()) {
                     let files = snap.data().files || [];
@@ -195,6 +194,7 @@ export function initDashboard(db, user, fsTools) {
         reader.onload = async function(e) {
             const content = e.target.result;
             try {
+                await setDoc(userDocRef, {}, { merge: true });
                 const snap = await getDoc(userDocRef);
                 if (snap.exists()) {
                     let files = snap.data().files || [];
@@ -251,6 +251,15 @@ export function initDashboard(db, user, fsTools) {
         modal.classList.remove('hidden');
     };
 
+    window.viewFileContent = function(name, content) {
+        const modal = document.getElementById('fileViewerModal');
+        const title = document.getElementById('viewerTitle'); const body = document.getElementById('viewerBody');
+        if(!modal || !title || !body) return;
+        title.innerText = "Dosya Önizleme: " + name;
+        body.innerHTML = `<textarea class="viewer-text" readonly style="width:100%; height:300px; background:var(--inner-bg); color:var(--text-color); border:var(--glass-border); padding:10px; border-radius:6px; outline:none; font-family:monospace; resize:none;">${content}</textarea>`;
+        modal.classList.remove('hidden');
+    };
+
     window.closeFileViewer = function() {
         const modal = document.getElementById('fileViewerModal'); if(modal) modal.classList.add('hidden');
     };
@@ -279,7 +288,6 @@ export function initDashboard(db, user, fsTools) {
                 f.links.forEach(l => { linksHtml += `<a href="${l.url}" target="_blank" class="folder-tree-link"> Klasör: ${l.name}</a>`; });
             } else { linksHtml = `<span style="font-size:11px; color:var(--text-muted); font-style:italic;">İçi boş</span>`; }
 
-            // Görsel yoksa img etiketi basılmıyor
             let imgHtml = f.icon ? `<img src="${f.icon}" class="folder-tree-img">` : '';
 
             node.innerHTML = `
