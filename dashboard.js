@@ -17,8 +17,8 @@ export function initDashboard(db, user, fsTools) {
         select.style.padding = '10px';
         select.style.borderRadius = '8px';
         select.innerHTML = `
-            <option value="private">🔒 Özel Klasör (Sadece Benim Sürücüm)</option>
-            <option value="global">🌍 Global Klasör (Ortak Paylaşılan Alan)</option>
+            <option value="private">Özel Klasör (Sadece Benim Sürücüm)</option>
+            <option value="global">Global Klasör (Ortak Paylaşılan Alan)</option>
         `;
         inputEl.parentNode.insertBefore(select, inputEl);
     }
@@ -70,7 +70,6 @@ export function initDashboard(db, user, fsTools) {
         const typeSelect = document.getElementById('folderTypeSelect');
         const isGlobal = typeSelect ? typeSelect.value === 'global' : false;
         
-        // Klasör Resim Linkini Alma
         const iconSelect = document.getElementById('newFolderIconSelect');
         const iconUrl = iconSelect ? iconSelect.value : 'site_profile.png';
 
@@ -136,7 +135,7 @@ export function initDashboard(db, user, fsTools) {
         if (privacy === 'global') {
             try {
                 await addDoc(collection(db, "global_files"), { name: fullName, content: content, creator: user.nick, createdAt: Date.now() });
-                alert("Kod/Metin belgesi ortak havuzda yayınlandı! 🌍");
+                alert("Kod/Metin belgesi ortak havuzda yayınlandı.");
             } catch(e) { alert("Paylaşım hatası: " + e.message); }
         } else {
             try {
@@ -145,7 +144,7 @@ export function initDashboard(db, user, fsTools) {
                     let files = snap.data().files || [];
                     files.push({ name: fullName, content: content, createdAt: Date.now() });
                     await updateDoc(userDocRef, { files: files });
-                    alert("Dosya şifreli özel sürücünüze kaydedildi! 🔒");
+                    alert("Dosya şifreli özel sürücünüze kaydedildi.");
                 }
             } catch(e) { alert("Dosya oluşturma hatası: " + e.message); }
         }
@@ -159,7 +158,7 @@ export function initDashboard(db, user, fsTools) {
                 const files = snap.data().files || []; const targetFile = files[index];
                 if(targetFile) {
                     await addDoc(collection(db, "global_files"), { name: targetFile.name, content: targetFile.content, creator: user.nick, createdAt: Date.now() });
-                    alert(`"${targetFile.name}" başarıyla küresel havuzda paylaşıldı! 🚀`);
+                    alert(`"${targetFile.name}" başarıyla küresel havuzda paylaşıldı.`);
                 }
             }
         } catch(e) { alert("Dosya paylaşım hatası: " + e.message); }
@@ -177,7 +176,7 @@ export function initDashboard(db, user, fsTools) {
                     let files = snap.data().files || [];
                     files.push({ name: file.name, content: content, createdAt: Date.now() });
                     await updateDoc(userDocRef, { files: files });
-                    alert(`"${file.name}" cihazınızdan özel bulut sürücünüze başarıyla senkronize edildi! 📥`);
+                    alert(`"${file.name}" cihazınızdan özel bulut sürücünüze başarıyla senkronize edildi.`);
                     uploader.value = '';
                 }
             } catch(err) { alert("Dosya yükleme hatası: " + err.message); }
@@ -207,7 +206,7 @@ export function initDashboard(db, user, fsTools) {
         if(!title || !content) return alert("Lütfen ücretsiz VIP rütbesi için hata başlığı ve açıklama alanını doldurun.");
         try {
             await addDoc(collection(db, "forum_topics"), { title: `[VIP BUG/ÖNERİ] ${title}`, creator: user.nick, createdAt: Date.now(), views: 0, uid: user.uid, body: content });
-            alert("Harika! Teknik bildiriminiz kurucu masasına başarıyla iletildi. Doğrulama sonrası VIP rütbeniz tamamen ÜCRETSİZ olarak tanımlanacaktır.");
+            alert("Teknik bildiriminiz kurucu masasına iletildi. Doğrulama sonrası VIP rütbeniz tanımlanacaktır.");
             document.getElementById('vipSuggestionTitle').value = ''; document.getElementById('vipSuggestionContent').value = '';
         } catch(e) { alert("Bildirim gönderme hatası: " + e.message); }
     };
@@ -223,7 +222,7 @@ export function initDashboard(db, user, fsTools) {
         const modal = document.getElementById('fileViewerModal');
         const title = document.getElementById('viewerTitle'); const body = document.getElementById('viewerBody');
         if(!modal || !title || !body) return;
-        title.innerText = "📄 Dosya Önizleme: " + name;
+        title.innerText = "Dosya Önizleme: " + name;
         body.innerHTML = `<textarea class="viewer-text" readonly style="width:100%; height:300px; background:var(--inner-bg); color:var(--text-color); border:var(--glass-border); padding:10px; border-radius:6px; outline:none; font-family:monospace; resize:none;">${content}</textarea>`;
         modal.classList.remove('hidden');
     };
@@ -235,11 +234,10 @@ export function initDashboard(db, user, fsTools) {
     function refreshFolderSelect() {
         const select = document.getElementById('folderSelect'); if(!select) return;
         select.innerHTML = '<option value="">-- Klasör Seçin --</option>';
-        for (const [id, f] of Object.entries(localPrivateFolders)) { select.innerHTML += `<option value="private_${id}">🔒 [Özel] ${f.name}</option>`; }
-        localGlobalFolders.forEach(f => { select.innerHTML += `<option value="global_${f.id}">🌍 [Paylaşılan] ${f.name}</option>`; });
+        for (const [id, f] of Object.entries(localPrivateFolders)) { select.innerHTML += `<option value="private_${id}">[Özel] ${f.name}</option>`; }
+        localGlobalFolders.forEach(f => { select.innerHTML += `<option value="global_${f.id}">[Paylaşılan] ${f.name}</option>`; });
     }
 
-    // MODERN YENİ SOL PANEL DETAYLI ÇİZİM MOTORU (AĞAÇ YAPISI)
     function renderSidebarTree() {
         const container = document.getElementById('sidebarFolderTreeContainer');
         if(!container) return;
@@ -247,7 +245,6 @@ export function initDashboard(db, user, fsTools) {
 
         let hasAnyFolder = false;
 
-        // 1. Özel Klasörleri Çiz
         for (const [id, f] of Object.entries(localPrivateFolders)) {
             hasAnyFolder = true;
             const node = document.createElement('div');
@@ -255,13 +252,13 @@ export function initDashboard(db, user, fsTools) {
             
             let linksHtml = '';
             if(f.links && f.links.length > 0) {
-                f.links.forEach(l => { linksHtml += `<a href="${l.url}" target="_blank" class="folder-tree-link">🔗 ${l.name}</a>`; });
+                f.links.forEach(l => { linksHtml += `<a href="${l.url}" target="_blank" class="folder-tree-link"> Klasör: ${l.name}</a>`; });
             } else { linksHtml = `<span style="font-size:11px; color:var(--text-muted); font-style:italic;">İçi boş</span>`; }
 
             node.innerHTML = `
                 <div class="folder-tree-header" onclick="window.sidebarToggleNode(this)">
                     <img src="${f.icon || 'site_profile.png'}" class="folder-tree-img">
-                    <span class="folder-tree-title">🔒 ${f.name}</span>
+                    <span class="folder-tree-title"> ${f.name}</span>
                     <span class="folder-tree-arrow">▶</span>
                 </div>
                 <div class="folder-tree-content hidden">${linksHtml}</div>
@@ -269,7 +266,6 @@ export function initDashboard(db, user, fsTools) {
             container.appendChild(node);
         }
 
-        // 2. Global Paylaşılan Klasörleri Çiz
         localGlobalFolders.forEach(f => {
             hasAnyFolder = true;
             const node = document.createElement('div');
@@ -277,13 +273,13 @@ export function initDashboard(db, user, fsTools) {
             
             let linksHtml = '';
             if(f.links && f.links.length > 0) {
-                f.links.forEach(l => { linksHtml += `<a href="${l.url}" target="_blank" class="folder-tree-link">🔗 ${l.name}</a>`; });
+                f.links.forEach(l => { linksHtml += `<a href="${l.url}" target="_blank" class="folder-tree-link"> Klasör: ${l.name}</a>`; });
             } else { linksHtml = `<span style="font-size:11px; color:var(--text-muted); font-style:italic;">İçi boş</span>`; }
 
             node.innerHTML = `
                 <div class="folder-tree-header" onclick="window.sidebarToggleNode(this)">
                     <img src="${f.icon || 'site_profile.png'}" class="folder-tree-img">
-                    <span class="folder-tree-title">🌍 ${f.name}</span>
+                    <span class="folder-tree-title"> ${f.name}</span>
                     <span class="folder-tree-arrow">▶</span>
                 </div>
                 <div class="folder-tree-content hidden">
@@ -292,14 +288,13 @@ export function initDashboard(db, user, fsTools) {
                 </div>
             `;
             container.appendChild(node);
-        }
+        }); // Hata buradaydı, kapatma parantezi eklendi.
         
         if(!hasAnyFolder) {
             container.innerHTML = `<span style="font-size:11px; color:var(--text-muted); font-style:italic;">Klasör bulunmuyor</span>`;
         }
     }
 
-    // Küresel Sidebar Tıklama Fonksiyonu
     window.sidebarToggleNode = function(headerElement) {
         const node = headerElement.parentElement;
         node.classList.toggle('open');
@@ -316,8 +311,8 @@ export function initDashboard(db, user, fsTools) {
         const wrapper = document.getElementById('foldersWrapper'); if(!wrapper) return; wrapper.innerHTML = '';
         for (const [id, f] of Object.entries(folders)) {
             const div = document.createElement('div'); div.className = 'folder-section'; let linksHtml = '';
-            if(f.links) f.links.forEach(l => { linksHtml += `<div class="link-card" onclick="window.open('${l.url}', '_blank')">🔗 ${l.name}</div>`; });
-            div.innerHTML = `<div class="folder-title"><div style="display:flex; align-items:center; gap:8px;"><img src="${f.icon || 'site_profile.png'}" style="width:22px; height:22px; object-fit:cover; border-radius:4px;">📂 ${f.name} (Kişisel)</div></div><div class="links-container">${linksHtml}</div>`;
+            if(f.links) f.links.forEach(l => { linksHtml += `<div class="link-card" onclick="window.open('${l.url}', '_blank')">Link: ${l.name}</div>`; });
+            div.innerHTML = `<div class="folder-title"><div style="display:flex; align-items:center; gap:8px;"><img src="${f.icon || 'site_profile.png'}" style="width:22px; height:22px; object-fit:cover; border-radius:4px;"> ${f.name} (Kişisel)</div></div><div class="links-container">${linksHtml}</div>`;
             wrapper.appendChild(div);
         }
     }
@@ -326,8 +321,8 @@ export function initDashboard(db, user, fsTools) {
         const wrapper = document.getElementById('sharedFoldersWrapper'); if(!wrapper) return; wrapper.innerHTML = '';
         folders.forEach(f => {
             const div = document.createElement('div'); div.className = 'folder-item'; let linksHtml = '';
-            if(f.links) f.links.forEach(l => { linksHtml += `<div class="link-card" onclick="window.open('${l.url}', '_blank')">🔗 ${l.name}</div>`; });
-            div.innerHTML = `<div class="folder-title" style="color:var(--success-color); font-size:15px;"><div style="display:flex; align-items:center; gap:8px;"><img src="${f.icon || 'site_profile.png'}" style="width:22px; height:22px; object-fit:cover; border-radius:4px;">🌍 ${f.name}</div></div><div style="font-size:10px; color:var(--text-muted); margin-top:-10px; margin-bottom:5px;">Paylaşan: ${f.creator || 'Anonim'}</div><div class="links-container">${linksHtml}</div>`;
+            if(f.links) f.links.forEach(l => { linksHtml += `<div class="link-card" onclick="window.open('${l.url}', '_blank')">Link: ${l.name}</div>`; });
+            div.innerHTML = `<div class="folder-title" style="color:var(--success-color); font-size:15px;"><div style="display:flex; align-items:center; gap:8px;"><img src="${f.icon || 'site_profile.png'}" style="width:22px; height:22px; object-fit:cover; border-radius:4px;"> ${f.name}</div></div><div style="font-size:10px; color:var(--text-muted); margin-top:-10px; margin-bottom:5px;">Paylaşan: ${f.creator || 'Anonim'}</div><div class="links-container">${linksHtml}</div>`;
             wrapper.appendChild(div);
         });
     }
@@ -338,7 +333,7 @@ export function initDashboard(db, user, fsTools) {
             const div = document.createElement('div'); div.className = 'file-item';
             let safeName = f.name.replace(/'/g, "\\'"); let safeContent = f.content.replace(/'/g, "\\'").replace(/\n/g, "\\n");
             div.innerHTML = `
-                <div style="font-weight:600; color:var(--accent-color);">📄 ${f.name}</div>
+                <div style="font-weight:600; color:var(--accent-color);">Dosya: ${f.name}</div>
                 <div style="display:flex; gap:4px; margin-top:4px; flex-wrap:wrap;">
                     <button onclick="window.viewFileContent('${safeName}', '${safeContent}')" style="padding:4px 6px; font-size:11px; flex:1;">Önizle</button>
                     <button onclick="window.downloadFile('${safeName}', '${safeContent}')" style="padding:4px 6px; font-size:11px; background:var(--success-color); color:#064e3b; flex:1;">İndir</button>
