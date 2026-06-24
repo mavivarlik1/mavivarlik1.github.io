@@ -188,8 +188,8 @@
         
         <div style="display: flex; align-items: center; gap: 20px;">
             <div class="custom-lang-container notranslate">
-                <button class="custom-lang-btn lang-active-node" id="langNodeTr" onclick="window.executeSecretTranslation('tr')">TR</button>
-                <button class="custom-lang-btn" id="langNodeEn" onclick="window.executeSecretTranslation('en')">EN</button>
+                <button class="custom-lang-btn lang-active-node notranslate" id="langNodeTr" onclick="window.executeSecretTranslation('tr')">TR</button>
+                <button class="custom-lang-btn notranslate" id="langNodeEn" onclick="window.executeSecretTranslation('en')">EN</button>
             </div>
             
             <div style="display: flex; align-items: center; gap: 10px;">
@@ -265,7 +265,7 @@
                         <h4 id="createFolderTitle" style="margin-top:0; color: var(--accent-color);">Yeni Klasör Oluştur</h4>
                         <div style="display:flex; flex-direction:column; gap:6px;">
                             <div style="margin: 2px 0;">
-                                <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px;">Klasör Görseli Seçin:</label>
+                                <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px;">Klasör Görseli Seçin (İsteğe Bağlı):</label>
                                 <input type="file" id="newFolderIconInput" accept="image/*" style="margin:0; padding:5px;">
                             </div>
                             <div style="display:flex; gap:10px; margin-top:4px;">
@@ -336,7 +336,7 @@
                 <div class="modal hidden" id="blogWritePanel">
                     <h3 style="color: var(--accent-color); margin-top:0;">İçerik Yayınlama Paneli</h3>
                     <input type="text" id="blogTitleInput" placeholder="Makale Başlığı...">
-                    <textarea id="blogContentInput" placeholder="Makale içeriğini yazın. Desteklenen resim veya youtube linkleri otomatik dönüştürülür..." rows="6"></textarea>
+                    <textarea id="blogContentInput" placeholder="Makale içeriğini yazın..." rows="6"></textarea>
                     <button id="btnPublishBlog" onclick="window.createNewBlogPost()" style="width:100%; background: var(--success-color); color: #fff; font-weight:600;">Yayınla</button>
                 </div>
                 <div id="blogPostsWrapper"></div>
@@ -496,14 +496,23 @@
     };
 
     window.executeSecretTranslation = function(langCode) {
+        localStorage.setItem('corebase_lang', langCode);
+        
         const googleSelect = document.querySelector('.goog-te-combo');
         if (googleSelect) {
             googleSelect.value = (langCode === 'tr') ? '' : langCode;
             googleSelect.dispatchEvent(new Event('change'));
         }
+        
+        // Türkçe seçildiğinde çerez temizliği yapılarak Google kilitlenmesi kırılır
+        if (langCode === 'tr') {
+            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + location.hostname;
+        }
+
         document.getElementById('langNodeTr').classList.toggle('lang-active-node', langCode === 'tr');
         document.getElementById('langNodeEn').classList.toggle('lang-active-node', langCode === 'en');
-        localStorage.setItem('corebase_lang', langCode);
+        
         if(window.translateUI) window.translateUI(langCode);
     };
 
