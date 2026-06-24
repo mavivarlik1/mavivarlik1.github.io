@@ -64,19 +64,36 @@ export function initDashboard(db, user, fsTools) {
         });
     });
 
+    // Cihazdan resim okuma ve Firebase kayıt mekanizması
     window.createNewFolder = async function() {
         const name = document.getElementById('newFolderNameInput').value.trim();
         if(!name) return alert("Lütfen klasör adını boş bırakmayın.");
         const typeSelect = document.getElementById('folderTypeSelect');
         const isGlobal = typeSelect ? typeSelect.value === 'global' : false;
         
-        const iconSelect = document.getElementById('newFolderIconSelect');
-        const iconUrl = iconSelect ? iconSelect.value : 'site_profile.png';
+        const iconInput = document.getElementById('newFolderIconInput');
+        let iconUrl = 'site_profile.png';
 
+        if (iconInput && iconInput.files && iconInput.files[0]) {
+            const file = iconInput.files[0];
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                iconUrl = e.target.result; 
+                await saveFolderToFirebase(name, iconUrl, isGlobal);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            await saveFolderToFirebase(name, iconUrl, isGlobal);
+        }
+    };
+
+    async function saveFolderToFirebase(name, iconUrl, isGlobal) {
         if (isGlobal) {
             try {
                 await addDoc(collection(db, "global_folders"), { name: name, icon: iconUrl, links: [], createdAt: Date.now(), creator: user.nick });
                 document.getElementById('newFolderNameInput').value = '';
+                const iconInput = document.getElementById('newFolderIconInput');
+                if(iconInput) iconInput.value = '';
                 alert("Küresel paylaşılan klasör başarıyla oluşturuldu.");
             } catch(e) { alert("Klasör oluşturulamadı: " + e.message); }
         } else {
@@ -84,10 +101,12 @@ export function initDashboard(db, user, fsTools) {
             try {
                 await updateDoc(userDocRef, { [`folders.${id}`]: { name: name, icon: iconUrl, links: [] } });
                 document.getElementById('newFolderNameInput').value = '';
-                alert("Özel klasör sürücünüze başarıyla eklendi.");
+                const iconInput = document.getElementById('newFolderIconInput');
+                if(iconInput) iconInput.value = '';
+                alert("Özel klasör Sürücünüze başarıyla eklendi.");
             } catch(e) { alert("Klasör hatası: " + e.message); }
         }
-    };
+    }
 
     window.addNewLinkToFolder = async function() {
         const fullId = document.getElementById('folderSelect').value;
@@ -288,7 +307,7 @@ export function initDashboard(db, user, fsTools) {
                 </div>
             `;
             container.appendChild(node);
-        }); // Hata buradaydı, kapatma parantezi eklendi.
+        });
         
         if(!hasAnyFolder) {
             container.innerHTML = `<span style="font-size:11px; color:var(--text-muted); font-style:italic;">Klasör bulunmuyor</span>`;
