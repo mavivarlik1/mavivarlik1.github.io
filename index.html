@@ -282,7 +282,7 @@
                         </div>
                         <div style="display:flex; gap:10px; margin-top:10px;">
                             <input type="text" id="siteUrlInput" placeholder="URL Adresi" style="margin:0;">
-                            <button id="btnAddLink" onclick="window.addNewLinkToFolder()" style="margin:0; background:var(--success-color); color:#fff; white-space:nowrap;">Ekle</button>
+                            <button id="btnOriginalAddLink" onclick="window.addNewLinkToFolder()" style="margin:0; background:var(--success-color); color:#fff; white-space:nowrap;">Ekle</button>
                         </div>
                     </div>
                 </div>
@@ -498,16 +498,18 @@
     window.executeSecretTranslation = function(langCode) {
         localStorage.setItem('corebase_lang', langCode);
         
-        const googleSelect = document.querySelector('.goog-te-combo');
-        if (googleSelect) {
-            googleSelect.value = (langCode === 'tr') ? '' : langCode;
-            googleSelect.dispatchEvent(new Event('change'));
-        }
-        
-        // Türkçe seçildiğinde çerez temizliği yapılarak Google kilitlenmesi kırılır
+        // Türkçe seçildiğinde çerezler tamamen silinir ve sayfa yenilenerek Google Translate devre dışı bırakılır
         if (langCode === 'tr') {
             document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + location.hostname;
+            window.location.reload();
+            return;
+        }
+
+        const googleSelect = document.querySelector('.goog-te-combo');
+        if (googleSelect) {
+            googleSelect.value = langCode;
+            googleSelect.dispatchEvent(new Event('change'));
         }
 
         document.getElementById('langNodeTr').classList.toggle('lang-active-node', langCode === 'tr');
@@ -530,7 +532,10 @@
 
     window.addEventListener('load', () => {
         const savedLang = localStorage.getItem('corebase_lang') || 'tr';
-        setTimeout(() => { window.executeSecretTranslation(savedLang); }, 1200);
+        // Sadece dil İngilizce ise Translate tetiklenir, Türkçe ise sayfa doğal halinde kalır
+        if (savedLang === 'en') {
+            setTimeout(() => { window.executeSecretTranslation('en'); }, 1200);
+        }
     });
 
     window.calculateRank = function(points, email, role) {
