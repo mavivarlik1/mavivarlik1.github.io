@@ -1,6 +1,6 @@
 // dashboard.js
 export function initDashboard(db, user, fsTools) {
-    const { doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot } = fsTools;
+    const { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot } = fsTools;
     const userDocRef = doc(db, "users", user.uid);
 
     let localPrivateFolders = {};
@@ -98,10 +98,12 @@ export function initDashboard(db, user, fsTools) {
         } else {
             const id = 'folder_' + Date.now();
             try {
-                // Emniyet Kilidi: Misafir kullanıcının dökümanı yoksa çökmesini engeller
-                await setDoc(userDocRef, {}, { merge: true });
+                await setDoc(userDocRef, { 
+                    folders: { 
+                        [id]: { name: name, icon: iconUrl, links: [] } 
+                    } 
+                }, { merge: true });
                 
-                await updateDoc(userDocRef, { [`folders.${id}`]: { name: name, icon: iconUrl, links: [] } });
                 document.getElementById('newFolderNameInput').value = '';
                 const iconInput = document.getElementById('newFolderIconInput');
                 if(iconInput) iconInput.value = '';
@@ -127,20 +129,20 @@ export function initDashboard(db, user, fsTools) {
                 if (folderSnap.exists()) {
                     let currentLinks = folderSnap.data().links || [];
                     currentLinks.push({ name: sName, url: sUrl });
-                    await updateDoc(folderRef, { links: currentLinks });
+                    await setDoc(folderRef, { links: currentLinks }, { merge: true });
                     alert("Bağlantı başarıyla küresel paylaşılan klasöre eklendi.");
                 }
             } catch(e) { alert("Bağlantı ekleme hatası: " + e.message); }
         } else {
             try {
-                await setDoc(userDocRef, {}, { merge: true });
                 const snap = await getDoc(userDocRef);
-                if(snap.exists()) {
-                    let currentLinks = snap.data().folders[targetId].links || [];
-                    currentLinks.push({ name: sName, url: sUrl });
-                    await updateDoc(userDocRef, { [`folders.${targetId}.links`]: currentLinks });
-                    alert("Bağlantı özel klasörünüze eklendi.");
+                let currentLinks = [];
+                if(snap.exists() && snap.data().folders && snap.data().folders[targetId]) {
+                    currentLinks = snap.data().folders[targetId].links || [];
                 }
+                currentLinks.push({ name: sName, url: sUrl });
+                await setDoc(userDocRef, { [`folders.${targetId}.links`]: currentLinks }, { merge: true });
+                alert("Bağlantı özel klasörünüze eklendi.");
             } catch(e) { alert("Bağlantı hatası: " + e.message); }
         }
         document.getElementById('siteNameInput').value = ''; document.getElementById('siteUrlInput').value = '';
@@ -161,14 +163,14 @@ export function initDashboard(db, user, fsTools) {
             } catch(e) { alert("Paylaşım hatası: " + e.message); }
         } else {
             try {
-                await setDoc(userDocRef, {}, { merge: true });
                 const snap = await getDoc(userDocRef);
+                let files = [];
                 if(snap.exists()) {
-                    let files = snap.data().files || [];
-                    files.push({ name: fullName, content: content, createdAt: Date.now() });
-                    await updateDoc(userDocRef, { files: files });
-                    alert("Dosya şifreli özel sürücünüze kaydedildi.");
+                    files = snap.data().files || [];
                 }
+                files.push({ name: fullName, content: content, createdAt: Date.now() });
+                await setDoc(userDocRef, { files: files }, { merge: true });
+                alert("Dosya şifreli özel sürücünüze kaydedildi.");
             } catch(e) { alert("Dosya oluşturma hatası: " + e.message); }
         }
         document.getElementById('newFileName').value = ''; document.getElementById('newFileContent').value = '';
@@ -194,15 +196,15 @@ export function initDashboard(db, user, fsTools) {
         reader.onload = async function(e) {
             const content = e.target.result;
             try {
-                await setDoc(userDocRef, {}, { merge: true });
                 const snap = await getDoc(userDocRef);
+                let files = [];
                 if (snap.exists()) {
-                    let files = snap.data().files || [];
-                    files.push({ name: file.name, content: content, createdAt: Date.now() });
-                    await updateDoc(userDocRef, { files: files });
-                    alert(`"${file.name}" cihazınızdan özel bulut sürücünüze başarıyla senkronize edildi.`);
-                    uploader.value = '';
+                    files = snap.data().files || [];
                 }
+                files.push({ name: file.name, content: content, createdAt: Date.now() });
+                await setDoc(userDocRef, { files: files }, { merge: true });
+                alert(`"${file.name}" cihazınızdan özel bulut sürücünüze başarıyla senkronize edildi.`);
+                uploader.value = '';
             } catch(err) { alert("Dosya yükleme hatası: " + err.message); }
         };
         reader.readAsText(file);
@@ -240,15 +242,6 @@ export function initDashboard(db, user, fsTools) {
         const url = URL.createObjectURL(blob); const a = document.createElement('a');
         a.href = url; a.download = name; document.body.appendChild(a);
         a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-    };
-
-    window.viewFileContent = function(name, content) {
-        const modal = document.getElementById('fileViewerModal');
-        const title = document.getElementById('viewerTitle'); const body = document.getElementById('viewerBody');
-        if(!modal || !title || !body) return;
-        title.innerText = "Dosya Önizleme: " + name;
-        body.innerHTML = `<textarea class="viewer-text" readonly style="width:100%; height:300px; background:var(--inner-bg); color:var(--text-color); border:var(--glass-border); padding:10px; border-radius:6px; outline:none; font-family:monospace; resize:none;">${content}</textarea>`;
-        modal.classList.remove('hidden');
     };
 
     window.viewFileContent = function(name, content) {
