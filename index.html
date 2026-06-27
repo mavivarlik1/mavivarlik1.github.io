@@ -149,6 +149,7 @@
         .viewer-body { padding: 20px; overflow-y: auto; flex:1; background: var(--inner-bg); }
         
         .blog-card { background: var(--glass-bg); border: var(--glass-border); padding: 25px; border-radius: 12px; margin-bottom: 52px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); box-sizing: border-box; }
+        .blog-card h2 { font-family: var(--site-font) !important; }
         .blog-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-top: 5px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; border-bottom: var(--glass-border); padding-bottom: 8px; }
         .blog-content { font-size: 14px; line-height: 1.7; color: var(--text-color); text-align: justify; white-space: pre-wrap; word-break: break-word; }
         
@@ -259,6 +260,7 @@
                 </div>
             </div>
 
+            <!-- MAIN UNIFIED DASHBOARD -->
             <div id="dashboardSection" class="hidden">
                 <div class="responsive-grid-2" style="margin-bottom: 25px;">
                     <div class="modal" style="margin-bottom:0;">
@@ -307,7 +309,9 @@
                                 <option value="global">Küresel Havuzda Paylaş</option>
                             </select>
                             <textarea id="newFileContent" placeholder="İçeriği buraya girin..." rows="4"></textarea>
-                            <button id="btnSaveFile" onclick="window.createNewTextFile()" style="width: 100%;">Dosyayı Sürücüye İşle</button>
+                            <div style="margin-top: 10px;">
+                                <button id="btnSaveFile" onclick="window.createNewTextFile()" style="width: 100%;">Dosyayı Sürücüye İşle</button>
+                            </div>
                         </div>
                         <div>
                             <h4 style="margin:0; color: var(--success-color); font-size:14px;">Cihazdan Yerel Dosya Yükle</h4>
@@ -332,6 +336,7 @@
                 <div id="foldersWrapper"></div>
             </div>
 
+            <!-- BLOG SECTION -->
             <div id="blogSection" class="hidden">
                 <div class="modal hidden" id="blogWritePanel">
                     <h3 style="color: var(--accent-color); margin-top:0;">İçerik Yayınlama Paneli</h3>
@@ -342,6 +347,7 @@
                 <div id="blogPostsWrapper"></div>
             </div>
 
+            <!-- CHAT SECTION -->
             <div id="chatSection" class="hidden">
                 <div class="chat-grid">
                     <div class="chat-box">
@@ -364,6 +370,7 @@
                 </div>
             </div>
 
+            <!-- HELP SECTION -->
             <div id="helpSection" class="hidden">
                 <div class="modal" id="helpWritePanel">
                     <h3 id="helpPanelTitle">Topluluğa Teknik Soru Sor</h3>
@@ -375,6 +382,7 @@
                 <div id="helpTopicsWrapper"></div>
             </div>
 
+            <!-- PRIVACY SECTION -->
             <div id="privacySection" class="hidden">
                 <div class="modal">
                     <h3 id="privacyTitle">Gizlilik Politikası</h3>
@@ -384,6 +392,7 @@
                 </div>
             </div>
 
+            <!-- VIP SECTION -->
             <div id="vipSection" class="hidden">
                 <div class="modal" style="text-align: center;">
                     <h3 id="vipActivationTitle" style="color: var(--gold-color); font-size: 20px;">VIP Aktivasyon Modülü</h3>
@@ -411,6 +420,7 @@
                 </div>
             </div>
 
+            <!-- ADMIN SECTION -->
             <div id="adminSection" class="hidden">
                 <div class="modal">
                     <h3 id="adminPanelTitle" style="color: var(--danger-color);">Rütbe Yönetim Merkezi</h3>
@@ -427,6 +437,7 @@
                 </div>
             </div>
 
+            <!-- PROFiL VE AYARLAR MODALİ -->
             <div class="modal hidden" id="settingsModal" style="margin-top:30px;">
                 <h3 id="settingsTitle">Profil & Hesap Ayarları</h3>
                 
@@ -498,7 +509,6 @@
     window.executeSecretTranslation = function(langCode) {
         localStorage.setItem('corebase_lang', langCode);
         
-        // Türkçe seçildiğinde çerezler tamamen silinir ve sayfa yenilenerek Google Translate devre dışı bırakılır
         if (langCode === 'tr') {
             document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + location.hostname;
@@ -532,7 +542,6 @@
 
     window.addEventListener('load', () => {
         const savedLang = localStorage.getItem('corebase_lang') || 'tr';
-        // Sadece dil İngilizce ise Translate tetiklenir, Türkçe ise sayfa doğal halinde kalır
         if (savedLang === 'en') {
             setTimeout(() => { window.executeSecretTranslation('en'); }, 1200);
         }
