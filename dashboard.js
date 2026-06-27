@@ -1,6 +1,6 @@
 // dashboard.js
 export function initDashboard(db, user, fsTools) {
-    const { doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot } = fsTools;
+    const { doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot } = fsTools;
     const userDocRef = doc(db, "users", user.uid);
 
     let localPrivateFolders = {};
@@ -21,6 +21,14 @@ export function initDashboard(db, user, fsTools) {
             <option value="global">Global Klasör (Ortak Paylaşılan Alan)</option>
         `;
         inputEl.parentNode.insertBefore(select, inputEl);
+    }
+
+    // GUEST OTURUMLARDA DOĞRUDAN DÖKÜMAN OLUŞTURAN GÜVENLİK MOTORU
+    async function ensureUserDocExists() {
+        const snap = await getDoc(userDocRef);
+        if (!snap.exists()) {
+            await setDoc(userDocRef, { folders: {}, files: [], nick: user.nick, role: user.role, points: user.points });
+        }
     }
 
     onSnapshot(userDocRef, (docSnap) => {
@@ -49,9 +57,10 @@ export function initDashboard(db, user, fsTools) {
         if(!wrapper) return; wrapper.innerHTML = '';
         snapshot.forEach((docSnap) => {
             const f = docSnap.data();
+            if(!f || !f.name) return; // Filtre
             const div = document.createElement('div'); div.className = 'file-item';
             let safeName = f.name.replace(/'/g, "\\'");
-            let safeContent = f.content.replace(/'/g, "\\'").replace(/\n/g, "\\n");
+            let safeContent = f.content ? f.content.replace(/'/g, "\\'").replace(/\n/g, "\\n") : "";
             div.innerHTML = `
                 <div style="font-weight:600; color:var(--success-color);">🌍 ${f.name}</div>
                 <div style="font-size:10px; color:var(--text-muted); margin-top:-6px;">Paylaşan: ${f.creator || 'Anonim'}</div>
@@ -98,11 +107,8 @@ export function initDashboard(db, user, fsTools) {
         } else {
             const id = 'folder_' + Date.now();
             try {
-                await setDoc(userDocRef, { 
-                    folders: { 
-                        [id]: { name: name, icon: iconUrl, links: [] } 
-                    } 
-                }, { merge: true });
+                await ensureUserDocExists();
+                await updateDoc(userDocRef, { [`folders.${id}`]: { name: name, icon: iconUrl, links: [] } });
                 
                 document.getElementById('newFolderNameInput').value = '';
                 const iconInput = document.getElementById('newFolderIconInput');
@@ -129,19 +135,20 @@ export function initDashboard(db, user, fsTools) {
                 if (folderSnap.exists()) {
                     let currentLinks = folderSnap.data().links || [];
                     currentLinks.push({ name: sName, url: sUrl });
-                    await setDoc(folderRef, { links: currentLinks }, { merge: true });
+                    await updateDoc(folderRef, { links: currentLinks });
                     alert("Bağlantı başarıyla küresel paylaşılan klasöre eklendi.");
                 }
             } catch(e) { alert("Bağlantı ekleme hatası: " + e.message); }
         } else {
             try {
+                await ensureUserDocExists();
                 const snap = await getDoc(userDocRef);
                 let currentLinks = [];
                 if(snap.exists() && snap.data().folders && snap.data().folders[targetId]) {
                     currentLinks = snap.data().folders[targetId].links || [];
                 }
                 currentLinks.push({ name: sName, url: sUrl });
-                await setDoc(userDocRef, { [`folders.${targetId}.links`]: currentLinks }, { merge: true });
+                await updateDoc(userDocRef, { [`folders.${targetId}.links`]: currentLinks });
                 alert("Bağlantı özel klasörünüze eklendi.");
             } catch(e) { alert("Bağlantı hatası: " + e.message); }
         }
@@ -163,13 +170,14 @@ export function initDashboard(db, user, fsTools) {
             } catch(e) { alert("Paylaşım hatası: " + e.message); }
         } else {
             try {
+                await ensureUserDocExists();
                 const snap = await getDoc(userDocRef);
                 let files = [];
                 if(snap.exists()) {
                     files = snap.data().files || [];
                 }
                 files.push({ name: fullName, content: content, createdAt: Date.now() });
-                await setDoc(userDocRef, { files: files }, { merge: true });
+                await updateDoc(userDocRef, { files: files });
                 alert("Dosya şifreli özel sürücünüze kaydedildi.");
             } catch(e) { alert("Dosya oluşturma hatası: " + e.message); }
         }
@@ -196,45 +204,19 @@ export function initDashboard(db, user, fsTools) {
         reader.onload = async function(e) {
             const content = e.target.result;
             try {
+                await ensureUserDocExists();
                 const snap = await getDoc(userDocRef);
                 let files = [];
                 if (snap.exists()) {
                     files = snap.data().files || [];
                 }
                 files.push({ name: file.name, content: content, createdAt: Date.now() });
-                await setDoc(userDocRef, { files: files }, { merge: true });
+                await updateDoc(userDocRef, { files: files });
                 alert(`"${file.name}" cihazınızdan özel bulut sürücünüze başarıyla senkronize edildi.`);
                 uploader.value = '';
             } catch(err) { alert("Dosya yükleme hatası: " + err.message); }
         };
         reader.readAsText(file);
-    };
-
-    window.handleRealCardPayment = function() {
-        const name = document.getElementById('cardHolderNamePay').value.trim();
-        const number = document.getElementById('cardNumber').value.trim();
-        const expiry = document.getElementById('cardExpiry').value.trim();
-        const cvc = document.getElementById('cardCvc').value.trim();
-
-        if(!name || !number || !expiry || !cvc) {
-            return alert("Lütfen kart ile anında aktivasyon için tüm alanları eksiksiz doldurun.");
-        }
-        alert("Secure Ödeme Ağ Geçidi Bağlantısı Başarılı!\nSimüle edilen 5.00 TL tahsil edildi. VIP yetkiniz kurucu masası onayına gönderildi!");
-        document.getElementById('cardHolderNamePay').value = '';
-        document.getElementById('cardNumber').value = '';
-        document.getElementById('cardExpiry').value = '';
-        document.getElementById('cardCvc').value = '';
-    };
-
-    window.handleBugVipPayment = async function() {
-        const title = document.getElementById('vipSuggestionTitle').value.trim();
-        const content = document.getElementById('vipSuggestionContent').value.trim();
-        if(!title || !content) return alert("Lütfen ücretsiz VIP rütbesi için hata başlığı ve açıklama alanını doldurun.");
-        try {
-            await addDoc(collection(db, "forum_topics"), { title: `[VIP BUG/ÖNERİ] ${title}`, creator: user.nick, createdAt: Date.now(), views: 0, uid: user.uid, body: content });
-            alert("Teknik bildiriminiz kurucu masasına iletildi. Doğrulama sonrası VIP rütbeniz tanımlanacaktır.");
-            document.getElementById('vipSuggestionTitle').value = ''; document.getElementById('vipSuggestionContent').value = '';
-        } catch(e) { alert("Bildirim gönderme hatası: " + e.message); }
     };
 
     window.downloadFile = function(name, content) {
@@ -260,8 +242,14 @@ export function initDashboard(db, user, fsTools) {
     function refreshFolderSelect() {
         const select = document.getElementById('folderSelect'); if(!select) return;
         select.innerHTML = '<option value="">-- Klasör Seçin --</option>';
-        for (const [id, f] of Object.entries(localPrivateFolders)) { select.innerHTML += `<option value="private_${id}">[Özel] ${f.name}</option>`; }
-        localGlobalFolders.forEach(f => { select.innerHTML += `<option value="global_${f.id}">[Paylaşılan] ${f.name}</option>`; });
+        for (const [id, f] of Object.entries(localPrivateFolders)) { 
+            if(!f || !f.name || id === "undefined") continue;
+            select.innerHTML += `<option value="private_${id}">[Özel] ${f.name}</option>`; 
+        }
+        localGlobalFolders.forEach(f => { 
+            if(!f || !f.name || f.id === "undefined") return;
+            select.innerHTML += `<option value="global_${f.id}">[Paylaşılan] ${f.name}</option>`; 
+        });
     }
 
     function renderSidebarTree() {
@@ -272,6 +260,7 @@ export function initDashboard(db, user, fsTools) {
         let hasAnyFolder = false;
 
         for (const [id, f] of Object.entries(localPrivateFolders)) {
+            if(!f || !f.name || id === "undefined") continue; // Tanımsız veri temizleyici filtre
             hasAnyFolder = true;
             const node = document.createElement('div');
             node.className = 'folder-tree-node';
@@ -295,6 +284,7 @@ export function initDashboard(db, user, fsTools) {
         }
 
         localGlobalFolders.forEach(f => {
+            if(!f || !f.name || f.id === "undefined") return; // Tanımsız veri temizleyici filtre
             hasAnyFolder = true;
             const node = document.createElement('div');
             node.className = 'folder-tree-node';
@@ -340,6 +330,7 @@ export function initDashboard(db, user, fsTools) {
     function renderPrivateFolders(folders) {
         const wrapper = document.getElementById('foldersWrapper'); if(!wrapper) return; wrapper.innerHTML = '';
         for (const [id, f] of Object.entries(folders)) {
+            if(!f || !f.name || id === "undefined") continue;
             const div = document.createElement('div'); div.className = 'folder-section'; let linksHtml = '';
             if(f.links) f.links.forEach(l => { linksHtml += `<div class="link-card" onclick="window.open('${l.url}', '_blank')">Link: ${l.name}</div>`; });
             
@@ -353,6 +344,7 @@ export function initDashboard(db, user, fsTools) {
     function renderGlobalFolders(folders) {
         const wrapper = document.getElementById('sharedFoldersWrapper'); if(!wrapper) return; wrapper.innerHTML = '';
         folders.forEach(f => {
+            if(!f || !f.name || f.id === "undefined") return;
             const div = document.createElement('div'); div.className = 'folder-item'; let linksHtml = '';
             if(f.links) f.links.forEach(l => { linksHtml += `<div class="link-card" onclick="window.open('${l.url}', '_blank')">Link: ${l.name}</div>`; });
             
@@ -366,8 +358,9 @@ export function initDashboard(db, user, fsTools) {
     function renderPrivateFiles(files) {
         const wrapper = document.getElementById('fileStorageWrapper'); if(!wrapper) return; wrapper.innerHTML = '';
         files.forEach((f, index) => {
+            if(!f || !f.name) return;
             const div = document.createElement('div'); div.className = 'file-item';
-            let safeName = f.name.replace(/'/g, "\\'"); let safeContent = f.content.replace(/'/g, "\\'").replace(/\n/g, "\\n");
+            let safeName = f.name.replace(/'/g, "\\'"); let safeContent = f.content ? f.content.replace(/'/g, "\\'").replace(/\n/g, "\\n") : "";
             div.innerHTML = `
                 <div style="font-weight:600; color:var(--accent-color);">Dosya: ${f.name}</div>
                 <div style="display:flex; gap:4px; margin-top:4px; flex-wrap:wrap;">
